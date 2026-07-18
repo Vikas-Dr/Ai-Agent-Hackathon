@@ -22,42 +22,12 @@ def _mock_analyzer_response() -> str:
     """Generate mock analyzer response with 6 insights."""
     insights: dict[str, Any] = {
         "insights": [
-            {
-                "title": "AI/ML Blog Dominance",
-                "description": "AI/ML blog posts receive 3.2x higher engagement than other topics.",
-                "metric": "engagement_rate",
-                "value": 0.32,
-            },
-            {
-                "title": "Developer Audience Preference",
-                "description": "Developer audience shows strongest engagement with technical blog content.",
-                "metric": "audience_segment",
-                "value": "developers",
-            },
-            {
-                "title": "Q1 Trend: Code Examples",
-                "description": "Blog posts with code examples saw 45% higher conversion rates in Q1.",
-                "metric": "conversions",
-                "value": 0.45,
-            },
-            {
-                "title": "Blog Format Outperforms",
-                "description": "Blog format consistently outperforms video and infographic in technical topics.",
-                "metric": "format_performance",
-                "value": "blog",
-            },
-            {
-                "title": "Search Ranking Boost",
-                "description": "AI/ML blog posts rank on page 1 for 78% of target keywords.",
-                "metric": "search_rank",
-                "value": 0.78,
-            },
-            {
-                "title": "Engagement-to-Conversion Gap",
-                "description": "While engagement is high, conversion rates lag by 12% compared to industry average.",
-                "metric": "conversion_gap",
-                "value": -0.12,
-            },
+            "AI/ML content drives 40% higher engagement than the average topic.",
+            "Blog posts outperform video in conversion rate by 2.3x.",
+            "Developer audience shows strongest engagement with technical deep-dives.",
+            "Content published in Q1 sees 25% more views than Q4.",
+            "Short-form content (<500 words) has above-average search ranking.",
+            "Case studies have the highest conversion rate across all formats.",
         ]
     }
     return json.dumps(insights)
@@ -67,11 +37,11 @@ def _mock_predictor_response() -> str:
     """Generate mock predictor response."""
     prediction: dict[str, Any] = {
         "predicted_score": 78,
-        "reasoning": "Similar AI/ML blog posts for developers averaged 78/100.",
+        "reasoning": "Similar AI/ML blog posts for developers averaged 78/100. Strong topic-format-audience alignment.",
         "suggestions": [
-            "Add code example",
-            "Include benchmarks",
-            "Optimize for keywords",
+            "Add a concrete code example in the first 200 words.",
+            "Include benchmark comparisons to boost authority.",
+            "Optimize for 'AI engineering' keywords to improve search rank.",
         ],
         "confidence": "high",
         "comparable_count": 12,

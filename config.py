@@ -55,9 +55,12 @@ GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY", "")
 MOCK_LLM: bool = os.getenv("MOCK_LLM", "true").lower() in ("true", "1", "yes")
 
 # ==================== DATA & PATHS ====================
+PROJECT_ROOT: Path = Path(__file__).parent
 DATA_PATH: Path = Path(os.getenv("DATA_PATH", "data/sample_content_data.csv"))
 LOGS_DIR: Path = Path("logs")
 LOGS_DIR.mkdir(exist_ok=True)
+ASSETS_DIR: Path = PROJECT_ROOT / "assets"
+ASSETS_DIR.mkdir(exist_ok=True)
 
 # ==================== VALIDATION ====================
 if not MOCK_LLM and not GOOGLE_API_KEY:
@@ -72,6 +75,8 @@ __all__ = [
     "LLM_MODEL",
     "GOOGLE_API_KEY",
     "MOCK_LLM",
+    "PROJECT_ROOT",
     "DATA_PATH",
     "LOGS_DIR",
+    "ASSETS_DIR",
 ]
