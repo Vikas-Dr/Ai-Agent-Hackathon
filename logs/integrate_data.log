@@ -1,3 +1,74 @@
 Starting HN data integration...
 Fetching top 200 story IDs from HN API...
 ✓ Fetched 200 story IDs
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...
+✓ Fetched 200 story IDs
+✓ Fetched 200 stories from HN API
+✓ Transformed 200 to valid rows
+============================================================
+DATASET VERIFICATION
+============================================================
+✓ Total rows: 200
+✓ All required columns present: views, engagement_rate, avg_time_on_page, conversions, search_rank
+✓ Topic distribution:
+  AI/ML: 38
+  Backend: 19
+  Cloud: 17
+  Data Engineering: 19
+  DevOps: 18
+  Frontend: 20
+  Leadership: 17
+  Mobile: 18
+  Platform: 17
+  Security: 17
+✓ Format distribution:
+  blog: 166
+  case_study: 19
+  newsletter: 7
+  video: 3
+  whitepaper: 5
+✓ Sample titles:
+  - Goodbye, and Thanks for All the Bikesheds
+  - GPT-5.6 used a prompt to close a 30-year gap in convex optim
+  - Gleam Is Now on Tangled
+  - Setting up your spare Mac for Claude Code to control, a step
+  - Our Approach to Bioresilience: Isomorphic Labs and Google De
+============================================================
+✓ Wrote 200 rows to data/sample_content_data.csv
+✓ Wrote 200 rows to assets/data/hackernews_export.csv
+✓ Data integration complete
+✓ Fetched 200 stories from HN API
+✓ Transformed 200 to valid rows
+============================================================
+DATASET VERIFICATION
+============================================================
+✓ Total rows: 200
+✓ All required columns present: views, engagement_rate, avg_time_on_page, conversions, search_rank
+✓ Topic distribution:
+  AI/ML: 38
+  Backend: 19
+  Cloud: 17
+  Data Engineering: 19
+  DevOps: 18
+  Frontend: 20
+  Leadership: 17
+  Mobile: 18
+  Platform: 17
+  Security: 17
+✓ Format distribution:
+  blog: 166
+  case_study: 19
+  newsletter: 7
+  video: 3
+  whitepaper: 5
+✓ Sample titles:
+  - Goodbye, and Thanks for All the Bikesheds
+  - GPT-5.6 used a prompt to close a 30-year gap in convex optim
+  - Gleam Is Now on Tangled
+  - Setting up your spare Mac for Claude Code to control, a step
+  - Our Approach to Bioresilience: Isomorphic Labs and Google De
+============================================================
+✓ Wrote 200 rows to data/sample_content_data.csv
+✓ Wrote 200 rows to assets/data/hackernews_export.csv
+✓ Data integration complete
