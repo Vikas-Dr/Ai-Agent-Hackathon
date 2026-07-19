@@ -1,16 +1,19 @@
-# ContentPulse — Editorial AI Strategy Platform
+# ⚡ DevPulse — Developer Relations Content Intelligence
 
 ## 🚀 Overview
 
-**ContentPulse** is a multi-agent AI system that translates content performance data into actionable editorial decisions. It analyzes historical content metrics, identifies performance patterns, predicts new content performance, and generates strategic recommendations for content teams.
+**DevPulse** is a specialized multi-agent AI system for **developer relations (DevRel) teams**. It translates developer content performance data into actionable editorial decisions, focusing on API adoption, SDK/framework coverage, developer experience metrics, and GitHub engagement.
+
+DevPulse analyzes historical developer content metrics, identifies performance patterns, predicts new content performance for developer audiences (frontend/backend/devops/architects), and generates strategic recommendations for DevRel teams.
 
 ### Key Features
-- 📊 **Real-time Analytics**: Aggregates content performance across topics, formats, and audiences
-- 🎯 **Performance Prediction**: Predicts scores for draft content using comparable historical data
-- 🔍 **Gap Analysis**: Identifies content opportunities (trending topics, underperforming areas)
-- 📋 **Strategic Reports**: Generates editorial recommendations (Continue, Stop, Create)
+- 📊 **Developer Content Analytics**: Aggregates performance across DevRel topics (API Design, Cloud Infrastructure, DevOps & CI/CD, etc.)
+- 🎯 **Developer Audience Targeting**: Predicts scores for draft content by developer specialization (frontend/backend/devops/architects)
+- 🔍 **Gap Analysis**: Identifies SDK/framework coverage gaps and emerging developer technologies (AI Agents, WebAssembly, Platform Engineering)
+- 📋 **DevRel Strategy Reports**: Generates editorial recommendations focused on API conversions, SDK adoption, and developer experience
 - 🧠 **Multi-Agent Architecture**: Specialized agents for data collection, analysis, prediction, and strategy
-- 🎨 **Interactive Dashboard**: Dark-themed single-page app with real-time insights
+- 📝 **Code Analysis**: Analyzes markdown drafts for code-to-text ratio and code quality feedback
+- 🎨 **Interactive Dashboard**: Dark-themed single-page app with DevRel metrics and insights
 - 📈 **Execution Tracing**: Full visibility into pipeline performance and decisions
 
 ---
@@ -21,31 +24,32 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    ContentPulse Platform                      │
+│                   ⚡ DevPulse Platform                         │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────────── Data Layer ──────────────────────┐   │
 │  │  Hacker News API → CSV → Pydantic Validation         │   │
-│  │  200 articles across 10 tech topics                  │   │
+│  │  200 articles: API Design, DevOps, Cloud, etc.       │   │
+│  │  Metrics: views, GitHub engagement, API conversions  │   │
 │  └──────────────────────────────────────────────────────┘   │
 │                            ↓                                  │
 │  ┌──────────────────── Agent Pipeline ──────────────────┐   │
 │  │  1. CollectorAgent    → Load & enrich data           │   │
-│  │  2. AnalyzerAgent     → Compute insights             │   │
-│  │  3. PredictorAgent    → Score draft content          │   │
-│  │  4. StrategistAgent   → Identify gaps               │   │
-│  │  5. ReportAgent       → Generate recommendations     │   │
+│  │  2. AnalyzerAgent     → DevRel metrics & insights    │   │
+│  │  3. PredictorAgent    → Code analysis & prediction   │   │
+│  │  4. StrategistAgent   → SDK/framework gaps           │   │
+│  │  5. ReportAgent       → DevRel recommendations       │   │
 │  └──────────────────────────────────────────────────────┘   │
 │                            ↓                                  │
 │  ┌──────────────────── Flask API ──────────────────────┐    │
 │  │  /api/report  →  Full pipeline execution            │    │
-│  │  /api/score   →  Single content prediction          │    │
-│  │  /api/topics  →  Config endpoints                   │    │
+│  │  /api/score   →  Score draft (+ markdown analysis)  │    │
+│  │  /api/topics  →  DevRel topics & formats            │    │
 │  └──────────────────────────────────────────────────────┘   │
 │                            ↓                                  │
 │  ┌──────────────────── Dashboard UI ──────────────────┐     │
-│  │  📊 Dashboard    (Metrics, Charts, Insights)        │     │
-│  │  ✍️  Draft Scorer  (Form, Prediction, Ring)         │     │
+│  │  📊 Dashboard    (DevRel Metrics, Insights)         │     │
+│  │  ✍️  Draft Scorer  (Code Analysis, Prediction)      │     │
 │  │  🎯 Strategy      (Continue, Stop, Create Cards)   │     │
 │  └──────────────────────────────────────────────────────┘   │
 │                                                               │
@@ -55,43 +59,47 @@
 ### Module Structure
 
 ```
-contentpulse/
-├── config.py                    # Central configuration (topics, formats, weights)
+devpulse/
+├── config.py                    # Central configuration (DevRel topics, formats, weights)
 ├── requirements.txt             # Python dependencies
 ├── .env.example                 # Environment template
 │
 ├── data/
 │   ├── schema.py               # Pydantic v2 models (15+)
-│   ├── integrate_data.py       # HN API fetcher & transformer
-│   └── sample_content_data.csv # 200 articles dataset
+│   ├── integrate_data.py       # HN API fetcher & DevRel transformer
+│   └── sample_content_data.csv # 200 developer articles dataset
 │
 ├── agents/
 │   ├── base_agent.py           # ABC with execute() wrapper
-│   ├── collector.py            # Load, validate, enrich data
-│   ├── analyzer.py             # Vectorized aggregations
-│   ├── predictor.py            # Fuzzy matching, scoring
-│   ├── strategist.py           # Gap identification
-│   └── report.py               # Strategic recommendations
+│   ├── collector.py            # Load, validate, enrich DevRel data
+│   ├── analyzer.py             # DevRel metrics & aggregations
+│   ├── predictor.py            # Code analysis + scoring
+│   ├── strategist.py           # SDK/framework gap identification
+│   └── report.py               # DevRel strategy recommendations
 │
 ├── llm/
-│   ├── client.py               # Google Generative AI wrapper
+│   ├── client.py               # Google Gemini 2.5 Flash + Hugging Face Qwen
 │   └── __init__.py             # Exports
 │
 ├── orchestrator/
-│   ├── pipeline.py             # Run full 4-agent pipeline
-│   ├── scorer.py               # Single content prediction
+│   ├── pipeline.py             # Run full 5-agent pipeline
+│   ├── scorer.py               # Single content prediction + code analysis
 │   ├── trace.py                # Execution tracing
 │   └── __init__.py             # Exports
 │
 ├── ui/
 │   ├── api_server.py           # Flask API (POST /report, /score)
-│   ├── index.html              # Dashboard SPA
+│   ├── index.html              # Dashboard SPA with DevRel branding
 │   ├── index.css               # Glassmorphic dark theme
 │   └── app.js                  # State + tab management
 │
+├── utils/
+│   ├── code_parser.py          # Markdown code analysis
+│   └── __init__.py             # Package marker
+│
 ├── tests/
-│   ├── test_schema.py          # 17 schema validation tests
-│   ├── test_agents.py          # 13 agent integration tests
+│   ├── test_schema.py          # Schema validation tests
+│   ├── test_agents.py          # Agent integration tests
 │   └── __init__.py             # Test module marker
 │
 ├── logs/                        # Runtime logs
@@ -363,12 +371,25 @@ print(f"Continue: {len(report.continue_items)}")
 ### `config.py` Constants
 
 ```python
-TOPICS                    # 10 tech topics
-FORMATS                   # 7 content types (blog, video, etc.)
-AUDIENCE_SEGMENTS         # 4 segments (developers, managers, executives, general_tech)
-PERFORMANCE_WEIGHTS       # {views: 0.4, engagement_rate: 0.3, conversions: 0.2, search_rank: 0.1}
-LLM_PROVIDER             # "gemini"
-LLM_MODEL                # "gemini-2.0-flash"
+TOPICS                    # 10 DevRel topics: API Design, Authentication, Cloud Infrastructure, 
+                          # Database & Data, DevOps & CI/CD, Frontend Frameworks, Mobile Development,
+                          # Python & Data Science, Web Security, Serverless & Edge
+
+FORMATS                   # 7 content types: technical_blog, tutorial, code_example, documentation,
+                          # case_study, webinar, sample_project
+
+AUDIENCE_SEGMENTS         # 4 developer roles: frontend, backend, devops, architects
+
+PERFORMANCE_WEIGHTS       # {views: 0.30, engagement_rate: 0.25, conversions: 0.25, 
+                          #  search_rank: 0.10, github_stars_growth: 0.10}
+
+TRENDING_DEVREL_TOPICS    # Emerging: AI Agents & MCP, WebAssembly, Platform Engineering,
+                          # Developer Experience (DX), Edge Functions, Rust for Systems
+
+LLM_PROVIDER             # "gemini" or "huggingface"
+LLM_MODEL                # "gemini-2.5-flash" or "Qwen/Qwen2.5-VL-7B-Instruct"
+GOOGLE_API_KEY           # Gemini API key (optional)
+HF_TOKEN                 # Hugging Face token (optional)
 MOCK_LLM                 # true/false (default: true)
 DATA_PATH                # Path to CSV
 LOGS_DIR                 # Path to logs/
@@ -379,8 +400,9 @@ ASSETS_DIR               # Path to assets/
 
 ```bash
 GOOGLE_API_KEY=your-gemini-api-key
+HF_TOKEN=your-huggingface-token
 LLM_PROVIDER=gemini
-LLM_MODEL=gemini-2.0-flash
+LLM_MODEL=gemini-2.5-flash
 MOCK_LLM=true
 DATA_PATH=data/sample_content_data.csv
 ```
@@ -715,27 +737,30 @@ curl -X POST http://localhost:5050/api/report \
 ```
 
 #### `POST /api/score`
-Predicts performance of draft content.
+Predicts performance of draft content with optional code analysis.
 
 ```bash
 curl -X POST http://localhost:5050/api/score \
   -H 'Content-Type: application/json' \
   -d '{
-    "title": "Building AI Agents",
-    "topic": "AI/ML",
-    "format": "blog",
-    "audience_segment": "developers",
-    "word_count": 1500
+    "title": "Building API SDKs with FastAPI",
+    "topic": "API Design",
+    "format": "tutorial",
+    "audience_segment": "backend",
+    "word_count": 1500,
+    "draft_markdown": "# Tutorial\n\n```python\nfrom fastapi import FastAPI\napp = FastAPI()\n```\n\n## Explanation..."
   }'
 
 # Response:
 {
   "prediction": {
-    "predicted_score": 78,
-    "reasoning": "Similar AI/ML blog posts...",
-    "suggestions": ["Add code...", "Include benchmarks...", "Optimize..."],
+    "predicted_score": 82,
+    "reasoning": "Similar API Design tutorials for backend developers averaged 82/100...",
+    "suggestions": ["Add error handling examples", "Include curl commands", "Optimize for API keywords"],
     "confidence": "high",
-    "comparable_count": 12
+    "comparable_count": 14,
+    "code_to_text_ratio": 0.25,
+    "code_quality_feedback": "Good code ratio. Add error handling examples."
   },
   "trace": { ... }
 }
@@ -793,15 +818,15 @@ Based on comparable content count:
 - **medium**: N ≥ 10 (moderate data)
 - **low**: N < 10 (scarce data)
 
-### Trending Topics
+### Trending DevRel Topics
 
-Topics not yet covered but gaining industry momentum:
-- FinOps
-- AI Agents
-- Platform Engineering
-- WebAssembly
-- Edge Computing
-- Green Software
+Emerging developer technologies and frameworks with high community momentum:
+- **AI Agents & MCP** — Multi-language support for AI agent frameworks
+- **WebAssembly** — Browser and server-side WASM adoption
+- **Platform Engineering** — Internal developer platforms (IDP)
+- **Developer Experience (DX)** — DX metrics, observability, DevEx tools
+- **Edge Functions** — Cloudflare Workers, Vercel Edge, Netlify Edge
+- **Rust for Systems** — Systems programming in Rust (embedded, networking)
 
 ---
 
