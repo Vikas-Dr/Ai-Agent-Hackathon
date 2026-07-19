@@ -3,137 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevPulse - Developer Relations Content Intelligence</title>
+    <title>DevPulse - Content Intelligence & Recommendation System</title>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="index.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Premium Global Top Header -->
+    <header class="global-header">
+        <div class="header-logo">⚡ DevPulse</div>
+        <div class="header-tagline">Data-driven Developer Content Performance & Recommendations</div>
+        <div class="header-badge">Agentic Pipeline Active</div>
+    </header>
+
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="logo">⚡ DevPulse</div>
-            <nav class="nav-tabs">
-                <a href="#dashboard" class="nav-tab active" data-tab="dashboard">📊 Dashboard</a>
-                <a href="#scorer" class="nav-tab" data-tab="scorer">✍️ Draft Scorer</a>
-                <a href="#abtester" class="nav-tab" data-tab="abtester">🔀 A/B Tester</a>
-                <a href="#custom" class="nav-tab" data-tab="custom">📤 Custom Data</a>
-                <a href="#strategy" class="nav-tab" data-tab="strategy">🎯 Strategy</a>
-                <a href="#datatable" class="nav-tab" data-tab="datatable">📋 Data Table</a>
+            <nav class="nav-tabs" aria-label="Main Navigation">
+                <a href="#dashboard" class="nav-tab active" data-tab="dashboard" id="nav-dashboard">📊 Dashboard</a>
+                <a href="#scorer" class="nav-tab" data-tab="scorer" id="nav-scorer">✍️ Draft Scorer</a>
+                <a href="#custom" class="nav-tab" data-tab="custom" id="nav-custom">📤 Custom Data</a>
+                <a href="#strategy" class="nav-tab" data-tab="strategy" id="nav-strategy">🎯 Strategy</a>
+                <a href="#datatable" class="nav-tab" data-tab="datatable" id="nav-datatable">📋 Data Table</a>
             </nav>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
-            <header class="header">
-                <h1>DevPulse — Developer Relations Content Intelligence</h1>
-                <p>Data-driven developer content strategy</p>
-            </header>
-
             <!-- Dashboard Tab -->
-            <section id="dashboard" class="tab-pane active">
+            <section id="dashboard" class="tab-pane active" aria-labelledby="nav-dashboard">
                 <div class="section-header">
-                    <h2>📊 Content Analytics Dashboard</h2>
+                    <h2>📊 Content Performance Analytics Dashboard</h2>
                     <button id="btn-run-analysis" class="btn btn-primary">🔄 Run Analysis</button>
-                </div>
-
-                <!-- Data Input Form -->
-                <div class="dashboard-section">
-                    <h3>📝 Add New Content</h3>
-                    <form id="data-input-form" class="form-container">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" id="input-title" placeholder="Enter content title" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Topic</label>
-                                <input type="text" id="input-topic" placeholder="e.g., API Design" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Format</label>
-                                <select id="input-format" required>
-                                    <option value="">Select format...</option>
-                                    <option value="blog">Blog Post</option>
-                                    <option value="tutorial">Tutorial</option>
-                                    <option value="guide">Guide</option>
-                                    <option value="video">Video Script</option>
-                                    <option value="podcast">Podcast Transcript</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Audience</label>
-                                <select id="input-audience" required>
-                                    <option value="">Select audience...</option>
-                                    <option value="beginner">Beginner</option>
-                                    <option value="intermediate">Intermediate</option>
-                                    <option value="advanced">Advanced</option>
-                                    <option value="expert">Expert</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Word Count</label>
-                                <input type="number" id="input-wordcount" min="100" max="20000" value="1500" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Markdown Content</label>
-                            <textarea id="input-markdown" placeholder="Paste your content here..." rows="6"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">📤 Add Content</button>
-                    </form>
-                </div>
-
-                <!-- LLM Integration Form -->
-                <div class="dashboard-section">
-                    <h3>🤖 AI Content Suggestions</h3>
-                    <form id="llm-form" class="form-container">
-                        <div class="form-group">
-                            <label>Content Brief</label>
-                            <textarea id="llm-prompt" placeholder="Describe what you want AI to help with..." rows="4" required></textarea>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Content Type</label>
-                                <select id="llm-type" required>
-                                    <option value="">Select type...</option>
-                                    <option value="headline">Headline Ideas</option>
-                                    <option value="outline">Content Outline</option>
-                                    <option value="summary">Summary</option>
-                                    <option value="keywords">Keywords</option>
-                                    <option value="improvement">Improvement Tips</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Tone</label>
-                                <select id="llm-tone" required>
-                                    <option value="professional">Professional</option>
-                                    <option value="casual">Casual</option>
-                                    <option value="technical">Technical</option>
-                                    <option value="conversational">Conversational</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">✨ Get Suggestions</button>
-                    </form>
-                </div>
-
-                <!-- Real-time Preview Section -->
-                <div class="dashboard-section">
-                    <h3>👁️ Real-time Preview</h3>
-                    <div id="preview-container" class="preview-card hidden">
-                        <div class="preview-header">
-                            <h4 id="preview-title"></h4>
-                            <span class="preview-meta" id="preview-meta"></span>
-                        </div>
-                        <div id="preview-content"></div>
-                    </div>
-                    <div id="llm-results" class="llm-results hidden">
-                        <h4>🤖 AI Suggestions:</h4>
-                        <div id="llm-output"></div>
-                    </div>
                 </div>
 
                 <!-- Metrics Grid -->
@@ -155,200 +60,203 @@
                         <div class="metric-value" id="metric-format">-</div>
                     </div>
                 </div>
-                <div class="chart-container">
-                    <h3>Topic Performance</h3>
-                    <canvas id="chart-topics"></canvas>
-                </div>
-                <div id="insights-container">
-                    <h3>💡 Key Insights</h3>
-                    <ul id="insights-list"></ul>
+
+                <div class="dashboard-visuals">
+                    <div class="chart-container">
+                        <h3>Topic Performance Summary</h3>
+                        <canvas id="chart-topics"></canvas>
+                    </div>
+                    <div id="insights-container" class="insights-container">
+                        <h3>💡 Key Insights</h3>
+                        <ul id="insights-list" class="insights-list">
+                            <li class="empty-state-text">No insights generated yet. Click "Run Analysis" to query the agents.</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
             <!-- Draft Scorer Tab -->
-            <section id="scorer" class="tab-pane">
+            <section id="scorer" class="tab-pane" aria-labelledby="nav-scorer">
                 <div class="section-header">
-                    <h2>✍️ Score Your Draft Content</h2>
+                    <h2>✍️ Content Scorer & Performance Predictor</h2>
                 </div>
-                <form id="scorer-form" class="form-container">
-                    <div class="form-group">
-                        <label>Article Title</label>
-                        <input type="text" id="scorer-title" placeholder="Enter article title" required>
-                    </div>
-                    <div class="form-row">
+                
+                <div class="scorer-grid">
+                    <form id="scorer-form" class="form-container">
                         <div class="form-group">
-                            <label>Topic</label>
-                            <select id="scorer-topic" required></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Format</label>
-                            <select id="scorer-format" required></select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Audience</label>
-                            <select id="scorer-audience" required></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Word Count</label>
-                            <input type="number" id="scorer-wordcount" min="100" max="20000" value="1500" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Draft Markdown (Optional)</label>
-                        <textarea id="scorer-markdown" placeholder="Paste your markdown here..." rows="5"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">📈 Score This Draft</button>
-                </form>
-                <div id="score-result" class="hidden">
-                    <div class="score-card">
-                        <div class="score-circle">
-                            <span class="score-value" id="result-score">0</span>
-                            <span class="score-label">/100</span>
-                        </div>
-                        <div class="score-details">
-                            <p id="result-reasoning"></p>
-                            <h4>Suggestions:</h4>
-                            <ul id="result-suggestions"></ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- A/B Tester Tab -->
-            <section id="abtester" class="tab-pane">
-                <div class="section-header">
-                    <h2>🔀 A/B Test Headlines & Code Hooks</h2>
-                </div>
-                <div class="ab-container">
-                    <div class="ab-section">
-                        <h3>📝 Headline Variants</h3>
-                        <input type="text" class="ab-input" placeholder="Headline 1" value="Building REST APIs with Python">
-                        <input type="text" class="ab-input" placeholder="Headline 2" value="Master FastAPI Complete Guide">
-                        <input type="text" class="ab-input" placeholder="Headline 3" value="FastAPI Production APIs">
-                    </div>
-                    <div class="ab-section">
-                        <h3>💻 Code Hooks</h3>
-                        <textarea class="ab-input" placeholder="Hook 1" rows="3">from fastapi import FastAPI
-app = FastAPI()</textarea>
-                        <textarea class="ab-input" placeholder="Hook 2" rows="3">import fastapi
-app = fastapi.FastAPI()</textarea>
-                    </div>
-                    <button id="btn-ab-test" class="btn btn-primary">🔀 Run A/B Test</button>
-                </div>
-                <div id="ab-results" class="hidden">
-                    <h3>📊 Results</h3>
-                    <p>Best Headline: <strong id="ab-winner"></strong></p>
-                </div>
-            </section>
-
-            <!-- Custom Data Tab -->
-            <section id="custom" class="tab-pane">
-                <div class="section-header">
-                    <h2>📤 Custom Data Management</h2>
-                </div>
-
-                <!-- Manual Data Entry -->
-                <div class="dashboard-section">
-                    <h3>✍️ Manual Data Entry</h3>
-                    <form id="manual-data-form" class="form-container">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" id="manual-title" placeholder="Enter title" required>
+                            <label for="scorer-title">Article Title</label>
+                            <input type="text" id="scorer-title" placeholder="Enter article title (e.g. Master FastAPI in Production)" required>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Topic</label>
-                                <input type="text" id="manual-topic" placeholder="Enter topic" required>
+                                <label for="scorer-topic">Topic</label>
+                                <select id="scorer-topic" required>
+                                    <option value="">Select Topic...</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label>Format</label>
-                                <input type="text" id="manual-format" placeholder="e.g., Blog, Tutorial" required>
+                                <label for="scorer-format">Format</label>
+                                <select id="scorer-format" required>
+                                    <option value="">Select Format...</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Views</label>
-                                <input type="number" id="manual-views" min="0" value="0" required>
+                                <label for="scorer-audience">Audience Segment</label>
+                                <select id="scorer-audience" required>
+                                    <option value="">Select Audience...</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label>Performance Score</label>
-                                <input type="number" id="manual-score" min="0" max="100" value="75" required>
+                                <label for="scorer-wordcount">Word Count</label>
+                                <input type="number" id="scorer-wordcount" min="100" max="20000" value="1500" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
-                            <textarea id="manual-description" placeholder="Enter description..." rows="3"></textarea>
+                            <label for="scorer-markdown">Draft Markdown Content (Optional)</label>
+                            <textarea id="scorer-markdown" placeholder="Paste your markdown content here. This will enable code ratio analysis..." rows="6"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">➕ Add Entry</button>
+                        <button type="submit" class="btn btn-primary btn-submit">📈 Score This Draft</button>
                     </form>
-                </div>
 
-                <!-- CSV Upload -->
-                <div class="dashboard-section">
-                    <h3>📁 Bulk Upload CSV</h3>
-                    <div class="upload-container">
-                        <div class="upload-zone" id="upload-zone">
-                            <p>📁 Drag and drop your CSV file here</p>
-                            <input type="file" id="csv-file" accept=".csv" style="display:none;">
+                    <div id="score-result" class="score-result-container hidden">
+                        <div class="score-card">
+                            <div class="score-radial-progress">
+                                <div class="score-circle">
+                                    <span class="score-value" id="result-score">0</span>
+                                    <span class="score-label">/100</span>
+                                </div>
+                            </div>
+                            <div class="score-details">
+                                <h3>Reasoning:</h3>
+                                <p id="result-reasoning"></p>
+                                <h4>💡 Actionable Recommendations:</h4>
+                                <ul id="result-suggestions"></ul>
+                            </div>
                         </div>
-                        <button id="btn-analyze-custom" class="btn btn-primary hidden">🚀 Analyze</button>
                     </div>
                 </div>
+            </section>
 
-                <!-- Data Preview -->
-                <div class="dashboard-section">
-                    <h3>📊 Data Preview</h3>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Topic</th>
-                                    <th>Format</th>
-                                    <th>Views</th>
-                                    <th>Score</th>
-                                </tr>
-                            </thead>
-                            <tbody id="custom-table-body"></tbody>
-                        </table>
+            <!-- Custom Data Management Tab -->
+            <section id="custom" class="tab-pane" aria-labelledby="nav-custom">
+                <div class="section-header">
+                    <h2>📤 Content Performance Data Management</h2>
+                </div>
+
+                <div class="data-manage-grid">
+                    <!-- Manual Data Entry -->
+                    <div class="dashboard-section card">
+                        <h3>✍️ Add Content Manually</h3>
+                        <form id="manual-data-form" class="form-container-full">
+                            <div class="form-group">
+                                <label for="manual-title">Title</label>
+                                <input type="text" id="manual-title" placeholder="Enter title" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="manual-topic">Topic</label>
+                                    <select id="manual-topic-select" required>
+                                        <option value="">Select Topic...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manual-format">Format</label>
+                                    <select id="manual-format-select" required>
+                                        <option value="">Select Format...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="manual-audience">Audience</label>
+                                    <select id="manual-audience-select" required>
+                                        <option value="">Select Audience...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manual-wordcount">Word Count</label>
+                                    <input type="number" id="manual-wordcount" min="100" value="1500" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="manual-views">Views</label>
+                                    <input type="number" id="manual-views" min="0" value="5000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manual-conversions">Conversions</label>
+                                    <input type="number" id="manual-conversions" min="0" value="150" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-submit">➕ Add Entry</button>
+                        </form>
+                    </div>
+
+                    <!-- CSV Upload -->
+                    <div class="dashboard-section card">
+                        <h3>📁 Bulk Upload Content Performance CSV</h3>
+                        <div class="upload-container">
+                            <div class="upload-zone" id="upload-zone">
+                                <span class="upload-icon">📁</span>
+                                <p>Drag and drop your performance CSV file here, or click to browse</p>
+                                <input type="file" id="csv-file" accept=".csv" style="display:none;">
+                            </div>
+                            <button id="btn-analyze-custom" class="btn btn-primary btn-submit hidden">🚀 Load and Parse File</button>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- Strategy Report Tab -->
-            <section id="strategy" class="tab-pane">
+            <section id="strategy" class="tab-pane" aria-labelledby="nav-strategy">
                 <div class="section-header">
-                    <h2>🎯 Strategy Report</h2>
-                    <button id="btn-generate-report" class="btn btn-primary">📊 Generate Report</button>
+                    <h2>🎯 Strategic Editorial Recommendations</h2>
+                    <button id="btn-generate-report" class="btn btn-primary">📊 Generate Strategy Report</button>
                 </div>
-                <div id="report-content"></div>
+                <div id="report-content" class="report-content-wrapper">
+                    <p class="empty-state-text">No strategy report has been compiled yet. Click "Generate Strategy Report" to run the Strategist and Report agents.</p>
+                </div>
             </section>
 
             <!-- Data Table Tab -->
-            <section id="datatable" class="tab-pane">
+            <section id="datatable" class="tab-pane" aria-labelledby="nav-datatable">
                 <div class="section-header">
-                    <h2>📋 Full Dataset</h2>
-                    <button id="btn-load-data" class="btn btn-primary">🔄 Load Data</button>
+                    <h2>📋 Historical Content Performance Database</h2>
+                    <button id="btn-load-data" class="btn btn-primary">🔄 Refresh Content Database</button>
                 </div>
                 <div class="table-container">
-                    <table id="data-table" class="data-table">
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Topic</th>
                                 <th>Format</th>
+                                <th>Audience</th>
+                                <th>Word Count</th>
                                 <th>Views</th>
                                 <th>Score</th>
                             </tr>
                         </thead>
-                        <tbody id="table-body"></tbody>
+                        <tbody id="table-body">
+                            <tr>
+                                <td colspan="7" style="text-align:center;color:#a0a0a0;">No data loaded. Click refresh to query the database.</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
+
+    <!-- Premium Global Footer -->
+    <footer class="global-footer">
+        <div class="footer-copy">&copy; 2026 DevPulse Content Performance Intelligence Platform</div>
+        <div class="footer-links">
+            <span>Powering Hackathon Multi-Agent Flows</span>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>

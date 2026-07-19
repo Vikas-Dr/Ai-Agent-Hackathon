@@ -21,33 +21,85 @@ logger.setLevel(logging.INFO)
 
 T = TypeVar("T", bound=BaseModel)
 
-def _mock_analyzer_response() -> str:
-    """Mock analyzer response for DevRel insights."""
+def _mock_analyzer_response(user_prompt: str) -> str:
+    """Mock analyzer response dynamic generator for DevRel insights."""
+    # Find the top topic in the prompt to make it dynamic
+    top_topic = "API Design"
+    lines = user_prompt.split('\n')
+    for line in lines:
+        if "avg_score=" in line:
+            parts = line.strip().split(':')
+            if len(parts) >= 2:
+                name = parts[0].replace("-", "").strip()
+                if name:
+                    top_topic = name
+                    break
+
     return json.dumps({
         "insights": [
-            "API Design tutorials drive 45% higher developer signups than blog posts.",
-            "Code examples with runnable snippets have 3x the engagement rate of text-only guides.",
-            "Backend developers show the strongest conversion to API console signups.",
-            "Content published after major framework releases sees 60% more views.",
-            "Tutorial-format content under 1500 words has the highest completion rate.",
-            "Authentication and OAuth guides have the highest search ranking performance.",
+            f"🎯 {top_topic} tutorials drive 45% higher developer conversions than standard documentation.",
+            "💻 Code examples with runnable snippets have 3x the engagement rate of text-only guides.",
+            "🛡️ Security and DevOps topics show the strongest long-term retention metrics.",
+            "📈 Content length analysis shows that evergreen posts (3000+ words) get 60% more shares over 90 days."
         ]
     })
 
-def _mock_predictor_response() -> str:
-    """Mock predictor response for DevRel draft scoring."""
+def _mock_predictor_response(user_prompt: str) -> str:
+    """Mock predictor response dynamic generator based on draft input."""
+    # Parse inputs from the prompt
+    title = "Proposed Content"
+    topic = "API Design"
+    fmt = "technical_blog"
+    audience = "developers"
+    word_count = 1500
+
+    for line in user_prompt.split('\n'):
+        if line.startswith("Title:"):
+            title = line.replace("Title:", "").strip()
+        elif line.startswith("Topic:"):
+            topic = line.replace("Topic:", "").strip()
+        elif line.startswith("Format:"):
+            fmt = line.replace("Format:", "").strip()
+        elif line.startswith("Audience:"):
+            audience = line.replace("Audience:", "").strip()
+        elif line.startswith("Word count:"):
+            try:
+                word_count = int(line.replace("Word count:", "").strip())
+            except:
+                pass
+
+    # Dynamic scoring rules
+    base_score = 60
+    # Length optimization
+    if 1000 <= word_count <= 4000:
+        base_score += 15
+    elif word_count > 4000:
+        base_score += 5
+    
+    # Title optimization
+    title_lower = title.lower()
+    if any(keyword in title_lower for keyword in ["tutorial", "guide", "how to", "master", "complete"]):
+        base_score += 10
+    if len(title) > 20:
+        base_score += 5
+
+    # Clamp score
+    score = min(98, max(40, base_score + (hash(title) % 11 - 5)))
+
+    suggestions = [
+        f"✓ Include more runnable code snippets tailored for the {audience} segment.",
+        f"✓ Add a troubleshooting or common errors section to increase developer trust.",
+        f"✓ Optimize the header for search rankings targeting key '{topic}' terms."
+    ]
+
     return json.dumps({
-        "predicted_score": 78,
-        "reasoning": "Similar API Design tutorials for backend developers averaged 78/100. Strong topic-format-audience alignment with high code-to-text ratio.",
-        "suggestions": [
-            "Add a runnable code example in the first 200 words to hook developers.",
-            "Include a curl command or SDK snippet for quick-start adoption.",
-            "Optimize for 'API authentication tutorial' keywords to improve search rank.",
-        ],
-        "confidence": "high",
-        "comparable_count": 12,
-        "code_quality_feedback": "Good code-to-text ratio. Consider adding error handling examples.",
-        "code_to_text_ratio": 0.25,
+        "predicted_score": score,
+        "reasoning": f"Your draft '{title}' on {topic} for {audience} shows strong semantic relevance. Word count of {word_count} is optimal. Suggestions aim to maximize conversions.",
+        "suggestions": suggestions,
+        "confidence": "high" if score >= 75 else "medium",
+        "comparable_count": 6 + (hash(topic) % 8),
+        "code_quality_feedback": "Good structuring detected.",
+        "code_to_text_ratio": 0.28
     })
 
 def _mock_generic_response() -> str:

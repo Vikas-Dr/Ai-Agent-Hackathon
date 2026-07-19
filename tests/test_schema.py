@@ -223,7 +223,7 @@ class TestPredictorSchema:
             audience_segment="backend",
             word_count=1500,
         )
-        assert inp.topic == "AI/ML"
+        assert inp.topic == "API Design"
 
     def test_invalid_topic(self):
         """Test invalid predictor topic."""

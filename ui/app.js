@@ -1,4 +1,4 @@
-// DevPulse App - Complete Functionality with Loading States
+// DevPulse App - Clean Frontend Controller
 
 class DevPulseApp {
     constructor() {
@@ -7,32 +7,19 @@ class DevPulseApp {
             formats: [],
             audiences: [],
             charts: {},
-            userContent: [],
-            customData: []
+            userContent: []
         };
         this.init();
     }
 
     init() {
         this.setupNavigation();
-        this.loadConfig();
+        this.loadConfig().then(() => {
+            // Load initial dashboard metrics and database
+            this.runAnalysis(true); 
+            this.loadData();
+        });
         this.setupEventListeners();
-    }
-
-    // ==================== LOADING HELPER ====================
-
-    showLoading(elementId, show = true) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-        if (show) {
-            el.innerHTML = '<div class="spinner">⏳ Loading...</div>';
-        }
-    }
-
-    hideLoading(elementId) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-        el.innerHTML = '';
     }
 
     // ==================== NAVIGATION ====================
@@ -50,7 +37,10 @@ class DevPulseApp {
         document.querySelectorAll('.tab-pane').forEach(pane => {
             pane.classList.remove('active');
         });
-        document.getElementById(tabName).classList.add('active');
+        const targetPane = document.getElementById(tabName);
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
 
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.classList.remove('active');
@@ -58,9 +48,14 @@ class DevPulseApp {
                 tab.classList.add('active');
             }
         });
+
+        // Auto-refresh lists when switching tabs
+        if (tabName === 'datatable') {
+            this.loadData();
+        }
     }
 
-    // ==================== CONFIG ====================
+    // ==================== CONFIG SELECTION BOOTSTRAP ====================
 
     async loadConfig() {
         try {
@@ -76,98 +71,151 @@ class DevPulseApp {
 
             this.populateSelects();
         } catch (e) {
-            console.error('Failed to load config:', e);
+            console.error('Failed to load system configs:', e);
         }
     }
 
     populateSelects() {
+        // Scorer selects
         this.populateSelect('scorer-topic', this.state.topics);
         this.populateSelect('scorer-format', this.state.formats);
         this.populateSelect('scorer-audience', this.state.audiences);
+
+        // Manual Data select dropdowns
+        this.populateSelect('manual-topic-select', this.state.topics);
+        this.populateSelect('manual-format-select', this.state.formats);
+        this.populateSelect('manual-audience-select', this.state.audiences);
     }
 
     populateSelect(elementId, options) {
         const select = document.getElementById(elementId);
         if (!select) return;
         
+        // Clear any existing options except the first placeholder
+        const firstOption = select.options[0];
+        select.innerHTML = '';
+        if (firstOption) {
+            select.appendChild(firstOption);
+        }
+
         options.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt;
-            option.textContent = opt;
+            option.textContent = opt.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // Clean labels
             select.appendChild(option);
         });
     }
 
-    // ==================== EVENT LISTENERS ====================
+    // ==================== EVENT REGISTRATION ====================
 
     setupEventListeners() {
-        // Dashboard
-        document.getElementById('btn-run-analysis').addEventListener('click', () => this.runAnalysis());
-        document.getElementById('data-input-form').addEventListener('submit', (e) => this.handleDataInput(e));
-        document.getElementById('llm-form').addEventListener('submit', (e) => this.handleLLMRequest(e));
+        // Run Analysis button on dashboard
+        const runAnalysisBtn = document.getElementById('btn-run-analysis');
+        if (runAnalysisBtn) {
+            runAnalysisBtn.addEventListener('click', () => this.runAnalysis());
+        }
 
-        // Scorer
-        document.getElementById('scorer-form').addEventListener('submit', (e) => this.scoreContent(e));
+        // Form submission for Scorer
+        const scorerForm = document.getElementById('scorer-form');
+        if (scorerForm) {
+            scorerForm.addEventListener('submit', (e) => this.scoreContent(e));
+        }
 
-        // A/B Tester
-        document.getElementById('btn-ab-test').addEventListener('click', () => this.runABTest());
+        // CSV Upload interactions
+        const uploadZone = document.getElementById('upload-zone');
+        if (uploadZone) {
+            uploadZone.addEventListener('click', () => {
+                document.getElementById('csv-file').click();
+            });
+        }
+        const csvFile = document.getElementById('csv-file');
+        if (csvFile) {
+            csvFile.addEventListener('change', (e) => this.handleCSVSelect(e));
+        }
+        const analyzeCustomBtn = document.getElementById('btn-analyze-custom');
+        if (analyzeCustomBtn) {
+            analyzeCustomBtn.addEventListener('click', () => this.uploadCSV());
+        }
 
-        // Custom Data
-        document.getElementById('upload-zone').addEventListener('click', () => {
-            document.getElementById('csv-file').click();
-        });
-        document.getElementById('csv-file').addEventListener('change', (e) => this.handleCSVSelect(e));
-        document.getElementById('btn-analyze-custom').addEventListener('click', () => this.uploadCSV());
-        document.getElementById('manual-data-form').addEventListener('submit', (e) => this.handleManualDataEntry(e));
+        // Manual Data Ingestion Form
+        const manualForm = document.getElementById('manual-data-form');
+        if (manualForm) {
+            manualForm.addEventListener('submit', (e) => this.handleManualDataEntry(e));
+        }
 
-        // Strategy
-        document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
+        // Strategy report execution
+        const reportBtn = document.getElementById('btn-generate-report');
+        if (reportBtn) {
+            reportBtn.addEventListener('click', () => this.generateReport());
+        }
 
-        // Data Table
-        document.getElementById('btn-load-data').addEventListener('click', () => this.loadData());
-
-        // Real-time preview
-        document.getElementById('input-markdown').addEventListener('input', () => this.updatePreview());
-        document.getElementById('input-title').addEventListener('input', () => this.updatePreview());
-        document.getElementById('input-topic').addEventListener('input', () => this.updatePreview());
+        // Refresh Data Database Button
+        const loadDataBtn = document.getElementById('btn-load-data');
+        if (loadDataBtn) {
+            loadDataBtn.addEventListener('click', () => this.loadData());
+        }
     }
 
-    // ==================== DASHBOARD ====================
+    // ==================== DASHBOARD & REAL PIPELINE ANALYSIS ====================
 
-    async runAnalysis() {
-        try {
-            const btn = document.getElementById('btn-run-analysis');
+    async runAnalysis(silent = false) {
+        const btn = document.getElementById('btn-run-analysis');
+        if (btn) {
             btn.disabled = true;
-            btn.textContent = '⏳ Analyzing...';
+            btn.textContent = '⏳ Run Analysis...';
+        }
 
+        try {
             const response = await fetch('/api/report', { method: 'POST' });
             const result = await response.json();
 
             if (result.analysis) {
                 const analysis = result.analysis;
                 
-                document.getElementById('metric-articles').textContent = '150';
-                document.getElementById('metric-topics').textContent = analysis.top_topics.length;
-                document.getElementById('metric-insights').textContent = analysis.insights.length;
-                document.getElementById('metric-format').textContent = analysis.top_formats[0] || '-';
+                // Update UI metric counters dynamically
+                const totalArticles = result.trace && result.trace.entries && result.trace.entries[0]
+                    ? parseInt(result.trace.entries[0].output_summary.split(' ')[0]) || 0 
+                    : 0;
 
+                document.getElementById('metric-articles').textContent = totalArticles || this.state.userContent.length || '200';
+                document.getElementById('metric-topics').textContent = analysis.top_topics ? analysis.top_topics.length : '0';
+                document.getElementById('metric-insights').textContent = analysis.insights ? analysis.insights.length : '0';
+                
+                const topFormat = analysis.top_formats && analysis.top_formats.length > 0
+                    ? (analysis.top_formats[0].format || analysis.top_formats[0])
+                    : '-';
+                document.getElementById('metric-format').textContent = topFormat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+                // Populate Insights listing card
                 const insightsList = document.getElementById('insights-list');
                 insightsList.innerHTML = '';
-                analysis.insights.forEach(insight => {
-                    const li = document.createElement('li');
-                    li.textContent = insight;
-                    insightsList.appendChild(li);
-                });
+                if (analysis.insights && analysis.insights.length > 0) {
+                    analysis.insights.forEach(insight => {
+                        const li = document.createElement('li');
+                        li.textContent = insight;
+                        insightsList.appendChild(li);
+                    });
+                } else {
+                    insightsList.innerHTML = '<li class="empty-state-text">No insights generated yet.</li>';
+                }
 
+                // Render dynamic Performance Chart based on updated data
                 this.drawTopicChart(analysis.top_topics);
+                
+                if (!silent) {
+                    this.showToast('✅ Analysis complete! Performance charts updated.', 'success');
+                }
             }
         } catch (e) {
-            console.error('Analysis failed:', e);
-            alert('❌ Analysis failed: ' + e.message);
+            console.error('Analysis execution failed:', e);
+            if (!silent) {
+                this.showToast('❌ Analysis failed: ' + e.message, 'error');
+            }
         } finally {
-            const btn = document.getElementById('btn-run-analysis');
-            btn.disabled = false;
-            btn.textContent = '🔄 Run Analysis';
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '🔄 Run Analysis';
+            }
         }
     }
 
@@ -179,148 +227,57 @@ class DevPulseApp {
             this.state.charts.topics.destroy();
         }
 
-        const data = topics || ['API Design', 'Authentication', 'Backend', 'Frontend', 'DevOps'];
-        const scores = [85, 78, 72, 65, 58];
+        // Fallback default topics if none found
+        let labels = [];
+        let scores = [];
+
+        if (topics && topics.length > 0) {
+            labels = topics.map(t => t.topic);
+            scores = topics.map(t => t.avg_score || t.performance_score);
+        } else {
+            labels = ['API Design', 'Authentication', 'Cloud Infrastructure', 'Database & Data', 'DevOps & CI/CD'];
+            scores = [85, 78, 72, 65, 58];
+        }
 
         this.state.charts.topics = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: data,
+                labels: labels,
                 datasets: [{
-                    label: 'Performance Score',
+                    label: 'Performance Score (0-100)',
                     data: scores,
-                    backgroundColor: '#00d4ff',
-                    borderColor: '#00a8cc',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(0, 212, 255, 0.45)',
+                    borderColor: '#00d4ff',
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    hoverBackgroundColor: 'rgba(0, 255, 212, 0.6)'
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        labels: { color: '#a0a0a0' }
+                        display: false
                     }
                 },
                 scales: {
                     y: {
-                        ticks: { color: '#a0a0a0' },
-                        grid: { color: '#2d3748' }
+                        min: 0,
+                        max: 100,
+                        ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } },
+                        grid: { color: '#242f3d' }
                     },
                     x: {
-                        ticks: { color: '#a0a0a0' },
-                        grid: { color: '#2d3748' }
+                        ticks: { color: '#94a3b8' },
+                        grid: { display: false }
                     }
                 }
             }
         });
     }
 
-    // ==================== DATA INPUT ====================
-
-    handleDataInput(e) {
-        e.preventDefault();
-
-        const title = document.getElementById('input-title').value;
-        const topic = document.getElementById('input-topic').value;
-        const format = document.getElementById('input-format').value;
-        const audience = document.getElementById('input-audience').value;
-        const wordcount = document.getElementById('input-wordcount').value;
-        const markdown = document.getElementById('input-markdown').value;
-
-        if (!title || !topic || !format || !audience) {
-            alert('❌ Please fill all fields');
-            return;
-        }
-
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = '⏳ Adding...';
-
-        const data = { title, topic, format, audience, wordcount, markdown };
-        this.state.userContent.push(data);
-
-        // Send to backend
-        fetch('/api/add-data', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(r => r.json())
-          .then(result => {
-              if (result.success) {
-                  alert('✅ ' + result.message);
-                  this.updatePreview();
-                  e.target.reset();
-              }
-          })
-          .catch(err => alert('❌ Error: ' + err))
-          .finally(() => {
-              btn.disabled = false;
-              btn.textContent = '📤 Add Content';
-          });
-    }
-
-    updatePreview() {
-        const title = document.getElementById('input-title').value || '(Title)';
-        const topic = document.getElementById('input-topic').value || '(Topic)';
-        const wordcount = document.getElementById('input-wordcount').value || '0';
-        const markdown = document.getElementById('input-markdown').value || '(No content yet)';
-
-        const preview = document.getElementById('preview-container');
-        document.getElementById('preview-title').textContent = title;
-        document.getElementById('preview-meta').textContent = `${topic} • ${wordcount} words`;
-        document.getElementById('preview-content').textContent = markdown;
-
-        if (title !== '(Title)' || markdown !== '(No content yet)') {
-            preview.classList.remove('hidden');
-        }
-    }
-
-    // ==================== LLM INTEGRATION ====================
-
-    async handleLLMRequest(e) {
-        e.preventDefault();
-
-        const prompt = document.getElementById('llm-prompt').value;
-        const type = document.getElementById('llm-type').value;
-        const tone = document.getElementById('llm-tone').value;
-
-        if (!prompt || !type || !tone) {
-            alert('❌ Please fill all fields');
-            return;
-        }
-
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = '⏳ Generating...';
-
-        const resultsDiv = document.getElementById('llm-results');
-        const outputDiv = document.getElementById('llm-output');
-        
-        outputDiv.innerHTML = '<p>🔄 Generating AI suggestions...</p>';
-        resultsDiv.classList.remove('hidden');
-
-        try {
-            const response = await fetch('/api/llm-suggest', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, type, tone })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                outputDiv.innerHTML = result.content;
-            } else {
-                outputDiv.innerHTML = '<p>❌ Error: ' + result.error + '</p>';
-            }
-        } catch (err) {
-            outputDiv.innerHTML = '<p>❌ Error: ' + err + '</p>';
-        } finally {
-            btn.disabled = false;
-            btn.textContent = '✨ Get Suggestions';
-        }
-    }
-
-    // ==================== SCORER ====================
+    // ==================== DRAFT PERFORMANCE SCORER ====================
 
     async scoreContent(e) {
         e.preventDefault();
@@ -332,14 +289,9 @@ class DevPulseApp {
         const wordcount = document.getElementById('scorer-wordcount').value;
         const markdown = document.getElementById('scorer-markdown').value;
 
-        if (!title || !topic || !format || !audience) {
-            alert('❌ Please fill required fields');
-            return;
-        }
-
         const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
-        btn.textContent = '⏳ Scoring...';
+        btn.textContent = '⏳ Evaluating Draft...';
 
         try {
             const response = await fetch('/api/score', {
@@ -347,7 +299,7 @@ class DevPulseApp {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     title, topic, format, audience,
-                    word_count: wordcount,
+                    word_count: parseInt(wordcount),
                     draft_markdown: markdown
                 })
             });
@@ -358,6 +310,19 @@ class DevPulseApp {
                 document.getElementById('result-score').textContent = score;
                 document.getElementById('result-reasoning').textContent = result.prediction.reasoning;
 
+                // Color code the circle border dynamically
+                const circle = document.querySelector('.score-circle');
+                if (circle) {
+                    if (score >= 75) {
+                        circle.style.borderColor = '#00ffd4';
+                    } else if (score >= 50) {
+                        circle.style.borderColor = '#ffd93d';
+                    } else {
+                        circle.style.borderColor = '#ff6b6b';
+                    }
+                }
+
+                // Render suggestions list
                 const suggestionsList = document.getElementById('result-suggestions');
                 suggestionsList.innerHTML = '';
                 result.prediction.suggestions.forEach(sug => {
@@ -367,78 +332,94 @@ class DevPulseApp {
                 });
 
                 document.getElementById('score-result').classList.remove('hidden');
+                this.showToast('🎯 Score calculated successfully!', 'success');
+            } else if (result.error) {
+                this.showToast('❌ Predictor failed: ' + result.error, 'error');
             }
         } catch (err) {
-            alert('❌ Scoring failed: ' + err);
+            this.showToast('❌ Scoring failed: ' + err.message, 'error');
         } finally {
             btn.disabled = false;
             btn.textContent = '📈 Score This Draft';
         }
     }
 
-    // ==================== A/B TESTER ====================
+    // ==================== MANUAL DATA ENTRY & FILE UPLOAD ====================
 
-    async runABTest() {
+    async handleManualDataEntry(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('manual-title').value;
+        const topic = document.getElementById('manual-topic-select').value;
+        const format = document.getElementById('manual-format-select').value;
+        const audience = document.getElementById('manual-audience-select').value;
+        const wordcount = document.getElementById('manual-wordcount').value;
+        const views = document.getElementById('manual-views').value;
+        const conversions = document.getElementById('manual-conversions').value;
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '⏳ Adding Entry...';
+
+        const data = {
+            title, topic, format, audience,
+            wordcount: parseInt(wordcount),
+            views: parseInt(views),
+            conversions: parseInt(conversions),
+            score: 75 // default starting score
+        };
+        
         try {
-            const btn = document.getElementById('btn-ab-test');
-            btn.disabled = true;
-            btn.textContent = '⏳ Testing...';
-
-            const headlines = [
-                document.querySelector('.ab-input').value,
-                document.querySelectorAll('.ab-input')[1].value,
-                document.querySelectorAll('.ab-input')[2].value
-            ];
-
-            const response = await fetch('/api/ab-test', {
+            const response = await fetch('/api/add-data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ headlines })
+                body: JSON.stringify(data)
             });
-
             const result = await response.json();
+            
             if (result.success) {
-                let html = '<h3>📊 A/B Test Results</h3>';
-                result.results.forEach((r, i) => {
-                    const bg = i === result.results.findIndex(x => x.score === Math.max(...result.results.map(y => y.score))) ? '#1a4d26' : '#2d3748';
-                    html += `<div style="background:${bg};padding:15px;margin:10px 0;border-radius:5px;"><strong>${r.headline}</strong><br>Score: ${r.score}/100</div>`;
-                });
-                html += `<h4 style="color:#00d4ff;margin-top:20px;">🏆 Winner: ${result.winner}</h4>`;
-                document.getElementById('ab-results').innerHTML = html;
-                document.getElementById('ab-results').classList.remove('hidden');
+                this.showToast('✅ Data entry added successfully!', 'success');
+                e.target.reset();
+                this.loadData();
+                this.runAnalysis(true); // silent dashboard update
+            } else {
+                this.showToast('❌ Error adding data: ' + result.error, 'error');
             }
         } catch (err) {
-            alert('❌ A/B test failed: ' + err);
+            this.showToast('❌ Error adding data: ' + err.message, 'error');
         } finally {
-            const btn = document.getElementById('btn-ab-test');
             btn.disabled = false;
-            btn.textContent = '🔀 Run A/B Test';
+            btn.textContent = '➕ Add Entry';
         }
     }
 
-    // ==================== CUSTOM DATA ====================
-
     handleCSVSelect(e) {
+        const analyzeBtn = document.getElementById('btn-analyze-custom');
+        const uploadZone = document.getElementById('upload-zone');
         if (e.target.files.length > 0) {
-            document.getElementById('btn-analyze-custom').classList.remove('hidden');
+            if (analyzeBtn) analyzeBtn.classList.remove('hidden');
+            if (uploadZone) {
+                uploadZone.style.borderColor = 'var(--accent)';
+                uploadZone.querySelector('p').textContent = `✓ Selected: ${e.target.files[0].name}`;
+            }
         }
     }
 
     async uploadCSV() {
+        const file = document.getElementById('csv-file').files[0];
+        if (!file) {
+            this.showToast('❌ Please select a CSV file first.', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btn-analyze-custom');
+        btn.disabled = true;
+        btn.textContent = '⏳ Ingesting CSV...';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
         try {
-            const file = document.getElementById('csv-file').files[0];
-            if (!file) {
-                alert('❌ Please select a file');
-                return;
-            }
-
-            const btn = document.getElementById('btn-analyze-custom');
-            btn.disabled = true;
-            btn.textContent = '⏳ Uploading...';
-
-            const formData = new FormData();
-            formData.append('file', file);
-
             const response = await fetch('/api/upload-csv', {
                 method: 'POST',
                 body: formData
@@ -446,153 +427,195 @@ class DevPulseApp {
 
             const result = await response.json();
             if (result.success) {
-                alert('✅ ' + result.message);
+                this.showToast(result.message, 'success');
                 this.loadData();
+                this.runAnalysis(true); // update dashboard silently
+                
+                // Reset upload state
+                document.getElementById('csv-file').value = '';
+                btn.classList.add('hidden');
+                document.getElementById('upload-zone').querySelector('p').textContent = 'Drag and drop your performance CSV file here, or click to browse';
+                document.getElementById('upload-zone').style.borderColor = 'var(--border-color)';
             } else {
-                alert('❌ ' + result.error);
+                this.showToast('❌ Upload failed: ' + result.error, 'error');
             }
         } catch (err) {
-            alert('❌ Upload failed: ' + err);
+            this.showToast('❌ Ingestion failed: ' + err.message, 'error');
         } finally {
-            const btn = document.getElementById('btn-analyze-custom');
             btn.disabled = false;
-            btn.textContent = '🚀 Analyze';
+            btn.textContent = '🚀 Load and Parse File';
         }
     }
 
-    handleManualDataEntry(e) {
-        e.preventDefault();
-
-        const title = document.getElementById('manual-title').value;
-        const topic = document.getElementById('manual-topic').value;
-        const format = document.getElementById('manual-format').value;
-        const views = document.getElementById('manual-views').value;
-        const score = document.getElementById('manual-score').value;
-
-        if (!title || !topic || !format) {
-            alert('❌ Please fill required fields');
-            return;
-        }
-
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = '⏳ Adding...';
-
-        const data = { title, topic, format, views: parseInt(views), score: parseInt(score) };
-        
-        fetch('/api/add-data', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(r => r.json())
-          .then(result => {
-              if (result.success) {
-                  alert('✅ Data entry added');
-                  this.addToCustomTable(data);
-                  e.target.reset();
-              }
-          })
-          .catch(err => alert('❌ Error: ' + err))
-          .finally(() => {
-              btn.disabled = false;
-              btn.textContent = '➕ Add Entry';
-          });
-    }
-
-    addToCustomTable(row) {
-        const tbody = document.getElementById('custom-table-body');
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${row.title}</td>
-            <td>${row.topic}</td>
-            <td>${row.format}</td>
-            <td>${row.views || 0}</td>
-            <td>${row.score || 75}</td>
-        `;
-        tbody.appendChild(tr);
-    }
-
-    // ==================== STRATEGY ====================
+    // ==================== STRATEGY REPORT FLOW ====================
 
     async generateReport() {
-        try {
-            const btn = document.getElementById('btn-generate-report');
-            btn.disabled = true;
-            btn.textContent = '⏳ Generating...';
+        const btn = document.getElementById('btn-generate-report');
+        btn.disabled = true;
+        btn.textContent = '⏳ Generating Report...';
 
+        try {
             const response = await fetch('/api/report', { method: 'POST' });
             const result = await response.json();
 
             if (result.report) {
                 const report = result.report;
-                let html = '<div class="report-card" style="background:#1a1f26;border:1px solid #2d3748;padding:20px;border-radius:8px;margin-top:20px;">';
-                html += '<h3 style="color:#00d4ff;margin-bottom:15px;">📊 Strategic Recommendations</h3>';
+                let html = '<div class="report-card">';
+                html += '<h3>🎯 Content Strategy Recommendations</h3>';
                 
                 if (report.summary) {
-                    html += `<p style="margin-bottom:20px;">${report.summary}</p>`;
+                    html += `<p style="margin-bottom: 24px; color: var(--text-primary); font-size: 15px; line-height: 1.6;">${report.summary}</p>`;
                 }
                 
-                if (report.create_next) {
-                    html += '<h4 style="margin-top:20px;margin-bottom:10px;">📝 Topics to Create:</h4><ul>';
-                    report.create_next.forEach(item => {
-                        const color = item.priority === 'high' ? '#ff6b6b' : item.priority === 'medium' ? '#ffd93d' : '#6bcf7f';
-                        html += `<li style="margin:8px 0;color:#e0e0e0;"><span style="color:${color};font-weight:bold;">[${item.priority.toUpperCase()}]</span> ${item.topic}</li>`;
+                // Render CONTINUE items
+                if (report.continue_items && report.continue_items.length > 0) {
+                    html += '<h4 style="color: #00ffd4; margin-top: 20px; margin-bottom: 12px;">✅ What to Continue:</h4><ul>';
+                    report.continue_items.forEach(item => {
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${item.format.replace(/_/g, ' ')})</strong>: ${item.reason}</li>`;
                     });
                     html += '</ul>';
+                }
+
+                // Render STOP items
+                if (report.stop_items && report.stop_items.length > 0) {
+                    html += '<h4 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 12px;">🛑 What to Stop / Reallocate:</h4><ul>';
+                    report.stop_items.forEach(item => {
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${item.format.replace(/_/g, ' ')})</strong>: ${item.reason}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                // Render CREATE NEXT items (Gaps)
+                if (report.create_next && report.create_next.length > 0) {
+                    html += '<h4 style="color: var(--accent); margin-top: 20px; margin-bottom: 12px;">🚀 Content Gaps & Gaps to Create Next:</h4><ul>';
+                    report.create_next.forEach(item => {
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic}</strong> (Target: ${item.target_audience}, Recommended format: ${item.suggested_format.replace(/_/g, ' ')}): ${item.reasoning}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                // Render Execution trace timeline dynamically
+                if (result.trace && result.trace.entries) {
+                    html += '<div class="trace-timeline">';
+                    html += '<h4 style="color: var(--text-secondary); margin-bottom: 16px; font-size:14px; text-transform:uppercase;">📝 Multi-Agent Trace Log:</h4>';
+                    result.trace.entries.forEach(step => {
+                        const icon = step.status === 'success' ? '✅' : '❌';
+                        html += `
+                            <div class="trace-step">
+                                <span style="font-weight: 700; color:#fff;">[${step.agent}]</span> 
+                                <span style="color:${step.status === 'success' ? '#00ffd4' : '#ff6b6b'}; font-size:12px;">${icon} ${step.status.toUpperCase()}</span>
+                                <span style="color: var(--text-secondary); font-size:12px;"> (${step.duration_seconds.toFixed(3)}s)</span>
+                                <div style="color: var(--text-secondary); font-size: 12px; margin-top: 4px;">In: ${step.input_summary} | Out: ${step.output_summary}</div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
                 }
                 
                 html += '</div>';
                 document.getElementById('report-content').innerHTML = html;
+                this.showToast('📋 Strategy report compiled successfully!', 'success');
             }
         } catch (err) {
-            alert('❌ Report generation failed: ' + err);
+            this.showToast('❌ Report generation failed: ' + err.message, 'error');
         } finally {
-            const btn = document.getElementById('btn-generate-report');
             btn.disabled = false;
-            btn.textContent = '📊 Generate Report';
+            btn.textContent = '📊 Generate Strategy Report';
         }
     }
 
-    // ==================== DATA TABLE ====================
+    // ==================== DATA DATABASE VIEW ====================
 
     async loadData() {
-        try {
-            const btn = document.getElementById('btn-load-data');
+        const btn = document.getElementById('btn-load-data');
+        if (btn) {
             btn.disabled = true;
             btn.textContent = '⏳ Loading...';
+        }
 
-            const response = await fetch('/api/data?limit=20&offset=0');
+        try {
+            const response = await fetch('/api/data?limit=25&offset=0');
             const result = await response.json();
 
             const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
+            if (tbody) {
+                tbody.innerHTML = '';
 
-            if (result.rows && result.rows.length > 0) {
-                result.rows.forEach(row => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${row.title}</td>
-                        <td>${row.topic}</td>
-                        <td>${row.format}</td>
-                        <td>${row.views || 0}</td>
-                        <td>${row.performance_score || 75}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } else {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#a0a0a0;">No data available</td></tr>';
+                if (result.rows && result.rows.length > 0) {
+                    result.rows.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="font-weight:600; color:#fff;">${row.title}</td>
+                            <td><span class="header-badge" style="border:none; padding:2px 8px; font-size:11px;">${row.topic}</span></td>
+                            <td>${row.format.replace(/_/g, ' ')}</td>
+                            <td>${row.audience_segment || row.audience || 'developers'}</td>
+                            <td style="font-family:'JetBrains Mono';">${row.word_count || row.wordcount || 1500}</td>
+                            <td style="font-family:'JetBrains Mono'; color:var(--accent); font-weight:600;">${(row.views || 0).toLocaleString()}</td>
+                            <td style="font-family:'JetBrains Mono'; font-weight:700; color:${row.performance_score >= 75 ? '#00ffd4' : row.performance_score >= 50 ? '#ffd93d' : '#ff6b6b'}">${row.performance_score || 75}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#a0a0a0;">No content performance data found in database.</td></tr>';
+                }
             }
         } catch (err) {
-            alert('❌ Data loading failed: ' + err);
+            this.showToast('❌ Database load failed: ' + err.message, 'error');
         } finally {
-            const btn = document.getElementById('btn-load-data');
-            btn.disabled = false;
-            btn.textContent = '🔄 Load Data';
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '🔄 Refresh Content Database';
+            }
         }
+    }
+
+    // ==================== UI TOAST NOTIFICATION ====================
+
+    showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '24px';
+        toast.style.right = '24px';
+        toast.style.padding = '14px 24px';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+        toast.style.zIndex = '9999';
+        toast.style.fontSize = '14px';
+        toast.style.fontWeight = '600';
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+
+        if (type === 'success') {
+            toast.style.backgroundColor = '#13221b';
+            toast.style.border = '1px solid #00ffd4';
+            toast.style.color = '#00ffd4';
+        } else {
+            toast.style.backgroundColor = '#2c1318';
+            toast.style.border = '1px solid #ff6b6b';
+            toast.style.color = '#ff6b6b';
+        }
+
+        document.body.appendChild(toast);
+        toast.textContent = message;
+
+        // Force reflow
+        toast.offsetHeight;
+
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3500);
     }
 }
 
-// Initialize on page load
+// Instantiate on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     new DevPulseApp();
 });

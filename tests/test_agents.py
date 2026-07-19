@@ -119,7 +119,7 @@ class TestPredictorAgent:
             dataframe=dataframe,
             title="Unknown",
             topic="API Design",
-            format="podcast",
+            format="tutorial",
             audience_segment="architects",
             word_count=10000,
         )
@@ -173,7 +173,7 @@ class TestOrchestrator:
         result = score_draft(
             title="Test Article",
             topic="API Design",
-            fmt="blog",
+            fmt="technical_blog",
             audience_segment="backend",
             word_count=1500,
             data_path=str(DATA_PATH),

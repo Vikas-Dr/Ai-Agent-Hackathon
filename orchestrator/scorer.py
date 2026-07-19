@@ -52,14 +52,14 @@ def score_draft(
 
     # ==================== COLLECTOR ====================
     logger.info("Collecting historical data...")
-    collector = CollectorAgent()
-    collector_result, collector_duration, collector_status = collector.execute(
-        dataframe=None, data_path=data_path
-    )
+    collector = CollectorAgent(data_path=data_path)
+    collector_result, collector_duration, collector_status = collector.execute()
 
-    trace.log(
-        stage="Collector",
-        duration=collector_duration,
+    trace.add(
+        agent="CollectorAgent",
+        input_summary=f"CSV: {data_path or DATA_PATH}",
+        output_summary=f"{collector_result.get('valid_rows', 0)} rows, {collector_result.get('dropped_rows', 0)} dropped",
+        duration_seconds=collector_duration,
         status=collector_status,
     )
 
@@ -99,7 +99,9 @@ def score_draft(
     logger.info("Predicting performance...")
     predictor = PredictorAgent()
     prediction, predictor_duration, predictor_status = predictor.execute(
-
+        dataframe=dataframe,
+        title=title,
+        topic=topic,
         format=fmt,
         audience_segment=audience_segment,
         word_count=word_count,
@@ -109,7 +111,7 @@ def score_draft(
     trace.add(
         agent="PredictorAgent",
         input_summary=f"{title} ({topic}/{fmt}/{audience_segment})",
-        output_summary=f"Score: {prediction.predicted_score}, Comparable: {prediction.comparable_count}",
+        output_summary=f"Score: {prediction.predicted_score if predictor_status == 'success' else 0}, Comparable: {prediction.comparable_count if predictor_status == 'success' else 0}",
         duration_seconds=predictor_duration,
         status=predictor_status,
     )
