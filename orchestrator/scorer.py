@@ -25,35 +25,12 @@ def score_draft(
     word_count: int,
     data_path: str | None = None,
     draft_markdown: str | None = None,
+    asset_path: str | None = None,
 ) -> dict[str, Any]:
     """
     Score a draft piece of content.
 
     Args:
-
-        # Multimodal asset analysis
-        asset_feedback = ""
-        if asset_path:
-            from utils.multimodal_analyzer import (
-                analyze_screenshot, analyze_video_frame, 
-                generate_visual_feedback, multimodal_scoring_boost
-            )
-            from pathlib import Path
-            
-            asset_ext = Path(asset_path).suffix.lower()
-            if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"]:
-                asset_analysis = analyze_screenshot(asset_path)
-            elif asset_ext in [".mp4", ".mov", ".avi", ".webm"]:
-                asset_analysis = analyze_video_frame(asset_path)
-            else:
-                asset_analysis = {"error": "Unsupported asset type"}
-            
-            asset_feedback = generate_visual_feedback(
-                "image" if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"] else "video",
-                asset_analysis
-            )
-            logger.info(f"Multimodal analysis complete: {asset_ext}")
-
         title: Content title.
         topic: Content topic.
         fmt: Content format.
@@ -61,6 +38,7 @@ def score_draft(
         word_count: Content length.
         data_path: Path to historical data (defaults to config.DATA_PATH).
         draft_markdown: Optional markdown draft for code analysis.
+        asset_path: Optional path to screenshot/video asset.
 
     Returns:
         Dictionary with prediction and trace.
@@ -73,15 +51,15 @@ def score_draft(
     logger.info("=" * 60)
 
     # ==================== COLLECTOR ====================
-    logger.info("Loading historical data...")
-    collector = CollectorAgent(data_path=data_path or str(DATA_PATH))
-    collector_result, collector_duration, collector_status = collector.execute()
+    logger.info("Collecting historical data...")
+    collector = CollectorAgent()
+    collector_result, collector_duration, collector_status = collector.execute(
+        dataframe=None, data_path=data_path
+    )
 
-    trace.add(
-        agent="CollectorAgent",
-        input_summary=f"CSV: {data_path or DATA_PATH}",
-        output_summary=f"{collector_result['valid_rows']} rows loaded",
-        duration_seconds=collector_duration,
+    trace.log(
+        stage="Collector",
+        duration=collector_duration,
         status=collector_status,
     )
 
@@ -93,10 +71,34 @@ def score_draft(
         }
 
     dataframe = collector_result["dataframe"]
+    
+    # Multimodal asset analysis
+    asset_feedback = ""
+    if asset_path:
+        from utils.multimodal_analyzer import (
+            analyze_screenshot, analyze_video_frame, 
+            generate_visual_feedback, multimodal_scoring_boost
+        )
+        from pathlib import Path
+        
+        asset_ext = Path(asset_path).suffix.lower()
+        if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"]:
+            asset_analysis = analyze_screenshot(asset_path)
+        elif asset_ext in [".mp4", ".mov", ".avi", ".webm"]:
+            asset_analysis = analyze_video_frame(asset_path)
+        else:
+            asset_analysis = {"error": "Unsupported asset type"}
+        
+        asset_feedback = generate_visual_feedback(
+            "image" if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"] else "video",
+            asset_analysis
+        )
+        logger.info(f"Multimodal analysis complete: {asset_ext}")
 
     # ==================== PREDICTOR ====================
     logger.info("Predicting performance...")
     predictor = PredictorAgent()
+    prediction, predictor_duration, predictor_status = predictor.execute(
 
         format=fmt,
         audience_segment=audience_segment,
