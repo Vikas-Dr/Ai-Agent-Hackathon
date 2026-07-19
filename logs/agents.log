@@ -1971,3 +1971,938 @@ Predicting for: AI/ML/blog/developers
 Found 30 comparable rows
 ✓ LLM predicted score=78, confidence=high (with Pydantic validation)
 PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.04s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Found 35 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Leadership', 'Backend', 'Security', 'AI/ML', 'Cloud', 'Platform', 'Data Engineering', 'Mobile', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Leadership', 'Backend', 'Security', 'AI/ML', 'Cloud', 'Platform', 'Data Engineering', 'Mobile', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Leadership', 'Backend', 'Security', 'AI/ML', 'Cloud', 'Platform', 'Data Engineering', 'Mobile', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.04s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+Found 30 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=45, confidence=high
+✓ Statistical fallback: score=45, confidence=high
+PredictorAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Predicting for: AI/ML/podcast/executives
+Found 35 comparable rows
+Found 35 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=44, confidence=high
+✓ Statistical fallback: score=44, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.04s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+Found 30 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=45, confidence=high
+✓ Statistical fallback: score=45, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Predicting for: AI/ML/podcast/executives
+Found 35 comparable rows
+Found 35 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=44, confidence=high
+✓ Statistical fallback: score=44, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Frontend', 'Data Engineering', 'Platform', 'Security', 'Mobile', 'Cloud', 'Backend', 'Leadership', 'AI/ML'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Leadership (37.1)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Frontend', 'Data Engineering', 'Platform', 'Security', 'Mobile', 'Cloud', 'Backend', 'Leadership', 'AI/ML'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Leadership (37.1)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ Computed aggregations: 10 topics, 6 formats
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+LLM insight generation failed: 'str' object has no attribute 'top_topics' and no __dict__ for setting new attributes, using fallback insights
+✓ Generated 6 fallback insights
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'DevOps', 'Frontend', 'Data Engineering', 'Platform', 'Security', 'Mobile', 'Cloud', 'Backend', 'Leadership', 'AI/ML'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Leadership (37.1)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+Found 30 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=45, confidence=high
+✓ Statistical fallback: score=45, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.04s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+Found 30 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=45, confidence=high
+✓ Statistical fallback: score=45, confidence=high
+PredictorAgent completed successfully in 0.00s
+Predicting for: Leadership/whitepaper/executives
+Predicting for: Leadership/whitepaper/executives
+Found 17 comparable rows
+Found 17 comparable rows
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+LLM prediction failed: 'str' object has no attribute 'predicted_score', using statistical fallback
+✓ Statistical fallback: score=42, confidence=medium
+✓ Statistical fallback: score=42, confidence=medium
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+CollectorAgent failed with error: 'views'
+Traceback (most recent call last):
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/base_agent.py", line 60, in execute
+    result = self.run(**kwargs)
+  File "/Users/Dev/Ai-Agent-Hackathon/agents/collector.py", line 141, in run
+    PERFORMANCE_WEIGHTS["views"] * views_norm
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'views'

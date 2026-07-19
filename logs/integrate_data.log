@@ -110,3 +110,39 @@ DATASET VERIFICATION
 ✓ Wrote 200 rows to data/sample_content_data.csv
 ✓ Wrote 200 rows to assets/data/hackernews_export.csv
 ✓ Data integration complete
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...
+✓ Fetched 200 story IDs
+✓ Fetched 200 stories from HN API
+✓ Transformed 200 to valid rows
+============================================================
+DATASET VERIFICATION
+============================================================
+✓ Total rows: 200
+✓ All required columns present: views, engagement_rate, avg_time_on_page, conversions, search_rank
+✓ Topic distribution:
+  API Design: 20
+  Authentication: 20
+  Cloud Infrastructure: 20
+  Database & Data: 21
+  DevOps & CI/CD: 20
+  Frontend Frameworks: 20
+  Mobile Development: 20
+  Python & Data Science: 20
+  Serverless & Edge: 19
+  Web Security: 20
+✓ Format distribution:
+  sample_project: 21
+  technical_blog: 175
+  tutorial: 2
+  webinar: 2
+✓ Sample titles:
+  - Transcribe.cpp
+  - Speech Recognition and TTS in less than 500kb
+  - FDA approves new kind of cholesterol pill
+  - Better and Cheaper Than IPTV
+  - Mathematicians still don't know the fastest way to multiply 
+============================================================
+✓ Wrote 200 rows to data/sample_content_data.csv
+✓ Wrote 200 rows to assets/data/hackernews_export.csv
+✓ Data integration complete

@@ -4,32 +4,32 @@
       "agent": "CollectorAgent",
       "input_summary": "CSV: data/sample_content_data.csv",
       "output_summary": "200 rows, 0 dropped",
-      "duration_seconds": 0.020694732666015625,
+      "duration_seconds": 0.02042531967163086,
       "status": "success"
     },
     {
       "agent": "AnalyzerAgent",
       "input_summary": "200 rows",
       "output_summary": "6 insights, 10 topics",
-      "duration_seconds": 0.008092164993286133,
+      "duration_seconds": 0.011947154998779297,
       "status": "success"
     },
     {
       "agent": "StrategistAgent",
       "input_summary": "Analysis output",
       "output_summary": "11 gaps identified",
-      "duration_seconds": 0.0004451274871826172,
+      "duration_seconds": 0.0005171298980712891,
       "status": "success"
     },
     {
       "agent": "ReportAgent",
       "input_summary": "Analysis + gaps",
       "output_summary": "0 continue, 1 stop, 11 create",
-      "duration_seconds": 0.0005431175231933594,
+      "duration_seconds": 0.0005776882171630859,
       "status": "success"
     }
   ],
-  "total_duration_seconds": 0.03106,
+  "total_duration_seconds": 0.034679,
   "entry_count": 4,
-  "timestamp": "2026-07-19T10:01:24.867723"
+  "timestamp": "2026-07-19T10:08:33.325321"
 }

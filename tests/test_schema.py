@@ -30,11 +30,11 @@ class TestRawContentRow:
         """Test valid raw content row."""
         d = date.today() - timedelta(days=30)
         row = RawContentRow(
-            title="Test Article",
-            url="https://example.com/test",
-            topic="AI/ML",
-            format="blog",
-            audience_segment="developers",
+            title="Building Secure APIs",
+            url="https://example.com/secure-apis",
+            topic="API Design",
+            format="technical_blog",
+            audience_segment="backend",
             word_count=1000,
             publish_date=d,
             views=100,
@@ -43,7 +43,7 @@ class TestRawContentRow:
             conversions=5,
             search_rank=10,
         )
-        assert row.title == "Test Article"
+        assert row.title == "Building Secure APIs"
         assert row.views == 100
 
     def test_invalid_url(self):
@@ -53,9 +53,9 @@ class TestRawContentRow:
             RawContentRow(
                 title="Test",
                 url="not-a-url",  # No http/https
-                topic="AI/ML",
-                format="blog",
-                audience_segment="developers",
+                topic="API Design",
+                format="technical_blog",
+                audience_segment="backend",
                 word_count=1000,
                 publish_date=d,
                 views=100,
@@ -72,8 +72,8 @@ class TestRawContentRow:
                 title="Test",
                 url="https://example.com",
                 topic="InvalidTopic",
-                format="blog",
-                audience_segment="developers",
+                format="technical_blog",
+                audience_segment="backend",
                 word_count=1000,
                 publish_date=d,
                 views=100,
@@ -89,9 +89,9 @@ class TestRawContentRow:
             RawContentRow(
                 title="Test",
                 url="https://example.com",
-                topic="AI/ML",
+                topic="API Design",
                 format="invalid",
-                audience_segment="developers",
+                audience_segment="backend",
                 word_count=1000,
                 publish_date=d,
                 views=100,
@@ -107,9 +107,9 @@ class TestRawContentRow:
             RawContentRow(
                 title="Test",
                 url="https://example.com",
-                topic="AI/ML",
-                format="blog",
-                audience_segment="developers",
+                topic="API Design",
+                format="technical_blog",
+                audience_segment="backend",
                 word_count=1000,
                 publish_date=d,
                 views=100,
@@ -125,9 +125,9 @@ class TestRawContentRow:
             RawContentRow(
                 title="Test",
                 url="https://example.com",
-                topic="AI/ML",
-                format="blog",
-                audience_segment="developers",
+                topic="API Design",
+                format="technical_blog",
+                audience_segment="backend",
                 word_count=1000,
                 publish_date=d,
                 views=-100,
@@ -142,9 +142,9 @@ class TestRawContentRow:
         row = RawContentRow(
             title="Test",
             url="https://example.com",
-            topic="AI/ML",
-            format="blog",
-            audience_segment="developers",
+            topic="API Design",
+            format="technical_blog",
+            audience_segment="backend",
             word_count=1000,
             publish_date=d,
             views=100,
@@ -165,9 +165,9 @@ class TestCleanedContentRow:
         row = CleanedContentRow(
             title="Test",
             url="https://example.com",
-            topic="AI/ML",
-            format="blog",
-            audience_segment="developers",
+            topic="API Design",
+            format="technical_blog",
+            audience_segment="backend",
             word_count=1500,
             publish_date=d,
             views=1000,
@@ -186,23 +186,23 @@ class TestCleanedContentRow:
         """Test length bucket categorization."""
         d = date.today()
         short = CleanedContentRow(
-            title="Short", url="https://x.com", topic="AI/ML", format="blog",
-            audience_segment="developers", word_count=300, publish_date=d,
+            title="Short", url="https://x.com", topic="API Design", format="technical_blog",
+            audience_segment="backend", word_count=300, publish_date=d,
             views=100, engagement_rate=0.1, avg_time_on_page=60, conversions=5
         )
         medium = CleanedContentRow(
-            title="Medium", url="https://x.com", topic="AI/ML", format="blog",
-            audience_segment="developers", word_count=1000, publish_date=d,
+            title="Medium", url="https://x.com", topic="API Design", format="technical_blog",
+            audience_segment="backend", word_count=1000, publish_date=d,
             views=100, engagement_rate=0.1, avg_time_on_page=60, conversions=5
         )
         long = CleanedContentRow(
-            title="Long", url="https://x.com", topic="AI/ML", format="blog",
-            audience_segment="developers", word_count=2500, publish_date=d,
+            title="Long", url="https://x.com", topic="API Design", format="technical_blog",
+            audience_segment="backend", word_count=2500, publish_date=d,
             views=100, engagement_rate=0.1, avg_time_on_page=60, conversions=5
         )
         evergreen = CleanedContentRow(
-            title="Evergreen", url="https://x.com", topic="AI/ML", format="blog",
-            audience_segment="developers", word_count=5000, publish_date=d,
+            title="Evergreen", url="https://x.com", topic="API Design", format="technical_blog",
+            audience_segment="backend", word_count=5000, publish_date=d,
             views=100, engagement_rate=0.1, avg_time_on_page=60, conversions=5
         )
         assert short.length_bucket == "short"
@@ -218,9 +218,9 @@ class TestPredictorSchema:
         """Test valid predictor input."""
         inp = PredictorInput(
             title="Test",
-            topic="AI/ML",
-            format="blog",
-            audience_segment="developers",
+            topic="API Design",
+            format="technical_blog",
+            audience_segment="backend",
             word_count=1500,
         )
         assert inp.topic == "AI/ML"
@@ -231,8 +231,8 @@ class TestPredictorSchema:
             PredictorInput(
                 title="Test",
                 topic="Invalid",
-                format="blog",
-                audience_segment="developers",
+                format="technical_blog",
+                audience_segment="backend",
                 word_count=1500,
             )
 
@@ -291,7 +291,7 @@ class TestReportOutput:
             period="Q1",
             summary="Test summary",
             continue_items=[
-                ContinueItem(topic="AI/ML", format="blog", reason="Test")
+                ContinueItem(topic="API Design", format="technical_blog", reason="Test")
             ],
             stop_items=[],
             create_next=[],
@@ -307,8 +307,8 @@ class TestAnalyzerOutput:
         """Test valid analyzer output."""
         output = AnalyzerOutput(
             insights=["insight1"],
-            top_topics=[TopicBreakdown(topic="AI/ML", avg_score=50.0, count=10)],
-            top_formats=[FormatBreakdown(format="blog", avg_score=50.0, count=10)],
+            top_topics=[TopicBreakdown(topic="API Design", avg_score=50.0, count=10)],
+            top_formats=[FormatBreakdown(format="technical_blog", avg_score=50.0, count=10)],
             audience_analysis=[
                 AudienceBreakdown(segment="developers", avg_score=50.0, count=10)
             ],

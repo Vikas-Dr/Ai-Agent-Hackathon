@@ -1,6 +1,7 @@
 """
-Strategist agent for ContentPulse.
-Identifies content gaps and opportunities.
+Strategist agent for ContentPulse — DevRel Specialization.
+Identifies content gaps and opportunities for developer audience.
+Focuses on emerging developer tools and framework coverage.
 """
 
 import logging
@@ -13,13 +14,14 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
 logger.setLevel(logging.INFO)
 
-TRENDING_TOPICS = [
-    "FinOps",
-    "AI Agents",
-    "Platform Engineering",
-    "WebAssembly",
-    "Edge Computing",
-    "Green Software",
+# Emerging DevRel Topics: developer platforms/frameworks with coverage gaps
+TRENDING_DEVREL_TOPICS = [
+    "AI/ML APIs & SDKs",
+    "Vector Databases",
+    "Rust Web Frameworks",
+    "GraphQL Subscriptions",
+    "Observability Platforms",
+    "API Rate Limiting Patterns",
 ]
 
 
@@ -27,18 +29,23 @@ class StrategistAgent(BaseAgent):
     """Identifies content gaps and strategic opportunities."""
 
     def __init__(self) -> None:
-        """Initialize strategist agent."""
+        """Initialize DevRel strategist agent."""
         super().__init__()
 
     def run(self, analysis: AnalyzerOutput | None = None) -> StrategistOutput:
         """
-        Identify content gaps and opportunities.
+        Identify developer content gaps and opportunities.
+        
+        Detects:
+        - Emerging technologies without coverage
+        - Underperforming developer specializations
+        - Framework/platform gaps that matter to APIs/DevOps/Security
 
         Args:
             analysis: AnalyzerOutput from AnalyzerAgent.
 
         Returns:
-            StrategistOutput with gaps and reasons.
+            StrategistOutput with gaps and reasons for developer relations.
         """
         if analysis is None:
             raise ValueError("analysis is required")

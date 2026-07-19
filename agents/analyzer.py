@@ -1,6 +1,7 @@
 """
-Analyzer agent for ContentPulse.
-Analyzes content performance across multiple dimensions.
+Analyzer agent for ContentPulse — DevRel Specialization.
+Analyzes developer content performance by topic, format, and specialization.
+Focuses on API conversions, GitHub engagement, and keyword rankings.
 Uses Pydantic structured output validation.
 """
 
@@ -23,32 +24,33 @@ from llm import call_llm
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
 logger.setLevel(logging.INFO)
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.FileHandler("logs/agents.log"))
-logger.setLevel(logging.INFO)
 
 
 class AnalyzerAgent(BaseAgent):
-    """Analyzes content performance across multiple dimensions."""
+    """Analyzes developer content performance across topics, formats, and specializations."""
 
     def __init__(self) -> None:
-        """Initialize analyzer agent."""
+        """Initialize DevRel analyzer agent."""
         super().__init__()
 
     def run(self, dataframe: pd.DataFrame | None = None) -> AnalyzerOutput:
         """
-        Analyze content performance.
+        Analyze developer content performance.
+        
+        Metrics analyzed:
+        - Views: Developer article pageviews
+        - Engagement: GitHub star/fork interaction rate
+        - Conversions: API key creations or console signups (PRIMARY)
+        - Keywords: Developer keyword rankings
 
         Args:
-            dataframe: Input DataFrame from CollectorAgent.
+            dataframe: Input DataFrame from CollectorAgent with DevRel metrics.
 
         Returns:
-            AnalyzerOutput with insights and breakdowns.
+            AnalyzerOutput with insights focused on developer conversion patterns.
         """
         if dataframe is None or dataframe.empty:
             raise ValueError("dataframe is required and cannot be empty")
-
-        # ==================== STEP 1: VECTORIZED AGGREGATIONS ====================
 
         # Topic analysis
         topic_agg = (
@@ -192,12 +194,16 @@ class AnalyzerAgent(BaseAgent):
         # ==================== STEP 3: LLM CALL ====================
 
         system_prompt = (
-            "You are a content analytics expert. Return JSON matching the schema."
-            " Each insight is one sentence grounded in the data, actionable for editorial decisions."
+            "You are a DevRel strategist analyzing developer content performance. "
+            "Return JSON insights focused on: (1) API signups/conversions, (2) GitHub engagement, "
+            "(3) developer keyword rankings, (4) topic-format alignment for developers. "
+            "Each insight is one sentence, grounded in data, and actionable for developer relations decisions."
         )
         user_prompt = (
-            f"Aggregated data:\n{summary}\n\n"
-            "Return 4-6 insights about content performance patterns."
+            f"DevRel Performance Data:\n{summary}\n\n"
+            "Return 4-6 insights about developer content performance patterns. "
+            "Prioritize conversion metrics (API signups), developer specialization engagement, "
+            "and topic coverage gaps that matter to frontend/backend/devops/architect audiences."
         )
 
         try:

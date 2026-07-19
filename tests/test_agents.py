@@ -103,9 +103,9 @@ class TestPredictorAgent:
         result, _, status = predictor.execute(
             dataframe=dataframe,
             title="AI/ML Article",
-            topic="AI/ML",
-            format="blog",
-            audience_segment="developers",
+            topic="API Design",
+            format="technical_blog",
+            audience_segment="backend",
             word_count=1500,
         )
         assert status == "success"
@@ -118,9 +118,9 @@ class TestPredictorAgent:
         result, _, status = predictor.execute(
             dataframe=dataframe,
             title="Unknown",
-            topic="AI/ML",
+            topic="API Design",
             format="podcast",
-            audience_segment="executives",
+            audience_segment="architects",
             word_count=10000,
         )
         assert status == "success"
@@ -172,9 +172,9 @@ class TestOrchestrator:
 
         result = score_draft(
             title="Test Article",
-            topic="AI/ML",
+            topic="API Design",
             fmt="blog",
-            audience_segment="developers",
+            audience_segment="backend",
             word_count=1500,
             data_path=str(DATA_PATH),
         )

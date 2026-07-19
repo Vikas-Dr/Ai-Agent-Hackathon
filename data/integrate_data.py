@@ -28,18 +28,18 @@ HN_NEWS_BASE = "https://news.ycombinator.com/item?id="
 STORIES_TO_FETCH = 200
 REQUEST_TIMEOUT = 10
 
-# Topic classification keywords
+# DevRel Topic classification keywords for developer content
 TOPIC_KEYWORDS = {
-    "AI/ML": r"AI|ML|machine learning|neural|GPT|LLM|chatgpt|deep learning|openai|anthropic|gemini",
-    "DevOps": r"kubernetes|docker|devops|ci/cd|deploy|terraform|ansible|gitops",
-    "Cloud": r"cloud|aws|gcp|azure|serverless|lambda|ec2|s3",
-    "Security": r"security|privacy|hack|crypt|vulnerability|zero.day|malware|breach",
-    "Data Engineering": r"data|database|sql|etl|pipeline|spark|kafka|airflow|warehouse",
-    "Frontend": r"react|vue|angular|frontend|css|javascript|typescript|ui|web",
-    "Backend": r"backend|api|microservice|graphql|rest|rust|go|golang",
-    "Mobile": r"mobile|ios|android|app|swift|kotlin|flutter",
-    "Platform": r"platform|infra|infrastructure|observability|monitoring",
-    "Leadership": r"management|leadership|culture|team|career|hiring|remote",
+    "API Design": r"API|REST|GraphQL|gRPC|endpoint|schema|OpenAPI|SDK",
+    "Authentication": r"auth|OAuth|JWT|SAML|password|login|SSO|MFA",
+    "Cloud Infrastructure": r"cloud|AWS|GCP|Azure|serverless|lambda|deployment",
+    "Database & Data": r"database|SQL|NoSQL|PostgreSQL|MongoDB|Redis|data",
+    "DevOps & CI/CD": r"DevOps|CI/CD|Docker|Kubernetes|pipeline|deployment|automation",
+    "Frontend Frameworks": r"React|Vue|Angular|Frontend|JavaScript|TypeScript|CSS",
+    "Mobile Development": r"mobile|iOS|Android|Flutter|Swift|Kotlin|app",
+    "Python & Data Science": r"Python|Django|FastAPI|Pandas|NumPy|ML|data science",
+    "Web Security": r"security|XSS|CSRF|SSL|TLS|encryption|vulnerability",
+    "Serverless & Edge": r"serverless|edge|Lambda|Cloudflare|function|CDN",
 }
 
 
@@ -163,36 +163,38 @@ def classify_topic(title: str, topic_counts: dict[str, int]) -> str:
 
 
 def classify_format(url: str, title: str) -> str:
-    """Determine content format from URL and title."""
+    """Determine developer content format from URL and title."""
     url_lower = url.lower()
     title_lower = title.lower()
 
-    if any(
-        x in url_lower for x in ["youtube.com", "youtu.be"]
-    ) or "video" in title_lower:
-        return "video"
-    elif "arxiv.org" in url_lower or any(
-        x in title_lower for x in ["research", "paper"]
-    ):
-        return "whitepaper"
-    elif "github.com" in url_lower or "case study" in title_lower:
+    # Map to DevRel formats: technical_blog, tutorial, code_example, documentation, case_study, webinar, sample_project
+    if any(x in url_lower for x in ["youtube.com", "youtu.be", "webinar"]) or "webinar" in title_lower:
+        return "webinar"
+    elif "github.com" in url_lower or "code" in title_lower or "example" in title_lower:
+        return "code_example" if "example" in title_lower else "sample_project"
+    elif any(x in title_lower for x in ["tutorial", "howto", "how-to", "guide"]):
+        return "tutorial"
+    elif any(x in url_lower for x in ["docs.", "documentation", "api-ref"]) or "documentation" in title_lower:
+        return "documentation"
+    elif "case study" in title_lower or "success" in title_lower:
         return "case_study"
-    elif "substack" in url_lower or "newsletter" in title_lower:
-        return "newsletter"
-    elif "podcast" in url_lower or "spotify" in url_lower:
-        return "podcast"
     else:
-        return "blog"
+        # Default to technical blog
+        return "technical_blog"
 
 
 def classify_audience(topic: str) -> str:
-    """Determine audience segment by topic."""
-    if topic == "Leadership":
-        return "managers"
-    elif random.random() < 0.15:
-        return random.choice(["executives", "general_tech"])
+    """Determine developer specialization by topic."""
+    # Map topics to developer specializations (frontend, backend, devops, architects)
+    if any(x in topic.lower() for x in ["frontend", "mobile", "web"]):
+        return "frontend"
+    elif any(x in topic.lower() for x in ["backend", "api", "database", "python"]):
+        return "backend"
+    elif any(x in topic.lower() for x in ["devops", "cloud", "infrastructure", "serverless"]):
+        return "devops"
     else:
-        return "developers"
+        # Architecture and platform roles
+        return random.choice(["architects", "backend"]) if random.random() < 0.7 else "architects"
 
 
 # ==================== TRANSFORMATION ====================
