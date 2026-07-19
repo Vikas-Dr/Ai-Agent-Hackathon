@@ -4,15 +4,18 @@ Predicts content performance based on comparable historical data.
 Uses Pydantic structured output validation.
 """
 
-import json
 import logging
 from typing import Any
 
 import pandas as pd
 
 from agents.base_agent import BaseAgent
-from data.schema import PredictorInput, PredictorOutput, PredictorStructuredOutput
+from data.schema import PredictorInput, PredictorOutput
 from llm import call_llm
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.FileHandler("logs/agents.log"))
+logger.setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
@@ -130,7 +133,7 @@ class PredictorAgent(BaseAgent):
         # ==================== STEP 4: LLM CALL ====================
 
         system_prompt = (
-            'You are a content predictor expert. Predict content performance with structured reasoning.'
+            "You are a content predictor expert. Return JSON matching the PredictorOutput schema."
         )
         user_prompt = (
             f"Proposed content:\n"
@@ -144,45 +147,21 @@ class PredictorAgent(BaseAgent):
         )
 
         try:
-            # Use Pydantic structured output validation
-            response_text = call_llm(
-                system_prompt, 
-                user_prompt,
-                response_schema=PredictorStructuredOutput,
+            # call_llm returns validated PredictorOutput object
+            prediction_output = call_llm(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                response_schema=PredictorOutput,
                 max_tokens=400
             )
-            response_obj = json.loads(response_text)
-
-            # Validate required fields
-            predicted_score = int(response_obj.get("predicted_score", 50))
-            predicted_score = max(0, min(100, predicted_score))  # Clamp to 0-100
-
-            reasoning = response_obj.get("reasoning", "")
-            suggestions = response_obj.get("suggestions", [])
-            confidence = response_obj.get("confidence", "medium")
-            comparable_count = response_obj.get("comparable_count", len(subset))
-
-            # Validate suggestions length
-            if len(suggestions) != 3:
-                logger.warning(
-                    f"LLM returned {len(suggestions)} suggestions, expected 3, using fallback"
-                )
-                raise ValueError("Invalid suggestions length")
-
             logger.info(
-                f"✓ LLM predicted score={predicted_score}, confidence={confidence} (with Pydantic validation)"
+                f"✓ LLM predicted score={prediction_output.predicted_score}, "
+                f"confidence={prediction_output.confidence} (Pydantic validated)"
             )
+            return prediction_output
 
-            return PredictorOutput(
-                predicted_score=predicted_score,
-                reasoning=reasoning,
-                suggestions=suggestions,
-                confidence=confidence,
-                comparable_count=comparable_count,
-            )
-
-        except (json.JSONDecodeError, ValueError, KeyError, Exception) as e:
-            logger.warning(f"LLM parsing failed: {e}, using statistical fallback")
+        except Exception as e:
+            logger.warning(f"LLM prediction failed: {e}, using statistical fallback")
             return self._statistical_fallback(subset)
 
     def _statistical_fallback(self, subset: pd.DataFrame) -> PredictorOutput:
