@@ -232,39 +232,81 @@ class ContentPulseApp {
                     <div class="bar-fill" style="width: ${percentage}%"></div>
                 </div>
                 <div class="bar-value">${item.value.toFixed(1)}</div>
-            `;
+    setupFileDragDrop() {
+        // CSV drag-drop
+        const csvZone = document.getElementById('csv-upload-zone');
+        if (csvZone) {
+            this.setupDragDrop(csvZone, 'custom-csv-file', 'csv');
+            csvZone.addEventListener('click', () => document.getElementById('custom-csv-file').click());
+            document.getElementById('custom-csv-file').addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    this.displayFilePreview('custom-csv-file', 'csv');
+                }
+            });
+        }
 
-            container.appendChild(row);
+        // Asset drag-drop
+        const assetZone = document.getElementById('file-upload-zone');
+        if (assetZone) {
+            this.setupDragDrop(assetZone, 'scorer-asset', 'asset');
+            assetZone.addEventListener('click', () => document.getElementById('scorer-asset').click());
+            document.getElementById('scorer-asset').addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    this.displayFilePreview('scorer-asset', 'asset');
+                }
+            });
+        }
+    }
+
+    setupDragDrop(zone, inputId, type) {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            zone.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                document.getElementById(inputId).files = files;
+                this.displayFilePreview(inputId, type);
+            }
         });
     }
 
-    renderTrace(containerId, trace) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
+    displayFilePreview(inputId, type) {
+        const fileInput = document.getElementById(inputId);
+        const file = fileInput.files[0];
+        if (!file) return;
 
-        trace.entries.forEach(entry => {
-            const div = document.createElement('div');
-            div.className = 'trace-entry';
-            div.innerHTML = `
-                <div class="trace-agent">${entry.agent}</div>
-                <div class="trace-status ${entry.status}">${entry.status}</div>
-                <div class="trace-detail">${entry.output_summary}</div>
-                <div class="trace-duration">${entry.duration_seconds.toFixed(3)}s</div>
-            `;
-            container.appendChild(div);
-        });
+        const previewId = type === 'csv' ? 'csv-preview' : 'asset-preview';
+        const nameId = type === 'csv' ? 'csv-name' : 'asset-name';
+        const sizeId = type === 'csv' ? 'csv-size' : 'asset-size';
+
+        const preview = document.getElementById(previewId);
+        const nameEl = document.getElementById(nameId);
+        const sizeEl = document.getElementById(sizeId);
+
+        if (nameEl) nameEl.textContent = file.name;
+        
+        if (sizeEl) {
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            sizeEl.textContent = `${sizeMB} MB`;
+        }
+
+        if (preview) preview.classList.remove('hidden');
     }
 
-    async scoreContent(e) {
-        e.preventDefault();
-
-        try {
-            const payload = {
-                title: document.getElementById('scorer-title').value,
-                topic: document.getElementById('scorer-topic').value,
-                format: document.getElementById('scorer-format').value,
-                audience_segment: document.getElementById('scorer-audience').value,
-                word_count: parseInt(document.getElementById('scorer-wordcount').value),
                 draft_markdown: document.getElementById('scorer-markdown').value || null,
             };
 

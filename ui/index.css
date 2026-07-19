@@ -804,27 +804,89 @@ html, body {
     transition: all 0.3s ease;
 }
 
+.file-upload-zone.enhanced-upload {
+    padding: 2.5rem;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.file-upload-zone.enhanced-upload::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(72, 196, 130, 0.1), transparent 70%);
+    pointer-events: none;
+}
+
 .file-upload-zone:hover,
 .file-upload-zone.drag-over {
     background: rgba(72, 196, 130, 0.15);
     border-color: var(--green);
-    transform: scale(1.02);
+    border-width: 2px;
+    box-shadow: 0 0 20px rgba(72, 196, 130, 0.3);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
 }
 
 .upload-prompt {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.upload-title {
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.upload-subtitle {
     color: var(--text-dim);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 400;
 }
 
 .file-preview {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(72, 196, 130, 0.1);
+    background: linear-gradient(135deg, rgba(72, 196, 130, 0.15), rgba(72, 196, 130, 0.05));
+    border-left: 4px solid var(--green);
     border-radius: 8px;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.file-name {
+    color: var(--text);
+    font-weight: 600;
+    word-break: break-all;
+}
+
+.file-size {
+    color: var(--text-dim);
+    font-size: 0.85rem;
 }
 
 .file-preview.hidden {
@@ -833,16 +895,33 @@ html, body {
 
 .btn-clear {
     background: transparent;
-    border: none;
+    border: 1px solid var(--text-dim);
     color: var(--text-dim);
     cursor: pointer;
     font-size: 1.2rem;
-    margin-left: auto;
-    transition: color 0.2s;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-clear:hover {
-    color: var(--red);
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.csv-upload {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(72, 196, 130, 0.05));
+    border-color: var(--green);
+}
+
+.csv-upload:hover,
+.csv-upload.drag-over {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(72, 196, 130, 0.15));
 }
 
 .custom-dataset-container {

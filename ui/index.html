@@ -162,19 +162,25 @@
                             <div class="result-section">
                                 <h4>Prediction Reasoning</h4>
                                 <p id="result-reasoning"></p>
+                        <div class="form-group full-width">
+                            <label for="scorer-asset">📸 Upload Architecture Diagram / Screenshot (Optional)</label>
+                            <div id="file-upload-zone" class="file-upload-zone enhanced-upload">
+                                <input type="file" id="scorer-asset" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi,.webp" style="display: none;">
+                                <div class="upload-icon">📸</div>
+                                <div class="upload-prompt">
+                                    <span class="upload-title">Drag & drop or click to upload</span>
+                                    <span class="upload-subtitle">PNG, JPG, GIF, MP4 (max 50MB)</span>
+                                </div>
+                                <div id="asset-preview" class="file-preview hidden">
+                                    <div class="preview-content">
+                                        <span id="asset-name" class="file-name"></span>
+                                        <span class="file-size" id="asset-size"></span>
+                                    </div>
+                                    <button type="button" class="btn-clear" onclick="document.getElementById('scorer-asset').value=''; document.getElementById('asset-preview').classList.add('hidden');">✕</button>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="result-section">
-                                <h4>Confidence Level</h4>
-                                <div id="result-confidence" class="confidence-badge"></div>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Code Quality Feedback</h4>
-                                <p id="result-code-feedback"></p>
-                            </div>
-
-                            <div class="result-section">
                                 <h4>Recommendations</h4>
                                 <ul id="result-suggestions" class="suggestions-list"></ul>
                             </div>
@@ -306,17 +312,22 @@ async def get_data():
 
                 <div class="custom-dataset-container">
                     <div class="upload-section">
-                        <h3>Upload Your CSV Dataset</h3>
-                        <p>Analyze your company's content data with DevPulse</p>
+                        <h3>📊 Upload Your Custom CSV Dataset</h3>
+                        <p>Analyze your company's content analytics data with DevPulse</p>
                         
-                        <div id="csv-upload-zone" class="file-upload-zone">
+                        <div id="csv-upload-zone" class="file-upload-zone enhanced-upload csv-upload">
                             <input type="file" id="custom-csv-file" accept=".csv" style="display: none;">
+                            <div class="upload-icon">📁</div>
                             <div class="upload-prompt">
-                                <span>📄 Drag & drop CSV or click to browse</span>
+                                <span class="upload-title">Drag & drop or click to upload CSV</span>
+                                <span class="upload-subtitle">Maximum file size: 50MB</span>
                             </div>
                             <div id="csv-preview" class="file-preview hidden">
-                                <span id="csv-name"></span>
-                                <button type="button" class="btn-clear">✕</button>
+                                <div class="preview-content">
+                                    <span id="csv-name" class="file-name"></span>
+                                    <span class="file-size" id="csv-size"></span>
+                                </div>
+                                <button type="button" class="btn-clear" onclick="document.getElementById('custom-csv-file').value=''; document.getElementById('csv-preview').classList.add('hidden');">✕</button>
                             </div>
                         </div>
 
