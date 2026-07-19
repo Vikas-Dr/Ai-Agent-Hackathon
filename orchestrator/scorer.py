@@ -98,6 +98,11 @@ def score_draft(
         if asset_feedback:
             prediction.code_quality_feedback = prediction.code_quality_feedback or ""
             prediction.code_quality_feedback += f"\n\n{asset_feedback}"
+        
+        trace.log(
+            stage="Predictor",
+            status=predictor_status,
+        )
 
 
     # ==================== PREDICTOR ====================

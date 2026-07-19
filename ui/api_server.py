@@ -105,9 +105,30 @@ def api_score():
                 400,
             )
 
-        # Extract optional draft_markdown
+        # Extract optional draft_markdown and asset_path
         draft_markdown = data.get("draft_markdown", None)
+        asset_path = data.get("asset_path", None)
 
+        # Call scorer
+        result = score_draft(
+            title=data["title"],
+            topic=data["topic"],
+            fmt=data["format"],
+            audience_segment=data["audience_segment"],
+            word_count=int(data["word_count"]),
+            draft_markdown=draft_markdown,
+            asset_path=asset_path,
+        )
+        logger.info(
+            f"Score computed: {result['prediction']['predicted_score']}"
+        )
+        return jsonify(result)
+    except ValueError as e:
+        logger.error(f"Invalid input: {e}")
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Scoring failed: {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
 
 # ==================== FILE UPLOAD ENDPOINTS ====================
 
