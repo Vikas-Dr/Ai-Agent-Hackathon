@@ -5,5 +5,6 @@ Multi-agent system for content analysis and strategy.
 
 from agents.base_agent import BaseAgent
 from agents.collector import CollectorAgent
+from agents.analyzer import AnalyzerAgent
 
-__all__ = ["BaseAgent", "CollectorAgent"]
+__all__ = ["BaseAgent", "CollectorAgent", "AnalyzerAgent"]
