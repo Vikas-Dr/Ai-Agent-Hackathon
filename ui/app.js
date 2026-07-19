@@ -7,6 +7,7 @@ class ContentPulseApp {
             analysis: null,
             scoreResult: null,
             trace: null,
+            charts: {} // Store Chart.js instances for cleanup
         };
         this.topics = [];
         this.formats = [];
@@ -34,6 +35,10 @@ class ContentPulseApp {
         // Strategy
         document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
         document.getElementById('btn-export-github').addEventListener('click', () => this.exportToGitHubIssues());
+        const exportPdfBtn = document.getElementById('btn-export-pdf');
+        if (exportPdfBtn) {
+            exportPdfBtn.addEventListener('click', () => this.exportToPDF());
+        }
 
         // A/B Tester
         document.getElementById('btn-run-ab-test').addEventListener('click', () => this.runABTest());
@@ -146,6 +151,259 @@ class ContentPulseApp {
         document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
     }
 
+    // ==================== CHART.JS UTILITIES ====================
+
+    destroyChart(chartId) {
+        if (this.state.charts[chartId]) {
+            this.state.charts[chartId].destroy();
+            delete this.state.charts[chartId];
+        }
+    }
+
+    destroyAllCharts() {
+        Object.keys(this.state.charts).forEach(key => {
+            this.state.charts[key].destroy();
+        });
+        this.state.charts = {};
+    }
+
+    createBarChart(canvasId, labels, values, label, color = '#48c482') {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: values,
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleColor: '#48c482',
+                        bodyColor: '#e2e8f0'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+    createDoughnutChart(canvasId, labels, values, colors = null) {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        const defaultColors = ['#48c482', '#2dd4bf', '#38bdf8', '#a78bfa', '#fbbf24', '#f472b6'];
+        const chartColors = colors || defaultColors.slice(0, labels.length);
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: chartColors,
+                    borderColor: '#161a24',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#e2e8f0', padding: 15 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        bodyColor: '#e2e8f0'
+                    }
+                }
+            }
+        });
+    }
+
+    createLineChart(canvasId, labels, datasets) {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        const colors = ['#48c482', '#38bdf8', '#a78bfa', '#fbbf24'];
+        const formattedDatasets = datasets.map((ds, idx) => ({
+            label: ds.label,
+            data: ds.data,
+            borderColor: colors[idx % colors.length],
+            backgroundColor: colors[idx % colors.length] + '15',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: colors[idx % colors.length]
+        }));
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: formattedDatasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        bodyColor: '#e2e8f0'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+    createScatterChart(canvasId, data) {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Historical Content',
+                    data: data.historical || [],
+                    backgroundColor: 'rgba(72, 196, 130, 0.4)',
+                    borderColor: '#48c482',
+                    borderWidth: 1,
+                    pointRadius: 5
+                }, {
+                    label: 'Your Draft',
+                    data: data.draft || [],
+                    backgroundColor: '#fbbf24',
+                    borderColor: '#f59e0b',
+                    borderWidth: 2,
+                    pointRadius: 8,
+                    pointStyle: 'star'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0', padding: 15 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        bodyColor: '#e2e8f0',
+                        callbacks: {
+                            label: (ctx) => `Score: ${ctx.parsed.y.toFixed(1)}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Word Count', color: '#e2e8f0' },
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Score', color: '#e2e8f0' },
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+    createRadarChart(canvasId, labels, values, label = 'Value') {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: values,
+                    backgroundColor: 'rgba(72, 196, 130, 0.2)',
+                    borderColor: '#48c482',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#48c482',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        bodyColor: '#e2e8f0'
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8', backdropColor: 'transparent' }
+                    }
+                }
+            }
+        });
+    }
+
     async runAnalysis() {
         try {
             document.getElementById('btn-run-analysis').disabled = true;
@@ -172,36 +430,70 @@ class ContentPulseApp {
         const analysis = this.state.analysis;
         const report = this.state.report;
 
-        // Update metrics
-        document.getElementById('metric-articles').textContent = 
-            Object.values(this.getTopicCounts()).reduce((a, b) => a + b, 0);
-        document.getElementById('metric-topics').textContent = 
-            analysis.top_topics.length;
-        document.getElementById('metric-insights').textContent = 
-            analysis.insights.length;
-        document.getElementById('metric-gaps').textContent = 
-            report.create_next.length;
+        // Destroy previous charts
+        this.destroyAllCharts();
 
-        // Render charts
-        this.renderBarChart(
-            'chart-topics',
-            analysis.top_topics.map(t => ({
-                label: t.topic,
-                value: t.avg_score,
-                count: t.count,
-            }))
-        );
+        // Update metric cards
+        const totalArticles = Object.values(this.getTopicCounts()).reduce((a, b) => a + b, 0);
+        document.getElementById('metric-articles').textContent = totalArticles;
+        document.getElementById('metric-topics').textContent = analysis.top_topics.length;
+        document.getElementById('metric-insights').textContent = analysis.insights.length;
+        document.getElementById('metric-gaps').textContent = report.create_next.length;
 
-        this.renderBarChart(
-            'chart-formats',
-            analysis.top_formats.map(f => ({
-                label: f.format,
-                value: f.avg_score,
-                count: f.count,
-            }))
-        );
+        // ROW 1: Sparklines (mini charts)
+        this.createSparklines();
 
-        // Render insights
+        // ROW 1B: Best Topic & Format
+        if (analysis.top_topics.length > 0) {
+            document.getElementById('best-topic-name').textContent = analysis.top_topics[0].topic;
+            document.getElementById('best-topic-score').textContent = `Score: ${analysis.top_topics[0].avg_score.toFixed(1)}`;
+        }
+        if (analysis.top_formats.length > 0) {
+            document.getElementById('best-format-name').textContent = analysis.top_formats[0].format;
+            document.getElementById('best-format-score').textContent = `Score: ${analysis.top_formats[0].avg_score.toFixed(1)}`;
+        }
+
+        // ROW 2: Charts
+        // Topic Performance Bar Chart
+        if (analysis.top_topics.length > 0) {
+            const topicLabels = analysis.top_topics.map(t => t.topic);
+            const topicValues = analysis.top_topics.map(t => t.avg_score);
+            this.createBarChart('chart-topics-bar', topicLabels, topicValues, 'Avg Score', '#48c482');
+        }
+
+        // Format Distribution Doughnut
+        if (analysis.top_formats.length > 0) {
+            const formatLabels = analysis.top_formats.map(f => f.format);
+            const formatCounts = analysis.top_formats.map(f => f.count);
+            this.createDoughnutChart('chart-formats-doughnut', formatLabels, formatCounts);
+        }
+
+        // Audience Reach (if available)
+        if (analysis.audiences && analysis.audiences.length > 0) {
+            const audienceLabels = analysis.audiences.map(a => a.audience || a.name);
+            const audienceValues = analysis.audiences.map(a => a.count || a.value);
+            this.createBarChart('chart-audience-bar', audienceLabels, audienceValues, 'Reach', '#38bdf8');
+        }
+
+        // ROW 3: Trends & Length Distribution
+        // Quarterly trends line chart (simulate with sample data if not available)
+        if (analysis.quarterly_data) {
+            const quarterLabels = Object.keys(analysis.quarterly_data);
+            const datasets = [{
+                label: 'Avg Score',
+                data: Object.values(analysis.quarterly_data).map(q => q.avg_score)
+            }];
+            this.createLineChart('chart-trends-line', quarterLabels, datasets);
+        }
+
+        // Length buckets radar/bar chart
+        if (analysis.length_distribution) {
+            const lengthLabels = Object.keys(analysis.length_distribution);
+            const lengthValues = Object.values(analysis.length_distribution);
+            this.createRadarChart('chart-length-radar', lengthLabels, lengthValues, 'Content Count');
+        }
+
+        // ROW 4: Insights
         const insightsList = document.getElementById('insights-list');
         insightsList.innerHTML = '';
         analysis.insights.forEach(insight => {
@@ -210,103 +502,89 @@ class ContentPulseApp {
             insightsList.appendChild(li);
         });
 
+        // Data Table
+        this.populateDataTable(analysis, report);
+
         // Render trace
         this.renderTrace('trace-dashboard', this.state.trace);
     }
 
-    renderBarChart(containerId, data) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-
-        const maxValue = Math.max(...data.map(d => d.value));
-
-        data.forEach(item => {
-            const row = document.createElement('div');
-            row.className = 'bar-row';
-
-            const percentage = (item.value / maxValue) * 100;
-
-            row.innerHTML = `
-                <div class="bar-label">${item.label}</div>
-                <div class="bar-track">
-                    <div class="bar-fill" style="width: ${percentage}%"></div>
-                </div>
-                <div class="bar-value">${item.value.toFixed(1)}</div>
-    setupFileDragDrop() {
-        // CSV drag-drop
-        const csvZone = document.getElementById('csv-upload-zone');
-        if (csvZone) {
-            this.setupDragDrop(csvZone, 'custom-csv-file', 'csv');
-            csvZone.addEventListener('click', () => document.getElementById('custom-csv-file').click());
-            document.getElementById('custom-csv-file').addEventListener('change', (e) => {
-                if (e.target.files.length) {
-                    this.displayFilePreview('custom-csv-file', 'csv');
-                }
-            });
-        }
-
-        // Asset drag-drop
-        const assetZone = document.getElementById('file-upload-zone');
-        if (assetZone) {
-            this.setupDragDrop(assetZone, 'scorer-asset', 'asset');
-            assetZone.addEventListener('click', () => document.getElementById('scorer-asset').click());
-            document.getElementById('scorer-asset').addEventListener('change', (e) => {
-                if (e.target.files.length) {
-                    this.displayFilePreview('scorer-asset', 'asset');
-                }
-            });
-        }
-    }
-
-    setupDragDrop(zone, inputId, type) {
-        zone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            zone.classList.add('drag-over');
-        });
-
-        zone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            zone.classList.remove('drag-over');
-        });
-
-        zone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            zone.classList.remove('drag-over');
-            
-            const files = e.dataTransfer.files;
-            if (files.length) {
-                document.getElementById(inputId).files = files;
-                this.displayFilePreview(inputId, type);
-            }
-        });
-    }
-
-    displayFilePreview(inputId, type) {
-        const fileInput = document.getElementById(inputId);
-        const file = fileInput.files[0];
-        if (!file) return;
-
-        const previewId = type === 'csv' ? 'csv-preview' : 'asset-preview';
-        const nameId = type === 'csv' ? 'csv-name' : 'asset-name';
-        const sizeId = type === 'csv' ? 'csv-size' : 'asset-size';
-
-        const preview = document.getElementById(previewId);
-        const nameEl = document.getElementById(nameId);
-        const sizeEl = document.getElementById(sizeId);
-
-        if (nameEl) nameEl.textContent = file.name;
+    createSparklines() {
+        const analysis = this.state.analysis;
+        const sparklineIds = ['sparkline-articles', 'sparkline-topics', 'sparkline-insights', 'sparkline-gaps'];
         
-        if (sizeEl) {
-            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-            sizeEl.textContent = `${sizeMB} MB`;
-        }
+        sparklineIds.forEach((id, idx) => {
+            this.destroyChart(id);
+            const ctx = document.getElementById(id);
+            if (!ctx) return;
 
-        if (preview) preview.classList.remove('hidden');
+            // Generate mock trend data
+            const data = {
+                labels: ['W1', 'W2', 'W3', 'W4'],
+                data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100]
+            };
+
+            this.state.charts[id] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.data,
+                        borderColor: '#48c482',
+                        backgroundColor: 'rgba(72, 196, 130, 0.1)',
+                        borderWidth: 1,
+                        fill: true,
+                        pointRadius: 0,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { display: false }
+                    }
+                }
+            });
+        });
     }
 
+    populateDataTable(analysis, report) {
+        const tbody = document.getElementById('data-table-body');
+        tbody.innerHTML = '';
+
+        const rows = [
+            ['Total Articles', Object.values(this.getTopicCounts()).reduce((a, b) => a + b, 0)],
+            ['Topics', analysis.top_topics.length],
+            ['Formats', analysis.top_formats.length],
+            ['Avg Score', analysis.top_topics.length > 0 ? (analysis.top_topics.reduce((sum, t) => sum + t.avg_score, 0) / analysis.top_topics.length).toFixed(1) : '—'],
+            ['Content Gaps', report.create_next.length],
+            ['Continue', report.continue_items.length],
+            ['Stop', report.stop_items.length]
+        ];
+
+        rows.forEach(([label, value]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${label}</td><td>${value}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async scoreContent(e) {
+        e.preventDefault();
+
+        try {
+            document.querySelector('.scorer-form .btn-primary').disabled = true;
+            document.querySelector('.scorer-form .btn-primary').textContent = '⏳ Scoring...';
+
+            const payload = {
+                title: document.getElementById('scorer-title').value,
+                topic: document.getElementById('scorer-topic').value,
+                format: document.getElementById('scorer-format').value,
+                audience: document.getElementById('scorer-audience').value,
+                word_count: parseInt(document.getElementById('scorer-wordcount').value),
                 draft_markdown: document.getElementById('scorer-markdown').value || null,
             };
 
@@ -328,6 +606,9 @@ class ContentPulseApp {
         } catch (e) {
             console.error('Error scoring content:', e);
             alert('Scoring failed: ' + e.message);
+        } finally {
+            document.querySelector('.scorer-form .btn-primary').disabled = false;
+            document.querySelector('.scorer-form .btn-primary').textContent = '📈 Score This Draft';
         }
     }
 
@@ -378,8 +659,44 @@ class ContentPulseApp {
 
         document.getElementById('result-comparable').textContent = prediction.comparable_count;
 
+        // Populate comparable content table
+        this.populateComparableTable(prediction.comparable_items || []);
+
+        // Render scatter chart
+        const scatterData = {
+            historical: (prediction.comparable_items || []).map(item => ({
+                x: item.word_count || 1500,
+                y: item.score || 75
+            })),
+            draft: [{ x: document.getElementById('scorer-wordcount').value, y: score }]
+        };
+        this.createScatterChart('chart-draft-vs-historical', scatterData);
+
         // Scroll to result
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    populateComparableTable(items) {
+        const tbody = document.getElementById('comparable-table-body');
+        tbody.innerHTML = '';
+
+        if (!items || items.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="4" style="text-align: center; color: #94a3b8;">No comparable content found</td>';
+            tbody.appendChild(tr);
+            return;
+        }
+
+        items.slice(0, 5).forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${(item.title || 'Untitled').substring(0, 30)}...</td>
+                <td>${item.topic || '—'}</td>
+                <td>${item.format || '—'}</td>
+                <td><strong>${item.score || '—'}</strong></td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 
     uploadCSVFile() {
@@ -644,7 +961,7 @@ class ContentPulseApp {
             alert('Report generation failed: ' + e.message);
         } finally {
             document.getElementById('btn-generate-report').disabled = false;
-            document.getElementById('btn-generate-report').textContent = '📋 Generate Report';
+            document.getElementById('btn-generate-report').textContent = '📊 Generate Report';
         }
     }
 
@@ -652,6 +969,31 @@ class ContentPulseApp {
         const report = this.state.report;
         const container = document.getElementById('report-container');
         container.innerHTML = '';
+
+        // Destroy previous charts
+        this.destroyAllCharts();
+
+        // Summary chart
+        const summaryData = {
+            continue: report.continue_items.length,
+            stop: report.stop_items.length,
+            create: report.create_next.length
+        };
+        
+        const chartCanvas = document.createElement('canvas');
+        chartCanvas.id = 'chart-strategy-summary';
+        chartCanvas.style.marginBottom = '2rem';
+        
+        // We'll create this after the container is updated
+        setTimeout(() => {
+            this.createBarChart(
+                'chart-strategy-summary',
+                Object.keys(summaryData),
+                Object.values(summaryData),
+                'Count',
+                '#48c482'
+            );
+        }, 100);
 
         // Header
         const header = document.createElement('div');
@@ -726,6 +1068,94 @@ class ContentPulseApp {
 
         card.appendChild(itemsContainer);
         return card;
+    }
+
+    exportToGitHubIssues() {
+        if (!this.state.report) {
+            alert('Please generate a report first');
+            return;
+        }
+
+        const report = this.state.report;
+        let content = `# Editorial Strategy Report\n\n`;
+        content += `Generated: ${new Date(report.report_date).toLocaleDateString()}\n`;
+        content += `Period: ${report.period}\n\n`;
+        content += `${report.summary}\n\n`;
+
+        content += `## 📋 Continue Items\n`;
+        report.continue_items.forEach(item => {
+            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        content += `\n## ⛔ Stop Items\n`;
+        report.stop_items.forEach(item => {
+            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        content += `\n## ✨ Create Next\n`;
+        report.create_next.forEach(item => {
+            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        navigator.clipboard.writeText(content).then(() => {
+            alert('Report copied to clipboard! Paste it into a GitHub issue.');
+        });
+    }
+
+    exportToPDF() {
+        if (!this.state.report) {
+            alert('Please generate a report first');
+            return;
+        }
+        
+        // Simple text-based export for now (can be enhanced with actual PDF library)
+        const report = this.state.report;
+        let content = `EDITORIAL STRATEGY REPORT\n`;
+        content += `Generated: ${new Date(report.report_date).toLocaleDateString()}\n`;
+        content += `Period: ${report.period}\n\n`;
+        content += `${report.summary}\n\n`;
+
+        content += `CONTINUE ITEMS\n`;
+        report.continue_items.forEach(item => {
+            content += `• ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        content += `\nSTOP ITEMS\n`;
+        report.stop_items.forEach(item => {
+            content += `• ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        content += `\nCREATE NEXT\n`;
+        report.create_next.forEach(item => {
+            content += `• ${item.topic || item} (${item.format || ''})\n`;
+        });
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `strategy-report-${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    renderTrace(containerId, trace) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        if (!trace || !trace.steps) return;
+
+        trace.steps.forEach(step => {
+            const entry = document.createElement('div');
+            entry.className = 'trace-entry';
+            entry.innerHTML = `
+                <div class="trace-agent">${step.agent || 'System'}</div>
+                <div class="trace-status ${step.status || 'success'}">${(step.status || 'success').toUpperCase()}</div>
+                <div class="trace-detail">${step.message || ''}</div>
+                <div class="trace-duration">${step.duration || '0ms'}</div>
+            `;
+            container.appendChild(entry);
+        });
     }
 }
 

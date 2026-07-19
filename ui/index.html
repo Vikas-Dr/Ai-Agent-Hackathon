@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevPulse — Developer Relations Content Intelligence</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -47,49 +48,101 @@
                     </button>
                 </div>
 
-                <!-- Metrics Grid -->
-                <div class="metrics-grid">
-                    <div class="metric-card">
+                <!-- ROW 1: Metric Cards with Sparklines -->
+                <div class="dashboard-row row-metrics">
+                    <div class="metric-card metric-enhanced">
                         <div class="metric-label">Articles Analyzed</div>
                         <div class="metric-value" id="metric-articles">0</div>
+                        <canvas id="sparkline-articles" class="metric-sparkline"></canvas>
                     </div>
-                    <div class="metric-card">
+                    <div class="metric-card metric-enhanced">
                         <div class="metric-label">Topics Covered</div>
                         <div class="metric-value" id="metric-topics">0</div>
+                        <canvas id="sparkline-topics" class="metric-sparkline"></canvas>
                     </div>
-                    <div class="metric-card">
+                    <div class="metric-card metric-enhanced">
                         <div class="metric-label">Key Insights</div>
                         <div class="metric-value" id="metric-insights">0</div>
+                        <canvas id="sparkline-insights" class="metric-sparkline"></canvas>
                     </div>
-                    <div class="metric-card">
+                    <div class="metric-card metric-enhanced">
                         <div class="metric-label">Content Gaps</div>
                         <div class="metric-value" id="metric-gaps">0</div>
+                        <canvas id="sparkline-gaps" class="metric-sparkline"></canvas>
                     </div>
                 </div>
 
-                <!-- Charts Grid -->
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3>Top Topics by Performance</h3>
-                        <div id="chart-topics" class="chart-container"></div>
+                <!-- ROW 1B: Best Topic & Format Cards -->
+                <div class="dashboard-row row-best">
+                    <div class="best-card best-topic">
+                        <div class="best-label">🏆 Best Topic</div>
+                        <div class="best-value" id="best-topic-name">—</div>
+                        <div class="best-score" id="best-topic-score">Score: —</div>
                     </div>
-                    <div class="chart-card">
-                        <h3>Format Performance</h3>
-                        <div id="chart-formats" class="chart-container"></div>
+                    <div class="best-card best-format">
+                        <div class="best-label">⭐ Best Format</div>
+                        <div class="best-value" id="best-format-name">—</div>
+                        <div class="best-score" id="best-format-score">Score: —</div>
                     </div>
                 </div>
 
-                <!-- Insights List -->
-                <div class="insights-card">
-                    <h3>Key Insights</h3>
-                    <ul id="insights-list" class="insights-list"></ul>
+                <!-- ROW 2: Topic Performance, Format Doughnut, Audience -->
+                <div class="dashboard-row row-charts-2">
+                    <div class="chart-card" style="flex: 0 0 40%;">
+                        <h3>📊 Topic Performance</h3>
+                        <canvas id="chart-topics-bar"></canvas>
+                    </div>
+                    <div class="chart-card" style="flex: 0 0 30%;">
+                        <h3>🎨 Format Distribution</h3>
+                        <canvas id="chart-formats-doughnut"></canvas>
+                    </div>
+                    <div class="chart-card" style="flex: 0 0 30%;">
+                        <h3>👥 Audience Reach</h3>
+                        <canvas id="chart-audience-bar"></canvas>
+                    </div>
+                </div>
+
+                <!-- ROW 3: Quarterly Trends & Length Buckets -->
+                <div class="dashboard-row row-charts-3">
+                    <div class="chart-card" style="flex: 0 0 50%;">
+                        <h3>📈 Quarterly Trends</h3>
+                        <canvas id="chart-trends-line"></canvas>
+                    </div>
+                    <div class="chart-card" style="flex: 0 0 50%;">
+                        <h3>📏 Content Length Distribution</h3>
+                        <canvas id="chart-length-radar"></canvas>
+                    </div>
+                </div>
+
+                <!-- ROW 4: Insights & Data Table -->
+                <div class="dashboard-row row-insights">
+                    <div class="insights-card" style="flex: 0 0 60%;">
+                        <h3>💡 Key Insights</h3>
+                        <ul id="insights-list" class="insights-list"></ul>
+                    </div>
+                    <div class="data-card" style="flex: 0 0 40%;">
+                        <h3>📋 Data Summary</h3>
+                        <div id="data-table-container" class="data-table-wrapper">
+                            <table id="data-summary-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Trace -->
                 <div class="trace-card">
-                    <h3>Execution Trace</h3>
+                    <h3>⚙️ Execution Trace</h3>
                     <div id="trace-dashboard" class="trace-container"></div>
                 </div>
+            </section>
             </section>
 
             <!-- ==================== DRAFT SCORER TAB ==================== -->
@@ -162,34 +215,70 @@
                             <div class="result-section">
                                 <h4>Prediction Reasoning</h4>
                                 <p id="result-reasoning"></p>
-                        <div class="form-group full-width">
-                            <label for="scorer-asset">📸 Upload Architecture Diagram / Screenshot (Optional)</label>
-                            <div id="file-upload-zone" class="file-upload-zone enhanced-upload">
-                                <input type="file" id="scorer-asset" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi,.webp" style="display: none;">
-                                <div class="upload-icon">📸</div>
-                                <div class="upload-prompt">
-                                    <span class="upload-title">Drag & drop or click to upload</span>
-                                    <span class="upload-subtitle">PNG, JPG, GIF, MP4 (max 50MB)</span>
-                                </div>
-                                <div id="asset-preview" class="file-preview hidden">
-                                    <div class="preview-content">
-                                        <span id="asset-name" class="file-name"></span>
-                                        <span class="file-size" id="asset-size"></span>
-                                    </div>
-                                    <button type="button" class="btn-clear" onclick="document.getElementById('scorer-asset').value=''; document.getElementById('asset-preview').classList.add('hidden');">✕</button>
-                                </div>
                             </div>
-                        </div>
 
+                            <div class="result-section">
+                                <h4>Code Quality Feedback</h4>
+                                <p id="result-code-feedback"></p>
+                            </div>
+
+                            <div class="result-section">
+                                <h4>Confidence</h4>
+                                <div id="result-confidence" class="confidence-badge"></div>
+                            </div>
+
+                            <div class="result-section">
                                 <h4>Recommendations</h4>
                                 <ul id="result-suggestions" class="suggestions-list"></ul>
                             </div>
 
-                            <div class="result-section meta">
-                                <span>Comparable content: <strong id="result-comparable">0</strong> items</span>
+                            <div class="result-section">
+                                <h4>Comparable Content</h4>
+                                <p><strong id="result-comparable">0</strong> similar items found</p>
+                                <div id="comparable-table-container" class="comparable-table-wrapper">
+                                    <table id="comparable-content-table" class="comparable-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Topic</th>
+                                                <th>Format</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="comparable-table-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="result-section">
+                                <h4>Draft vs Historical Scores</h4>
+                                <canvas id="chart-draft-vs-historical" class="comparison-chart"></canvas>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Asset Upload -->
+                    <div class="form-group full-width">
+                        <label for="scorer-asset">📸 Upload Architecture Diagram / Screenshot (Optional)</label>
+                        <div id="file-upload-zone" class="file-upload-zone enhanced-upload">
+                            <input type="file" id="scorer-asset" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi,.webp" style="display: none;">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-prompt">
+                                <span class="upload-title">Drag & drop or click to upload</span>
+                                <span class="upload-subtitle">PNG, JPG, GIF, MP4 (max 50MB)</span>
+                            </div>
+                            <div id="asset-preview" class="file-preview hidden">
+                                <div class="preview-content">
+                                    <span id="asset-name" class="file-name"></span>
+                                    <span class="file-size" id="asset-size"></span>
+                                </div>
+                                <button type="button" class="btn-clear" onclick="document.getElementById('scorer-asset').value=''; document.getElementById('asset-preview').classList.add('hidden');">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
                 </div>
             </section>
 
@@ -361,23 +450,36 @@ async def get_data():
             <section id="strategy" class="tab-content">
                 <div class="section-header">
                     <h2>Editorial Strategy Report</h2>
-                    <button id="btn-generate-report" class="btn btn-primary">
-                        📊 Generate Report
-                    </button>
-                    <button id="btn-export-github" class="btn btn-secondary" style="margin-left: 1rem;">
-                        📋 Copy as GitHub Issues
-                    </button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="btn-generate-report" class="btn btn-primary">
+                            📊 Generate Report
+                        </button>
+                        <button id="btn-export-pdf" class="btn btn-secondary" title="Export as PDF">
+                            📥 Export PDF
+                        </button>
+                        <button id="btn-export-github" class="btn btn-secondary" title="Copy as GitHub Issues">
+                            📋 GitHub Issues
+                        </button>
+                    </div>
+                </div>
 
+                <!-- Summary Statistics Chart -->
+                <div class="chart-card" style="margin-bottom: 2rem;">
+                    <h3>📊 Strategy Summary</h3>
+                    <canvas id="chart-strategy-summary"></canvas>
+                </div>
 
+                <!-- Report Content -->
                 <div id="report-container" class="report-container">
                     <!-- Report will be rendered here -->
                 </div>
 
-                <!-- Trace -->
+                <!-- Timeline/Gantt View -->
                 <div class="trace-card">
-                    <h3>Execution Trace</h3>
+                    <h3>📅 Execution Timeline</h3>
                     <div id="trace-strategy" class="trace-container"></div>
                 </div>
+            </section>
             </section>
 
         </main>
