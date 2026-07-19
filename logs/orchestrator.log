@@ -114,3 +114,32 @@ Trace: PredictorAgent (success, 0.001s)
 SCORING COMPLETE
 Total duration: 0.02s
 ============================================================
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.053s)
+Stage 2: Analyzing content...
+Trace: AnalyzerAgent (success, 0.013s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.000s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.000s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE
+Total duration: 0.07s
+============================================================
+✓ Trace started
+============================================================
+SCORING DRAFT CONTENT
+============================================================
+Loading historical data...
+Trace: CollectorAgent (success, 0.021s)
+Predicting performance...
+Trace: PredictorAgent (success, 0.002s)
+============================================================
+SCORING COMPLETE
+Total duration: 0.02s
+============================================================

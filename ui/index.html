@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContentPulse — Editorial AI</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">⚡ ContentPulse</h1>
+                <p class="tagline">Data-driven editorial strategy</p>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="dashboard">
+                📊 Dashboard
+            </button>
+            <button class="tab-btn" data-tab="scorer">
+                ✍️ Draft Scorer
+            </button>
+            <button class="tab-btn" data-tab="strategy">
+                🎯 Strategy Report
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- ==================== DASHBOARD TAB ==================== -->
+            <section id="dashboard" class="tab-content active">
+                <div class="section-header">
+                    <h2>Content Analytics Dashboard</h2>
+                    <button id="btn-run-analysis" class="btn btn-primary">
+                        🔄 Run Analysis
+                    </button>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Articles Analyzed</div>
+                        <div class="metric-value" id="metric-articles">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Topics Covered</div>
+                        <div class="metric-value" id="metric-topics">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Key Insights</div>
+                        <div class="metric-value" id="metric-insights">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Content Gaps</div>
+                        <div class="metric-value" id="metric-gaps">0</div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Top Topics by Performance</h3>
+                        <div id="chart-topics" class="chart-container"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Format Performance</h3>
+                        <div id="chart-formats" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <!-- Insights List -->
+                <div class="insights-card">
+                    <h3>Key Insights</h3>
+                    <ul id="insights-list" class="insights-list"></ul>
+                </div>
+
+                <!-- Trace -->
+                <div class="trace-card">
+                    <h3>Execution Trace</h3>
+                    <div id="trace-dashboard" class="trace-container"></div>
+                </div>
+            </section>
+
+            <!-- ==================== DRAFT SCORER TAB ==================== -->
+            <section id="scorer" class="tab-content">
+                <div class="section-header">
+                    <h2>Score Your Draft Content</h2>
+                </div>
+
+                <div class="scorer-container">
+                    <form id="scorer-form" class="scorer-form">
+                        <div class="form-group">
+                            <label for="scorer-title">Article Title</label>
+                            <input type="text" id="scorer-title" placeholder="Enter article title" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="scorer-topic">Topic</label>
+                                <select id="scorer-topic" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="scorer-format">Format</label>
+                                <select id="scorer-format" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="scorer-audience">Audience</label>
+                                <select id="scorer-audience" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="scorer-wordcount">Word Count</label>
+                                <input type="number" id="scorer-wordcount" min="100" max="20000" value="1500" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            📈 Score This Draft
+                        </button>
+                    </form>
+
+                    <!-- Score Result Card (hidden by default) -->
+                    <div id="score-result" class="score-result-card hidden">
+                        <div class="score-ring-container">
+                            <svg class="score-ring" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" class="score-ring-bg"></circle>
+                                <circle cx="50" cy="50" r="45" class="score-ring-fill"></circle>
+                            </svg>
+                            <div class="score-text">
+                                <div id="result-score" class="score-value">0</div>
+                                <div class="score-label">/ 100</div>
+                            </div>
+                        </div>
+
+                        <div class="score-details">
+                            <div class="result-section">
+                                <h4>Prediction Reasoning</h4>
+                                <p id="result-reasoning"></p>
+                            </div>
+
+                            <div class="result-section">
+                                <h4>Confidence Level</h4>
+                                <div id="result-confidence" class="confidence-badge"></div>
+                            </div>
+
+                            <div class="result-section">
+                                <h4>Recommendations</h4>
+                                <ul id="result-suggestions" class="suggestions-list"></ul>
+                            </div>
+
+                            <div class="result-section meta">
+                                <span>Comparable content: <strong id="result-comparable">0</strong> items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== STRATEGY REPORT TAB ==================== -->
+            <section id="strategy" class="tab-content">
+                <div class="section-header">
+                    <h2>Editorial Strategy Report</h2>
+                    <button id="btn-generate-report" class="btn btn-primary">
+                        📋 Generate Report
+                    </button>
+                </div>
+
+                <div id="report-container" class="report-container">
+                    <!-- Report will be rendered here -->
+                </div>
+
+                <!-- Trace -->
+                <div class="trace-card">
+                    <h3>Execution Trace</h3>
+                    <div id="trace-strategy" class="trace-container"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
