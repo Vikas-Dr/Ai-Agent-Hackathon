@@ -10,6 +10,7 @@ from typing import Any
 
 import pandas as pd
 
+import json
 from agents.base_agent import BaseAgent
 from data.schema import (
     AnalyzerOutput,
@@ -224,35 +225,25 @@ class AnalyzerAgent(BaseAgent):
         )
 
         try:
-            # Let call_llm handle structured schema validation directly
-            analyzer_output = call_llm(
-                system_prompt=system_prompt,
-                user_prompt=user_prompt,
-                response_schema=AnalyzerOutput,
-                max_tokens=500
-            )
-            
-            # Map aggregated stats from local calculations to preserve exact values
-            analyzer_output.top_topics = top_topics
-            analyzer_output.top_formats = top_formats
-            analyzer_output.audience_analysis = audience_analysis
-            analyzer_output.period_trends = period_trends
-            analyzer_output.length_analysis = length_analysis
-            
-            logger.info(f"✓ LLM generated {len(analyzer_output.insights)} insights (Pydantic validated)")
-            return analyzer_output
-
+            response_text = call_llm(system_prompt, user_prompt)
+            response_obj = json.loads(response_text) if isinstance(response_text, str) else response_text
+            insights = response_obj.get("insights", []) if isinstance(response_obj, dict) else []
+            if not insights:
+                insights = self._generate_fallback_insights(dataframe)
         except Exception as e:
-            logger.warning(f"LLM insight generation failed: {e}, using fallback insights")
+            logger.warning(f"LLM failed: {e}, using fallback insights")
             insights = self._generate_fallback_insights(dataframe)
-            return AnalyzerOutput(
-                insights=insights,
-                top_topics=top_topics,
-                top_formats=top_formats,
-                audience_analysis=audience_analysis,
-                period_trends=period_trends,
-                length_analysis=length_analysis,
-            )
+
+        return AnalyzerOutput(
+            insights=insights,
+            top_topics=top_topics,
+            top_formats=top_formats,
+            audience_analysis=audience_analysis,
+            period_trends=period_trends,
+            length_analysis=length_analysis,
+            devrel_metrics=devrel_metrics,
+        )
+
 
     def _generate_fallback_insights(self, dataframe: pd.DataFrame) -> list[str]:
         """Generate deterministic fallback insights."""

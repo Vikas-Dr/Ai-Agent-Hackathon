@@ -13,6 +13,7 @@ from agents.base_agent import BaseAgent
 from data.schema import PredictorInput, PredictorOutput
 from llm import call_llm
 from utils.code_parser import analyze_technical_draft
+from utils.code_parser import analyze_technical_draft
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))

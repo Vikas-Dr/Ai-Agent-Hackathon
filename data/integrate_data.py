@@ -275,7 +275,11 @@ def transform_hn_story(
             avg_time_on_page=avg_time_on_page,
             conversions=conversions,
             search_rank=search_rank,
+            github_stars_growth=github_stars_growth,
+            api_signups=api_signups,
         )
+        return row
+
         return row
 
     except Exception as e:
@@ -355,7 +359,10 @@ def verify_dataset(rows: list[RawContentRow]) -> None:
         "avg_time_on_page",
         "conversions",
         "search_rank",
+        "github_stars_growth",
+        "api_signups",
     ]
+
 
     for col in required_columns:
         assert all(
@@ -412,8 +419,12 @@ def write_to_csv(rows: list[RawContentRow], filepath: Path) -> None:
                 "avg_time_on_page",
                 "conversions",
                 "search_rank",
+                "github_stars_growth",
+                "api_signups",
             ],
         )
+        writer.writeheader()
+
         writer.writeheader()
         for row in rows:
             writer.writerow(row.model_dump())

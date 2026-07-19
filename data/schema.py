@@ -52,6 +52,8 @@ class RawContentRow(BaseModel):
     avg_time_on_page: float = Field(..., ge=0, description="Time on page (seconds)")
     conversions: int = Field(..., ge=0, description="Developer signups, API key creations, or adoptions")
     search_rank: Optional[int] = Field(None, ge=1, le=100, description="Developer SEO keyword ranking")
+    github_stars_growth: int = Field(default=0, ge=0)
+    api_signups: int = Field(default=0, ge=0)
 
     @field_validator("url")
     @classmethod
@@ -104,6 +106,7 @@ class CleanedContentRow(RawContentRow):
     days_since_publish: int = Field(default=0)
     views_per_day: float = Field(default=0.0)
     performance_score: float = Field(default=0.0)
+    code_to_text_ratio: float = Field(default=0.0, ge=0.0, le=1.0)
 
     @model_validator(mode="after")
     def derive_fields(self) -> "CleanedContentRow":
@@ -150,6 +153,7 @@ class PredictorInput(BaseModel):
     format: str
     audience_segment: str
     word_count: int = Field(..., ge=100, le=20000)
+    draft_markdown: str = Field(default="", max_length=50000)
 
     @field_validator("topic")
     @classmethod
@@ -184,6 +188,8 @@ class PredictorOutput(BaseModel):
     suggestions: list[str] = Field(..., min_length=3, max_length=3)
     confidence: str
     comparable_count: int = Field(..., ge=0)
+    code_quality_feedback: str = Field(default="")
+    code_to_text_ratio: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 # ==================== ANALYZER ====================
@@ -236,6 +242,7 @@ class AnalyzerOutput(BaseModel):
     audience_analysis: list[AudienceBreakdown]
     period_trends: list[PeriodTrend]
     length_analysis: list[LengthAnalysis]
+    devrel_metrics: dict = Field(default_factory=dict)
 
 
 # ==================== STRATEGIST ====================
@@ -277,6 +284,7 @@ class CreateNextItem(BaseModel):
     format: str
     target_audience: str
     reasoning: str
+    suggested_format: str = Field(default="tutorial")
 
 
 class ReportOutput(BaseModel):

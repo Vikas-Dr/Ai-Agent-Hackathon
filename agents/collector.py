@@ -51,7 +51,7 @@ class CollectorAgent(BaseAgent):
         logger.info(f"Loaded {total_rows} rows from CSV")
 
         # Strip whitespace from string columns
-        string_cols = df_raw.select_dtypes(include="object").columns
+        string_cols = df_raw.select_dtypes(include=["object", "string"]).columns
         for col in string_cols:
             df_raw[col] = df_raw[col].apply(str.strip)
 
@@ -137,12 +137,20 @@ class CollectorAgent(BaseAgent):
         # Invert: lower rank is better, so higher normalized value
         rank_norm = 1.0 - search_rank_norm_raw
 
-        # Weighted sum
+        # Normalize github_stars_growth
+        github_default = df["github_stars_growth"].median()
+        if pd.isna(github_default):
+            github_default = 0.0
+        github_filled = df["github_stars_growth"].fillna(github_default)
+        github_norm = scaler.fit_transform(github_filled.values.reshape(-1, 1))[:, 0]
+
+        # Weighted sum (includes DevRel github_stars_growth metric)
         performance_score = (
             PERFORMANCE_WEIGHTS["views"] * views_norm
             + PERFORMANCE_WEIGHTS["engagement_rate"] * engagement_norm
             + PERFORMANCE_WEIGHTS["conversions"] * conversions_norm
             + PERFORMANCE_WEIGHTS["search_rank"] * rank_norm
+            + PERFORMANCE_WEIGHTS["github_stars_growth"] * github_norm
         ) * 100
 
         df["performance_score"] = performance_score.round(1)
