@@ -37,6 +37,54 @@ class ContentPulseApp {
 
         // A/B Tester
         document.getElementById('btn-run-ab-test').addEventListener('click', () => this.runABTest());
+
+        // Custom Dataset
+        document.getElementById('btn-analyze-custom').addEventListener('click', () => this.uploadCSVFile());
+        this.setupFileDragDrop();
+    }
+
+    setupFileDragDrop() {
+        // CSV drag-drop
+        const csvZone = document.getElementById('csv-upload-zone');
+        if (csvZone) {
+            csvZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                csvZone.classList.add('drag-over');
+            });
+            csvZone.addEventListener('dragleave', () => csvZone.classList.remove('drag-over'));
+            csvZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                csvZone.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file && file.name.endsWith('.csv')) {
+                    document.getElementById('custom-csv-file').files = e.dataTransfer.files;
+                    document.getElementById('csv-name').textContent = file.name;
+                    document.getElementById('csv-preview').classList.remove('hidden');
+                }
+            });
+            csvZone.addEventListener('click', () => document.getElementById('custom-csv-file').click());
+        }
+
+        // Asset drag-drop
+        const assetZone = document.getElementById('file-upload-zone');
+        if (assetZone) {
+            assetZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                assetZone.classList.add('drag-over');
+            });
+            assetZone.addEventListener('dragleave', () => assetZone.classList.remove('drag-over'));
+            assetZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                assetZone.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    document.getElementById('scorer-asset').files = e.dataTransfer.files;
+                    document.getElementById('asset-name').textContent = file.name;
+                    document.getElementById('asset-preview').classList.remove('hidden');
+                }
+            });
+            assetZone.addEventListener('click', () => document.getElementById('scorer-asset').click());
+        }
     }
 
     async loadConfig() {
@@ -290,6 +338,82 @@ class ContentPulseApp {
 
         // Scroll to result
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    uploadCSVFile() {
+        const fileInput = document.getElementById('custom-csv-file');
+        if (!fileInput || !fileInput.files.length) {
+            alert('Please select a CSV file');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        document.getElementById('btn-analyze-custom').disabled = true;
+        document.getElementById('btn-analyze-custom').textContent = '⏳ Analyzing...';
+
+        fetch('/api/upload-csv', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('btn-analyze-custom').disabled = false;
+                document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+
+                const resultsDiv = document.getElementById('custom-results');
+                const summaryDiv = document.getElementById('custom-report-summary');
+                
+                resultsDiv.classList.remove('hidden');
+                summaryDiv.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-label">Rows Processed</div>
+                        <div class="metric-value">${data.rows_processed}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Status</div>
+                        <div class="metric-value">✅ Complete</div>
+                    </div>
+                `;
+
+                if (data.result?.report?.summary) {
+                    summaryDiv.innerHTML += `<p>${data.result.report.summary}</p>`;
+                }
+            })
+            .catch(e => {
+                alert('Upload failed: ' + e.message);
+                document.getElementById('btn-analyze-custom').disabled = false;
+                document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
+            });
+    }
+
+    uploadDraftAsset() {
+        const fileInput = document.getElementById('scorer-asset');
+        if (!fileInput || !fileInput.files.length) {
+            return null;
+        }
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return fetch('/api/upload-asset', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Asset upload error: ' + data.error);
+                    return null;
+                }
+                return data;
+            })
+            .catch(e => {
+                console.error('Asset upload failed:', e);
+                return null;
+            });
     }
 
     runABTest() {

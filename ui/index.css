@@ -792,6 +792,131 @@ html, body {
     cursor: pointer;
 }
 
+/* ==================== FILE UPLOAD ==================== */
+
+.file-upload-zone {
+    border: 2px dashed var(--green);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(72, 196, 130, 0.05);
+    transition: all 0.3s ease;
+}
+
+.file-upload-zone:hover,
+.file-upload-zone.drag-over {
+    background: rgba(72, 196, 130, 0.15);
+    border-color: var(--green);
+    transform: scale(1.02);
+}
+
+.upload-prompt {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.file-preview {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(72, 196, 130, 0.1);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.file-preview.hidden {
+    display: none;
+}
+
+.btn-clear {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-left: auto;
+    transition: color 0.2s;
+}
+
+.btn-clear:hover {
+    color: var(--red);
+}
+
+.custom-dataset-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.upload-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.csv-requirements {
+    background: rgba(72, 196, 130, 0.05);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.csv-requirements h4 {
+    color: var(--green);
+    margin-bottom: 0.75rem;
+}
+
+.csv-requirements ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.csv-requirements li {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.csv-requirements li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.csv-requirements code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    color: var(--green);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+}
+
+.analysis-results {
+    background: var(--surface);
+    border: 2px solid var(--green);
+    border-radius: 14px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.analysis-results.hidden {
+    display: none;
+}
+
 .ab-tester-container {
     display: grid;
     grid-template-columns: 1fr 1fr;

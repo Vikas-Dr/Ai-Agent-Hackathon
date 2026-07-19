@@ -27,6 +27,9 @@
             <button class="tab-btn" data-tab="ab-tester">
                 🔀 A/B Tester
             </button>
+            <button class="tab-btn" data-tab="custom-dataset">
+                📤 Custom Data
+            </button>
             <button class="tab-btn" data-tab="strategy">
                 🎯 Strategy Report
             </button>
@@ -291,6 +294,54 @@ async def get_data():
                             <h4>✨ Combined Recommendation</h4>
                             <div id="ab-combined-rec" class="recommendation-text"></div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== CUSTOM DATASET TAB ==================== -->
+            <section id="custom-dataset" class="tab-content">
+                <div class="section-header">
+                    <h2>📊 Custom Dataset Analysis</h2>
+                </div>
+
+                <div class="custom-dataset-container">
+                    <div class="upload-section">
+                        <h3>Upload Your CSV Dataset</h3>
+                        <p>Analyze your company's content data with DevPulse</p>
+                        
+                        <div id="csv-upload-zone" class="file-upload-zone">
+                            <input type="file" id="custom-csv-file" accept=".csv" style="display: none;">
+                            <div class="upload-prompt">
+                                <span>📄 Drag & drop CSV or click to browse</span>
+                            </div>
+                            <div id="csv-preview" class="file-preview hidden">
+                                <span id="csv-name"></span>
+                                <button type="button" class="btn-clear">✕</button>
+                            </div>
+                        </div>
+
+                        <div class="csv-requirements">
+                            <h4>Required CSV Columns:</h4>
+                            <ul>
+                                <li><code>title</code> - Article title</li>
+                                <li><code>url</code> - Article URL</li>
+                                <li><code>score</code> - Performance metric (views, HN score, etc.)</li>
+                                <li><code>engagement_rate</code> - Engagement percentage</li>
+                                <li><code>conversions</code> - Conversion count</li>
+                                <li><code>topic</code> - Content topic</li>
+                                <li><code>format</code> - Content format</li>
+                                <li><code>audience_segment</code> - Target audience</li>
+                            </ul>
+                        </div>
+
+                        <button id="btn-analyze-custom" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                            🚀 Run Custom Analysis
+                        </button>
+                    </div>
+
+                    <div id="custom-results" class="analysis-results hidden">
+                        <h3>✅ Analysis Complete</h3>
+                        <div id="custom-report-summary"></div>
                     </div>
                 </div>
             </section>

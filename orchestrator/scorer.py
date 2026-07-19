@@ -30,6 +30,30 @@ def score_draft(
     Score a draft piece of content.
 
     Args:
+
+        # Multimodal asset analysis
+        asset_feedback = ""
+        if asset_path:
+            from utils.multimodal_analyzer import (
+                analyze_screenshot, analyze_video_frame, 
+                generate_visual_feedback, multimodal_scoring_boost
+            )
+            from pathlib import Path
+            
+            asset_ext = Path(asset_path).suffix.lower()
+            if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"]:
+                asset_analysis = analyze_screenshot(asset_path)
+            elif asset_ext in [".mp4", ".mov", ".avi", ".webm"]:
+                asset_analysis = analyze_video_frame(asset_path)
+            else:
+                asset_analysis = {"error": "Unsupported asset type"}
+            
+            asset_feedback = generate_visual_feedback(
+                "image" if asset_ext in [".png", ".jpg", ".jpeg", ".gif", ".webp"] else "video",
+                asset_analysis
+            )
+            logger.info(f"Multimodal analysis complete: {asset_ext}")
+
         title: Content title.
         topic: Content topic.
         fmt: Content format.
@@ -69,6 +93,12 @@ def score_draft(
         }
 
     dataframe = collector_result["dataframe"]
+        
+        # Inject multimodal feedback if available
+        if asset_feedback:
+            prediction.code_quality_feedback = prediction.code_quality_feedback or ""
+            prediction.code_quality_feedback += f"\n\n{asset_feedback}"
+
 
     # ==================== PREDICTOR ====================
     logger.info("Predicting performance...")
