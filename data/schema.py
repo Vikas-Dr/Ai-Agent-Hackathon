@@ -1,6 +1,6 @@
 """
-Pydantic v2 data models for ContentPulse.
-Defines validated schema for content data, predictions, analysis, and reporting.
+Pydantic v2 data models for DevPulse.
+Defines validated schema for developer content data, predictions, analysis, and reporting.
 """
 
 from datetime import date, datetime, timedelta
@@ -27,23 +27,31 @@ class PredictorStructuredOutput(BaseModel):
 
 
 
-
 # ==================== RAW DATA ====================
 class RawContentRow(BaseModel):
-    """Raw content row from CSV."""
+    """Raw developer content row from CSV.
+    
+    Metrics mapping for DevPulse:
+    - views: Developer documentation/article pageviews
+    - engagement_rate: Social engagement (GitHub stars, tweets, shares) (0.0-1.0)
+    - conversions: Developer signups, API key creations, or tool adoptions
+    - search_rank: Developer SEO keyword ranking (1-100)
+    - github_stars_growth: Growth rate of GitHub repository stars
+    - audience_segment: Developer specialization (frontend|backend|devops|architects)
+    """
 
     title: str = Field(..., min_length=1, max_length=200)
     url: str
-    topic: str
-    format: str
-    audience_segment: str
+    topic: str  # API Design, Authentication, Cloud Infrastructure, etc.
+    format: str  # technical_blog, tutorial, code_example, documentation, etc.
+    audience_segment: str  # frontend, backend, devops, architects
     word_count: int = Field(..., ge=100, le=20000)
     publish_date: date
-    views: int = Field(..., ge=0)
-    engagement_rate: float = Field(..., ge=0.0, le=1.0)
-    avg_time_on_page: float = Field(..., ge=0)
-    conversions: int = Field(..., ge=0)
-    search_rank: Optional[int] = Field(None, ge=1, le=100)
+    views: int = Field(..., ge=0, description="Developer documentation/article pageviews")
+    engagement_rate: float = Field(..., ge=0.0, le=1.0, description="Social engagement rate (GitHub, social media)")
+    avg_time_on_page: float = Field(..., ge=0, description="Time on page (seconds)")
+    conversions: int = Field(..., ge=0, description="Developer signups, API key creations, or adoptions")
+    search_rank: Optional[int] = Field(None, ge=1, le=100, description="Developer SEO keyword ranking")
 
     @field_validator("url")
     @classmethod
