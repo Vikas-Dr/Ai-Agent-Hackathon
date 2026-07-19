@@ -4,7 +4,6 @@ Analyzes content performance across multiple dimensions.
 Uses Pydantic structured output validation.
 """
 
-import json
 import logging
 from typing import Any
 
@@ -13,7 +12,6 @@ import pandas as pd
 from agents.base_agent import BaseAgent
 from data.schema import (
     AnalyzerOutput,
-    AnalyzerInsightsOutput,
     AudienceBreakdown,
     FormatBreakdown,
     LengthAnalysis,
@@ -22,6 +20,9 @@ from data.schema import (
 )
 from llm import call_llm
 
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.FileHandler("logs/agents.log"))
+logger.setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
 logger.setLevel(logging.INFO)
@@ -191,8 +192,8 @@ class AnalyzerAgent(BaseAgent):
         # ==================== STEP 3: LLM CALL ====================
 
         system_prompt = (
-            "You are a content analytics expert. Return structured insights grounded in data. "
-            "Each insight must be one sentence and actionable for editorial decisions."
+            "You are a content analytics expert. Return JSON matching the schema."
+            " Each insight is one sentence grounded in the data, actionable for editorial decisions."
         )
         user_prompt = (
             f"Aggregated data:\n{summary}\n\n"
@@ -200,35 +201,35 @@ class AnalyzerAgent(BaseAgent):
         )
 
         try:
-            # Use Pydantic structured output validation
-            response_text = call_llm(
-                system_prompt, 
-                user_prompt,
-                response_schema=AnalyzerInsightsOutput,
+            # Let call_llm handle structured schema validation directly
+            analyzer_output = call_llm(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                response_schema=AnalyzerOutput,
                 max_tokens=500
             )
-            response_obj = json.loads(response_text)
-            insights = response_obj.get("insights", [])
+            
+            # Map aggregated stats from local calculations to preserve exact values
+            analyzer_output.top_topics = top_topics
+            analyzer_output.top_formats = top_formats
+            analyzer_output.audience_analysis = audience_analysis
+            analyzer_output.period_trends = period_trends
+            analyzer_output.length_analysis = length_analysis
+            
+            logger.info(f"✓ LLM generated {len(analyzer_output.insights)} insights (Pydantic validated)")
+            return analyzer_output
 
-            if not insights:
-                logger.warning("LLM returned empty insights, using fallback")
-                insights = self._generate_fallback_insights(dataframe)
-            else:
-                logger.info(f"✓ LLM generated {len(insights)} insights (with Pydantic validation)")
-        except (json.JSONDecodeError, KeyError, Exception) as e:
-            logger.warning(f"LLM parsing failed: {e}, using fallback insights")
+        except Exception as e:
+            logger.warning(f"LLM insight generation failed: {e}, using fallback insights")
             insights = self._generate_fallback_insights(dataframe)
-
-        # ==================== STEP 5: RETURN OUTPUT ====================
-
-        return AnalyzerOutput(
-            insights=insights,
-            top_topics=top_topics,
-            top_formats=top_formats,
-            audience_analysis=audience_analysis,
-            period_trends=period_trends,
-            length_analysis=length_analysis,
-        )
+            return AnalyzerOutput(
+                insights=insights,
+                top_topics=top_topics,
+                top_formats=top_formats,
+                audience_analysis=audience_analysis,
+                period_trends=period_trends,
+                length_analysis=length_analysis,
+            )
 
     def _generate_fallback_insights(self, dataframe: pd.DataFrame) -> list[str]:
         """Generate deterministic fallback insights."""
