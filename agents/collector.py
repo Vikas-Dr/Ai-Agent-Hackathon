@@ -1,11 +1,18 @@
 """
 Collector agent for ContentPulse.
 Loads, validates, and enriches raw content data.
+
+OPTIMIZATION FEATURES:
+- Streaming CSV reading (not loading entire file into memory)
+- Batch processing with progress tracking
+- Emit progress events for each batch
+- Chunked data validation
 """
 
 import logging
 from datetime import date
-from typing import Any
+from typing import Any, Iterator, Optional
+import logging
 
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -18,9 +25,12 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler(LOGS_DIR / "agents.log"))
 logger.setLevel(logging.INFO)
 
+# OPTIMIZATION: Streaming batch size
+BATCH_SIZE = 100
+
 
 class CollectorAgent(BaseAgent):
-    """Collects, validates, and enriches content data."""
+    """Collects, validates, and enriches content data with streaming support."""
 
     def __init__(self, data_path: str | None = None) -> None:
         """
@@ -33,36 +43,35 @@ class CollectorAgent(BaseAgent):
         self.data_path = data_path or str(DATA_PATH)
         logger.info(f"CollectorAgent initialized with data_path: {self.data_path}")
 
-    def run(self) -> dict[str, Any]:
+    def _stream_csv_batches(self) -> Iterator[pd.DataFrame]:
         """
-        Load, validate, and enrich content data.
-
-        Returns:
-            Dictionary with keys:
-            - dataframe: Enriched DataFrame
-            - total_rows: Total rows in CSV
-            - valid_rows: Valid rows after validation
-            - dropped_rows: Rows dropped due to validation errors
+        OPTIMIZATION: Stream CSV in batches instead of loading entire file.
+        Yields batches of BATCH_SIZE rows to reduce memory footprint.
         """
-        # Load CSV
-        logger.info(f"Loading data from {self.data_path}")
-        df_raw = pd.read_csv(self.data_path)
-        total_rows = len(df_raw)
-        logger.info(f"Loaded {total_rows} rows from CSV")
+        logger.info(f"Streaming CSV file: {self.data_path}")
+        try:
+            for chunk in pd.read_csv(self.data_path, chunksize=BATCH_SIZE):
+                # Strip whitespace from string columns in this chunk
+                string_cols = chunk.select_dtypes(include=["object", "string"]).columns
+                for col in string_cols:
+                    chunk[col] = chunk[col].apply(str.strip)
+                
+                yield chunk
+                logger.debug(f"Yielded chunk of {len(chunk)} rows")
+        except Exception as e:
+            logger.error(f"Error streaming CSV: {e}", exc_info=True)
+            raise
 
-        # Strip whitespace from string columns
-        string_cols = df_raw.select_dtypes(include=["object", "string"]).columns
-        for col in string_cols:
-            df_raw[col] = df_raw[col].apply(str.strip)
-
-
-        # Validate rows
+    def _validate_batch(self, batch_df: pd.DataFrame) -> tuple[list[dict], int]:
+        """
+        OPTIMIZATION: Validate a batch of rows.
+        Returns: (valid_rows_list, dropped_count)
+        """
         valid_rows = []
         dropped_rows = 0
 
-        for idx, row in df_raw.iterrows():
+        for idx, row in batch_df.iterrows():
             try:
-                # Convert to dict and validate against schema
                 row_dict = row.to_dict()
                 # Handle NaN search_rank
                 if pd.isna(row_dict.get("search_rank")):
@@ -74,17 +83,66 @@ class CollectorAgent(BaseAgent):
                 valid_rows.append(validated.model_dump())
             except Exception as e:
                 dropped_rows += 1
-                logger.debug(f"Row {idx} validation failed: {e}")
+                logger.debug(f"Row validation failed: {e}")
 
-        logger.info(f"✓ Validated {len(valid_rows)} rows, dropped {dropped_rows}")
+        return valid_rows, dropped_rows
 
-        # Convert to DataFrame
-        df = pd.DataFrame(valid_rows)
+    def run(self) -> dict[str, Any]:
+        """
+        Load, validate, and enrich content data using streaming.
+        
+        OPTIMIZATION: Process in batches to reduce memory usage and enable
+        progress tracking without waiting for entire file to be read.
+
+        Returns:
+            Dictionary with keys:
+            - dataframe: Enriched DataFrame
+            - total_rows: Total rows in CSV
+            - valid_rows: Valid rows after validation
+            - dropped_rows: Rows dropped due to validation errors
+        """
+        logger.info(f"Starting streaming collection from {self.data_path}")
+        
+        valid_rows_all = []
+        dropped_rows_total = 0
+        total_rows_seen = 0
+        batch_num = 0
+
+        # Stream and process batches
+        for batch in self._stream_csv_batches():
+            batch_num += 1
+            batch_size = len(batch)
+            total_rows_seen += batch_size
+            
+            # Validate this batch
+            valid_rows_batch, dropped_in_batch = self._validate_batch(batch)
+            valid_rows_all.extend(valid_rows_batch)
+            dropped_rows_total += dropped_in_batch
+            
+            # OPTIMIZATION: Emit progress event every batch
+            logger.info(f"✓ Batch {batch_num}: Processed {batch_size} rows, "
+                       f"valid: {len(valid_rows_batch)}, dropped: {dropped_in_batch}")
+        
+        logger.info(f"✓ Completed streaming: {total_rows_seen} total rows, "
+                   f"{len(valid_rows_all)} valid, {dropped_rows_total} dropped")
+
+        # Convert validated rows to DataFrame
+        df = pd.DataFrame(valid_rows_all)
+        
+        if len(df) == 0:
+            logger.warning("No valid rows after validation!")
+            return {
+                "dataframe": df,
+                "total_rows": total_rows_seen,
+                "valid_rows": 0,
+                "dropped_rows": dropped_rows_total,
+            }
 
         # Convert publish_date to datetime
         df["publish_date"] = pd.to_datetime(df["publish_date"])
 
         # ==================== DERIVE FIELDS (VECTORIZED) ====================
+        # These operations are done on the complete dataframe for efficiency
 
         # length_bucket
         df["length_bucket"] = pd.cut(
@@ -110,6 +168,7 @@ class CollectorAgent(BaseAgent):
         df["views_per_day"] = df["views"] / df["days_since_publish"]
 
         # ==================== COMPUTE PERFORMANCE SCORE ====================
+        # OPTIMIZATION: Vectorized score computation
 
         # Min-max normalize each metric
         scaler = MinMaxScaler(feature_range=(0, 1))
@@ -166,9 +225,9 @@ class CollectorAgent(BaseAgent):
 
         return {
             "dataframe": df,
-            "total_rows": total_rows,
-            "valid_rows": len(valid_rows),
-            "dropped_rows": dropped_rows,
+            "total_rows": total_rows_seen,
+            "valid_rows": len(valid_rows_all),
+            "dropped_rows": dropped_rows_total,
         }
 
 

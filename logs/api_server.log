@@ -15,3 +15,86 @@ ContentPulse API Server initialized
 Starting ContentPulse API Server on 0.0.0.0:5050
 ContentPulse API Server initialized
 Starting ContentPulse API Server on 0.0.0.0:5050
+ContentPulse API Server initialized
+Starting ContentPulse API Server on 0.0.0.0:5050
+ContentPulse API Server initialized
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+API endpoints at http://localhost:5050/api/
+ContentPulse API Server initialized with WebSocket support
+ContentPulse API Server initialized with WebSocket support
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+ContentPulse API Server initialized with WebSocket support
+Starting ContentPulse API Server on http://0.0.0.0:5050
+Dashboard available at http://localhost:5050
+WebSocket available at ws://localhost:5050/ws/dashboard
+API endpoints at http://localhost:5050/api/
+Real-time metrics at http://localhost:5050/api/metrics
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+DevPulse API Server initialized
+Starting DevPulse API on http://0.0.0.0:5050
+Report request received
+Report generated in 0.09s
+Report generation failed: Object of type int64 is not JSON serializable
+Report request received
+Report generated in 0.05s
+Report generation failed: Object of type int64 is not JSON serializable
+Report request received
+Report generated in 0.05s
+Report generation failed: Object of type int64 is not JSON serializable
+Score request: API
+Scoring failed: 'ExecutionTrace' object has no attribute 'log'

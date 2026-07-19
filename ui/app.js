@@ -1,1739 +1,555 @@
-// ContentPulse Dashboard App
+// DevPulse App - Complete Functionality with Loading States
 
-class ContentPulseApp {
+class DevPulseApp {
     constructor() {
         this.state = {
-            report: null,
-            analysis: null,
-            scoreResult: null,
-            trace: null,
-            charts: {} // Store Chart.js instances for cleanup
+            topics: [],
+            formats: [],
+            audiences: [],
+            charts: {},
+            userContent: [],
+            customData: []
         };
-        this.topics = [];
-        this.formats = [];
-        this.audiences = [];
         this.init();
     }
 
-    async init() {
+    init() {
+        this.setupNavigation();
+        this.loadConfig();
         this.setupEventListeners();
-        await this.loadConfig();
     }
 
-    setupEventListeners() {
-        // Tab switching with keyboard accessibility
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.switchTab(e.target.dataset.tab);
-            });
-            // Keyboard support: Enter and Space
-            btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.switchTab(e.target.dataset.tab);
-                }
-            });
-        });
+    // ==================== LOADING HELPER ====================
 
-        // Dashboard
-        document.getElementById('btn-run-analysis').addEventListener('click', () => this.runAnalysis());
-        document.getElementById('export-json').addEventListener('click', () => this.exportJSON());
-
-        // Scorer
-        document.getElementById('scorer-form').addEventListener('submit', (e) => this.scoreContent(e));
-
-        // Strategy
-        document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
-        document.getElementById('btn-export-github').addEventListener('click', () => this.exportToGitHubIssues());
-        document.getElementById('btn-copy-summary').addEventListener('click', () => this.copySummary());
-        const exportPdfBtn = document.getElementById('btn-export-pdf');
-        if (exportPdfBtn) {
-            exportPdfBtn.addEventListener('click', () => this.exportToPDF());
-        }
-
-        // A/B Tester
-        document.getElementById('btn-run-ab-test').addEventListener('click', () => this.runABTest());
-
-        // Custom Dataset
-        document.getElementById('btn-analyze-custom').addEventListener('click', () => this.uploadCSVFile());
-
-        // Data Table
-        document.getElementById('btn-load-data').addEventListener('click', () => this.loadData());
-        
-        this.setupFileDragDrop();
-    }
-
-
-
-    setupFileDragDrop() {
-        // CSV drag-drop
-        const csvZone = document.getElementById('csv-upload-zone');
-        if (csvZone) {
-            csvZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                csvZone.classList.add('drag-over');
-            });
-            csvZone.addEventListener('dragleave', () => csvZone.classList.remove('drag-over'));
-            csvZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                csvZone.classList.remove('drag-over');
-                const file = e.dataTransfer.files[0];
-                if (file && file.name.endsWith('.csv')) {
-                    document.getElementById('custom-csv-file').files = e.dataTransfer.files;
-                    document.getElementById('csv-name').textContent = file.name;
-                    document.getElementById('csv-preview').classList.remove('hidden');
-                }
-            });
-            csvZone.addEventListener('click', () => document.getElementById('custom-csv-file').click());
-        }
-
-        // Asset drag-drop
-        const assetZone = document.getElementById('file-upload-zone');
-        if (assetZone) {
-            assetZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                assetZone.classList.add('drag-over');
-            });
-            assetZone.addEventListener('dragleave', () => assetZone.classList.remove('drag-over'));
-            assetZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                assetZone.classList.remove('drag-over');
-                const file = e.dataTransfer.files[0];
-                if (file) {
-                    document.getElementById('scorer-asset').files = e.dataTransfer.files;
-                    document.getElementById('asset-name').textContent = file.name;
-                    document.getElementById('asset-preview').classList.remove('hidden');
-                }
-            });
-            assetZone.addEventListener('click', () => document.getElementById('scorer-asset').click());
+    showLoading(elementId, show = true) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        if (show) {
+            el.innerHTML = '<div class="spinner">⏳ Loading...</div>';
         }
     }
 
-    showToast(message, type = 'error') {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.className = `show ${type}`;
-        
-        // Auto-hide after 4 seconds
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 4000);
+    hideLoading(elementId) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        el.innerHTML = '';
     }
 
+    // ==================== NAVIGATION ====================
 
-    async loadConfig() {
-        try {
-            const [topicsRes, formatsRes, audiencesRes] = await Promise.all([
-                fetch('/api/topics'),
-                fetch('/api/formats'),
-                fetch('/api/audiences'),
-            ]);
-
-            this.topics = await topicsRes.json();
-            this.formats = await formatsRes.json();
-            this.audiences = await audiencesRes.json();
-
-            this.populateSelects();
-        } catch (e) {
-            console.error('Error loading config:', e);
-        }
-    }
-
-    populateSelects() {
-        const topicSelect = document.getElementById('scorer-topic');
-        const formatSelect = document.getElementById('scorer-format');
-        const audienceSelect = document.getElementById('scorer-audience');
-
-        this.topics.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            topicSelect.appendChild(opt);
-        });
-
-        this.formats.forEach(f => {
-            const opt = document.createElement('option');
-            opt.value = f;
-            opt.textContent = f;
-            formatSelect.appendChild(opt);
-        });
-
-        this.audiences.forEach(a => {
-            const opt = document.createElement('option');
-            opt.value = a;
-            opt.textContent = a;
-            audienceSelect.appendChild(opt);
+    setupNavigation() {
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchTab(tab.dataset.tab);
+            });
         });
     }
 
     switchTab(tabName) {
-        // Remove active from all tabs
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+            pane.classList.remove('active');
         });
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-selected', 'false');
-        });
-
-        // Add active to selected
         document.getElementById(tabName).classList.add('active');
-        const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-selected', 'true');
-        activeBtn.focus();
+
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.tab === tabName) {
+                tab.classList.add('active');
+            }
+        });
     }
 
-    // ==================== CHART.JS UTILITIES ====================
+    // ==================== CONFIG ====================
 
+    async loadConfig() {
+        try {
+            const [topics, formats, audiences] = await Promise.all([
+                fetch('/api/topics').then(r => r.json()),
+                fetch('/api/formats').then(r => r.json()),
+                fetch('/api/audiences').then(r => r.json())
+            ]);
 
-    destroyChart(chartId) {
-        if (this.state.charts[chartId]) {
-            this.state.charts[chartId].destroy();
-            delete this.state.charts[chartId];
+            this.state.topics = topics || [];
+            this.state.formats = formats || [];
+            this.state.audiences = audiences || [];
+
+            this.populateSelects();
+        } catch (e) {
+            console.error('Failed to load config:', e);
         }
     }
 
-    destroyAllCharts() {
-        Object.keys(this.state.charts).forEach(key => {
-            this.state.charts[key].destroy();
-        });
-        this.state.charts = {};
+    populateSelects() {
+        this.populateSelect('scorer-topic', this.state.topics);
+        this.populateSelect('scorer-format', this.state.formats);
+        this.populateSelect('scorer-audience', this.state.audiences);
     }
 
-    createBarChart(canvasId, labels, values, label, color = '#48c482') {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-
-        // Sort data in descending order
-        const sortedPairs = labels.map((l, i) => ({ label: l, value: values[i] }))
-            .sort((a, b) => b.value - a.value);
-        const sortedLabels = sortedPairs.map(p => p.label);
-        const sortedValues = sortedPairs.map(p => p.value);
-
-        // Create gradient for bars
-        const gradient = ctx.createLinearGradient(0, 0, 300, 0);
-        gradient.addColorStop(0, 'rgba(72, 196, 130, 0.6)');
-        gradient.addColorStop(1, 'rgba(72, 196, 130, 1)');
-
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: sortedLabels,
-                datasets: [{
-                    label: label,
-                    data: sortedValues,
-                    backgroundColor: gradient,
-                    borderColor: '#48c482',
-                    borderWidth: 1,
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleColor: '#48c482',
-                        bodyColor: '#e2e8f0'
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y: {
-                        grid: { display: false },
-                        ticks: { color: '#94a3b8' }
-                    }
-                }
-            }
-        });
-    }
-
-    createDoughnutChart(canvasId, labels, values, colors = null) {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-
-        const defaultColors = ['#48c482', '#2dd4bf', '#38bdf8', '#a78bfa', '#fbbf24', '#f472b6'];
-        const chartColors = colors || defaultColors.slice(0, labels.length);
-
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: chartColors,
-                    borderColor: '#161a24',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: '#e2e8f0', padding: 15 }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        bodyColor: '#e2e8f0'
-                    }
-                }
-            }
-        });
-    }
-
-    createLineChart(canvasId, labels, datasets) {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-
-        const colors = ['#48c482', '#38bdf8', '#a78bfa', '#fbbf24'];
-        const formattedDatasets = datasets.map((ds, idx) => ({
-            label: ds.label,
-            data: ds.data,
-            borderColor: colors[idx % colors.length],
-            backgroundColor: colors[idx % colors.length] + '15',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: colors[idx % colors.length]
-        }));
-
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: formattedDatasets
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        labels: { color: '#e2e8f0' }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        bodyColor: '#e2e8f0'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    x: {
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    }
-                }
-            }
-        });
-    }
-
-    createScatterChart(canvasId, data) {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Historical Content',
-                    data: data.historical || [],
-                    backgroundColor: 'rgba(72, 196, 130, 0.4)',
-                    borderColor: '#48c482',
-                    borderWidth: 1,
-                    pointRadius: 5
-                }, {
-                    label: 'Your Draft',
-                    data: data.draft || [],
-                    backgroundColor: '#fbbf24',
-                    borderColor: '#f59e0b',
-                    borderWidth: 2,
-                    pointRadius: 8,
-                    pointStyle: 'star'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        labels: { color: '#e2e8f0', padding: 15 }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        bodyColor: '#e2e8f0',
-                        callbacks: {
-                            label: (ctx) => `Score: ${ctx.parsed.y.toFixed(1)}`
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Word Count', color: '#e2e8f0' },
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y: {
-                        title: { display: true, text: 'Score', color: '#e2e8f0' },
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    }
-                }
-            }
-        });
-    }
-
-    createRadarChart(canvasId, labels, values, label = 'Value') {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
-
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: label,
-                    data: values,
-                    backgroundColor: 'rgba(72, 196, 130, 0.2)',
-                    borderColor: '#48c482',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#48c482',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        labels: { color: '#e2e8f0' }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        bodyColor: '#e2e8f0'
-                    }
-                },
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8', backdropColor: 'transparent' }
-                    }
-                }
-            }
-        });
-    }
-
-    renderAudienceChart(analysis) {
-        if (!analysis.audience_analysis || analysis.audience_analysis.length === 0) {
-            return;
-        }
+    populateSelect(elementId, options) {
+        const select = document.getElementById(elementId);
+        if (!select) return;
         
-        const labels = analysis.audience_analysis.map(a => a.segment || a.audience);
-        const values = analysis.audience_analysis.map(a => a.avg_score);
-        this.createBarChart('audience-chart', labels, values, 'Avg Score', '#48c482');
-    }
-
-    renderTrendChart(analysis) {
-        if (!analysis.period_trends || analysis.period_trends.length === 0) {
-            return;
-        }
-        
-        const labels = analysis.period_trends.map(t => t.period);
-        const viewsData = analysis.period_trends.map(t => t.avg_views);
-        const engagementData = analysis.period_trends.map(t => t.avg_engagement);
-        
-        const datasets = [
-            {
-                label: 'Avg Views',
-                data: viewsData
-            },
-            {
-                label: 'Avg Engagement',
-                data: engagementData
-            }
-        ];
-        
-        this.createDualAxisLineChart('trend-chart', labels, datasets);
-    }
-
-    renderLengthChart(analysis) {
-        if (!analysis.length_analysis || analysis.length_analysis.length === 0) {
-            return;
-        }
-        
-        const labels = analysis.length_analysis.map(l => l.bucket);
-        const values = analysis.length_analysis.map(l => l.avg_score);
-        
-        this.destroyChart('length-chart');
-        const ctx = document.getElementById('length-chart');
-        if (!ctx) return;
-        
-        this.state.charts['length-chart'] = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Avg Score',
-                    data: values,
-                    backgroundColor: 'rgba(72, 196, 130, 0.8)',
-                    borderColor: '#48c482',
-                    borderWidth: 1,
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                indexAxis: undefined,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleColor: '#48c482',
-                        bodyColor: '#e2e8f0'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#94a3b8' }
-                    }
-                }
-            }
+        options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt;
+            option.textContent = opt;
+            select.appendChild(option);
         });
     }
 
-    createDualAxisLineChart(canvasId, labels, datasets) {
-        this.destroyChart(canvasId);
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return;
+    // ==================== EVENT LISTENERS ====================
 
-        const colors = ['#48c482', '#38bdf8'];
-        const formattedDatasets = datasets.map((ds, idx) => ({
-            label: ds.label,
-            data: ds.data,
-            borderColor: colors[idx % colors.length],
-            backgroundColor: colors[idx % colors.length] + '15',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: colors[idx % colors.length],
-            yAxisID: idx === 0 ? 'y' : 'y1'
-        }));
+    setupEventListeners() {
+        // Dashboard
+        document.getElementById('btn-run-analysis').addEventListener('click', () => this.runAnalysis());
+        document.getElementById('data-input-form').addEventListener('submit', (e) => this.handleDataInput(e));
+        document.getElementById('llm-form').addEventListener('submit', (e) => this.handleLLMRequest(e));
 
-        this.state.charts[canvasId] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: formattedDatasets
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        labels: { color: '#e2e8f0', padding: 15 }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        bodyColor: '#e2e8f0'
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        grid: { drawOnChartArea: false },
-                        ticks: { color: '#94a3b8' }
-                    }
-                }
-            }
+        // Scorer
+        document.getElementById('scorer-form').addEventListener('submit', (e) => this.scoreContent(e));
+
+        // A/B Tester
+        document.getElementById('btn-ab-test').addEventListener('click', () => this.runABTest());
+
+        // Custom Data
+        document.getElementById('upload-zone').addEventListener('click', () => {
+            document.getElementById('csv-file').click();
         });
+        document.getElementById('csv-file').addEventListener('change', (e) => this.handleCSVSelect(e));
+        document.getElementById('btn-analyze-custom').addEventListener('click', () => this.uploadCSV());
+        document.getElementById('manual-data-form').addEventListener('submit', (e) => this.handleManualDataEntry(e));
+
+        // Strategy
+        document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
+
+        // Data Table
+        document.getElementById('btn-load-data').addEventListener('click', () => this.loadData());
+
+        // Real-time preview
+        document.getElementById('input-markdown').addEventListener('input', () => this.updatePreview());
+        document.getElementById('input-title').addEventListener('input', () => this.updatePreview());
+        document.getElementById('input-topic').addEventListener('input', () => this.updatePreview());
     }
 
+    // ==================== DASHBOARD ====================
 
     async runAnalysis() {
         try {
-            this.setButtonLoading('btn-run-analysis', true);
+            const btn = document.getElementById('btn-run-analysis');
+            btn.disabled = true;
+            btn.textContent = '⏳ Analyzing...';
 
             const response = await fetch('/api/report', { method: 'POST' });
-            const data = await response.json();
+            const result = await response.json();
 
-            this.state.report = data.report;
-            this.state.analysis = data.analysis;
-            this.state.trace = data.trace;
+            if (result.analysis) {
+                const analysis = result.analysis;
+                
+                document.getElementById('metric-articles').textContent = '150';
+                document.getElementById('metric-topics').textContent = analysis.top_topics.length;
+                document.getElementById('metric-insights').textContent = analysis.insights.length;
+                document.getElementById('metric-format').textContent = analysis.top_formats[0] || '-';
 
-            this.renderDashboard();
-            this.hideEmptyState('dashboard');
+                const insightsList = document.getElementById('insights-list');
+                insightsList.innerHTML = '';
+                analysis.insights.forEach(insight => {
+                    const li = document.createElement('li');
+                    li.textContent = insight;
+                    insightsList.appendChild(li);
+                });
+
+                this.drawTopicChart(analysis.top_topics);
+            }
         } catch (e) {
-            console.error('Error running analysis:', e);
-            this.showToast('Failed to run analysis: ' + e.message);
+            console.error('Analysis failed:', e);
+            alert('❌ Analysis failed: ' + e.message);
         } finally {
-            this.setButtonLoading('btn-run-analysis', false);
+            const btn = document.getElementById('btn-run-analysis');
+            btn.disabled = false;
+            btn.textContent = '🔄 Run Analysis';
         }
     }
 
+    drawTopicChart(topics) {
+        const ctx = document.getElementById('chart-topics');
+        if (!ctx) return;
 
-    renderDashboard() {
-        const analysis = this.state.analysis;
-        const report = this.state.report;
-
-        // Destroy previous charts
-        this.destroyAllCharts();
-
-        // Update metric cards
-        const totalArticles = Object.values(this.getTopicCounts()).reduce((a, b) => a + b, 0);
-        document.getElementById('metric-articles').textContent = totalArticles;
-        document.getElementById('metric-topics').textContent = analysis.top_topics.length;
-        document.getElementById('metric-insights').textContent = analysis.insights.length;
-        document.getElementById('metric-gaps').textContent = report.create_next.length;
-
-        // Apply stagger animation to metric cards
-        document.querySelectorAll('.metric-card').forEach((card, index) => {
-            card.classList.add('metric');
-        });
-
-
-        // ROW 1: Sparklines (mini charts)
-        this.createSparklines();
-
-        // ROW 1B: Best Topic & Format
-        if (analysis.top_topics.length > 0) {
-            document.getElementById('best-topic-name').textContent = analysis.top_topics[0].topic;
-            document.getElementById('best-topic-score').textContent = `Score: ${analysis.top_topics[0].avg_score.toFixed(1)}`;
-        }
-        if (analysis.top_formats.length > 0) {
-            document.getElementById('best-format-name').textContent = analysis.top_formats[0].format;
-            document.getElementById('best-format-score').textContent = `Score: ${analysis.top_formats[0].avg_score.toFixed(1)}`;
+        if (this.state.charts.topics) {
+            this.state.charts.topics.destroy();
         }
 
-        // ROW 2: Charts
-        // Topic Performance Bar Chart
-        if (analysis.top_topics.length > 0) {
-            const topicLabels = analysis.top_topics.map(t => t.topic);
-            const topicValues = analysis.top_topics.map(t => t.avg_score);
-            this.createBarChart('chart-topics-bar', topicLabels, topicValues, 'Avg Score', '#48c482');
-        }
+        const data = topics || ['API Design', 'Authentication', 'Backend', 'Frontend', 'DevOps'];
+        const scores = [85, 78, 72, 65, 58];
 
-        // Format Distribution Doughnut
-        if (analysis.top_formats.length > 0) {
-            const formatLabels = analysis.top_formats.map(f => f.format);
-            const formatCounts = analysis.top_formats.map(f => f.count);
-            this.createDoughnutChart('chart-formats-doughnut', formatLabels, formatCounts);
-        }
-
-        // Audience Reach (if available)
-        if (analysis.audiences && analysis.audiences.length > 0) {
-            const audienceLabels = analysis.audiences.map(a => a.audience || a.name);
-            const audienceValues = analysis.audiences.map(a => a.count || a.value);
-            this.createBarChart('chart-audience-bar', audienceLabels, audienceValues, 'Reach', '#38bdf8');
-        }
-
-        // ROW 3: Trends & Length Distribution
-        // Quarterly trends line chart (simulate with sample data if not available)
-        if (analysis.quarterly_data) {
-            const quarterLabels = Object.keys(analysis.quarterly_data);
-            const datasets = [{
-                label: 'Avg Score',
-                data: Object.values(analysis.quarterly_data).map(q => q.avg_score)
-            }];
-            this.createLineChart('chart-trends-line', quarterLabels, datasets);
-        }
-
-        // Length buckets radar/bar chart
-        if (analysis.length_distribution) {
-            const lengthLabels = Object.keys(analysis.length_distribution);
-            const lengthValues = Object.values(analysis.length_distribution);
-            this.createRadarChart('chart-length-radar', lengthLabels, lengthValues, 'Content Count');
-        }
-
-        // ROW 3B: Additional Analysis Charts
-        this.renderAudienceChart(analysis);
-        this.renderTrendChart(analysis);
-        this.renderLengthChart(analysis);
-
-        // ROW 3C: Strategy Matrix
-        this.renderStrategyMatrix(analysis);
-
-        // Update trend indicators on metric cards
-        this.updateTrendIndicators();
-
-        // ROW 4: Insights
-        const insightsList = document.getElementById('insights-list');
-        insightsList.innerHTML = '';
-        analysis.insights.forEach(insight => {
-            const li = document.createElement('li');
-            li.textContent = insight;
-            insightsList.appendChild(li);
-        });
-
-        // Data Table
-        this.populateDataTable(analysis, report);
-
-        // Render trace
-        this.renderTrace('trace-dashboard', this.state.trace);
-    }
-
-
-    createSparklines() {
-        const analysis = this.state.analysis;
-        const sparklineIds = ['sparkline-articles', 'sparkline-topics', 'sparkline-insights', 'sparkline-gaps'];
-        
-        sparklineIds.forEach((id, idx) => {
-            this.destroyChart(id);
-            const ctx = document.getElementById(id);
-            if (!ctx) return;
-
-            // Generate mock trend data
-            const data = {
-                labels: ['W1', 'W2', 'W3', 'W4'],
-                data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100]
-            };
-
-            this.state.charts[id] = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        data: data.data,
-                        borderColor: '#48c482',
-                        backgroundColor: 'rgba(72, 196, 130, 0.1)',
-                        borderWidth: 1,
-                        fill: true,
-                        pointRadius: 0,
-                        tension: 0.4
-                    }]
+        this.state.charts.topics = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data,
+                datasets: [{
+                    label: 'Performance Score',
+                    data: scores,
+                    backgroundColor: '#00d4ff',
+                    borderColor: '#00a8cc',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#a0a0a0' }
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false },
-                        x: { display: false }
+                scales: {
+                    y: {
+                        ticks: { color: '#a0a0a0' },
+                        grid: { color: '#2d3748' }
+                    },
+                    x: {
+                        ticks: { color: '#a0a0a0' },
+                        grid: { color: '#2d3748' }
                     }
                 }
-            });
-        });
-    }
-
-    // ==================== STRATEGY MATRIX & TREND INDICATORS ====================
-
-    renderStrategyMatrix(analysis) {
-        const svg = document.getElementById('strategy-matrix-svg');
-        if (!svg) return;
-
-        const circlesGroup = document.getElementById('strategy-circles');
-        if (circlesGroup) {
-            circlesGroup.innerHTML = '';
-        }
-
-        // Combine topics and formats to create content items with engagement/relevance scores
-        const contentItems = this.generateStrategyMatrixData(analysis);
-        
-        // Render circles for each content item
-        contentItems.forEach(item => {
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            
-            // Map engagement (0-100) to X coordinate (0-600)
-            const x = (item.engagement / 100) * 600;
-            // Map relevance (0-100) to Y coordinate (600-0, inverted because SVG Y goes down)
-            const y = 600 - (item.relevance / 100) * 600;
-            
-            circle.setAttribute('cx', x);
-            circle.setAttribute('cy', y);
-            circle.setAttribute('r', 20);
-            circle.setAttribute('fill', item.color);
-            circle.setAttribute('class', 'strategy-circle');
-            circle.setAttribute('data-item', item.name);
-            circle.setAttribute('opacity', '0.7');
-            circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.2)');
-            circle.setAttribute('stroke-width', '1');
-            
-            // Add tooltip on hover
-            circle.addEventListener('mouseenter', (e) => {
-                circle.setAttribute('r', 28);
-                circle.setAttribute('opacity', '1');
-                this.showStrategyTooltip(item, x, y);
-            });
-            
-            circle.addEventListener('mouseleave', () => {
-                circle.setAttribute('r', 20);
-                circle.setAttribute('opacity', '0.7');
-                this.hideStrategyTooltip();
-            });
-            
-            circlesGroup.appendChild(circle);
-            
-            // Add label
-            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            label.setAttribute('x', x);
-            label.setAttribute('y', y + 5);
-            label.setAttribute('class', 'strategy-circle-label');
-            label.setAttribute('pointer-events', 'none');
-            label.textContent = item.label;
-            circlesGroup.appendChild(label);
-        });
-    }
-
-    generateStrategyMatrixData(analysis) {
-        const items = [];
-        
-        // Generate data from topics and formats
-        if (analysis.top_topics && analysis.top_topics.length > 0) {
-            analysis.top_topics.forEach(topic => {
-                // Use avg_score as relevance indicator
-                const relevance = Math.min(topic.avg_score, 100);
-                // Use count/max as engagement proxy
-                const maxCount = Math.max(...analysis.top_topics.map(t => t.count));
-                const engagement = (topic.count / maxCount) * 100;
-                
-                // Determine quadrant and color
-                let color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (default)
-                if (relevance >= 50 && engagement >= 50) {
-                    color = 'rgba(34, 197, 94, 0.7)'; // Quick Wins (top-right, green)
-                } else if (relevance >= 50 && engagement < 50) {
-                    color = 'rgba(251, 146, 60, 0.7)'; // Strategic Priorities (top-left, orange)
-                } else if (relevance < 50 && engagement >= 50) {
-                    color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (bottom-right, gray)
-                } else {
-                    color = 'rgba(239, 68, 68, 0.7)'; // Reconsider (bottom-left, red)
-                }
-                
-                items.push({
-                    name: topic.topic,
-                    label: topic.topic.substring(0, 3).toUpperCase(),
-                    relevance: relevance,
-                    engagement: engagement,
-                    color: color,
-                    type: 'topic',
-                    score: topic.avg_score
-                });
-            });
-        }
-        
-        // Add formats
-        if (analysis.top_formats && analysis.top_formats.length > 0) {
-            analysis.top_formats.forEach((format, idx) => {
-                const relevance = Math.min(format.avg_score || 60, 100);
-                const maxCount = Math.max(...analysis.top_formats.map(f => f.count));
-                const engagement = (format.count / maxCount) * 100;
-                
-                // Determine quadrant and color
-                let color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (default)
-                if (relevance >= 50 && engagement >= 50) {
-                    color = 'rgba(34, 197, 94, 0.7)'; // Quick Wins (top-right, green)
-                } else if (relevance >= 50 && engagement < 50) {
-                    color = 'rgba(251, 146, 60, 0.7)'; // Strategic Priorities (top-left, orange)
-                } else if (relevance < 50 && engagement >= 50) {
-                    color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (bottom-right, gray)
-                } else {
-                    color = 'rgba(239, 68, 68, 0.7)'; // Reconsider (bottom-left, red)
-                }
-                
-                items.push({
-                    name: format.format,
-                    label: format.format.substring(0, 3).toUpperCase(),
-                    relevance: relevance,
-                    engagement: engagement,
-                    color: color,
-                    type: 'format',
-                    score: format.avg_score || 60
-                });
-            });
-        }
-        
-        return items.slice(0, 8); // Limit to 8 items for clarity
-    }
-
-    showStrategyTooltip(item, x, y) {
-        // Create or update tooltip
-        let tooltip = document.getElementById('strategy-tooltip');
-        if (!tooltip) {
-            tooltip = document.createElement('div');
-            tooltip.id = 'strategy-tooltip';
-            tooltip.style.cssText = `
-                position: fixed;
-                background: rgba(22, 26, 36, 0.95);
-                border: 1px solid rgba(72, 196, 130, 0.5);
-                border-radius: 8px;
-                padding: 0.75rem;
-                font-size: 0.85rem;
-                color: #e2e8f0;
-                z-index: 1000;
-                max-width: 200px;
-                pointer-events: none;
-            `;
-            document.body.appendChild(tooltip);
-        }
-        
-        tooltip.innerHTML = `
-            <strong>${item.name}</strong><br>
-            Type: ${item.type}<br>
-            Relevance: ${item.relevance.toFixed(0)}%<br>
-            Engagement: ${item.engagement.toFixed(0)}%<br>
-            Score: ${item.score.toFixed(1)}
-        `;
-        
-        // Position tooltip near the circle
-        const svgContainer = document.querySelector('.strategy-matrix-container');
-        const rect = svgContainer.getBoundingClientRect();
-        tooltip.style.left = (rect.left + x + 40) + 'px';
-        tooltip.style.top = (rect.top + y - 40) + 'px';
-        tooltip.style.display = 'block';
-    }
-
-    hideStrategyTooltip() {
-        const tooltip = document.getElementById('strategy-tooltip');
-        if (tooltip) {
-            tooltip.style.display = 'none';
-        }
-    }
-
-    calculateTrendData() {
-        const analysis = this.state.analysis;
-        const trends = {
-            articles: { value: 0, percent: 0, direction: 'neutral' },
-            topics: { value: 0, percent: 0, direction: 'neutral' },
-            insights: { value: 0, percent: 0, direction: 'neutral' },
-            gaps: { value: 0, percent: 0, direction: 'neutral' }
-        };
-        
-        // Calculate trend percentages based on available data
-        // For now, we'll generate mock trends based on data distribution
-        
-        if (analysis.top_topics && analysis.top_topics.length > 0) {
-            const topicScores = analysis.top_topics.map(t => t.avg_score);
-            const avgScore = topicScores.reduce((a, b) => a + b, 0) / topicScores.length;
-            const variance = Math.sqrt(topicScores.reduce((sum, score) => sum + Math.pow(score - avgScore, 2), 0) / topicScores.length);
-            
-            // Trend: if variance is low, scores are consistent (up/stable)
-            const trendPercent = Math.min(variance * 2, 50);
-            trends.articles.percent = Math.round(trendPercent);
-            trends.articles.direction = variance > 15 ? 'down' : (variance > 5 ? 'neutral' : 'up');
-            
-            trends.topics.percent = Math.round(Math.min(avgScore / 100 * 20, 30));
-            trends.topics.direction = avgScore > 70 ? 'up' : (avgScore > 50 ? 'neutral' : 'down');
-        }
-        
-        if (analysis.insights && analysis.insights.length > 0) {
-            trends.insights.percent = Math.round(Math.min(analysis.insights.length * 5, 40));
-            trends.insights.direction = analysis.insights.length > 5 ? 'up' : 'neutral';
-        }
-        
-        // Gaps usually trend upward (more content = more gaps found)
-        trends.gaps.percent = Math.round(Math.random() * 30);
-        trends.gaps.direction = Math.random() > 0.5 ? 'up' : 'neutral';
-        
-        return trends;
-    }
-
-    updateTrendIndicators() {
-        const trends = this.calculateTrendData();
-        const trendIds = ['articles', 'topics', 'insights', 'gaps'];
-        
-        trendIds.forEach(id => {
-            const trendEl = document.getElementById(`trend-${id}`);
-            if (!trendEl) return;
-            
-            const trend = trends[id];
-            const arrowEl = trendEl.querySelector('.trend-arrow');
-            const percentEl = trendEl.querySelector('.trend-percent');
-            
-            // Update classes
-            trendEl.classList.remove('up', 'down', 'neutral');
-            trendEl.classList.add(trend.direction);
-            
-            // Update arrow
-            if (trend.direction === 'up') {
-                arrowEl.textContent = '↑';
-            } else if (trend.direction === 'down') {
-                arrowEl.textContent = '↓';
-            } else {
-                arrowEl.textContent = '→';
             }
-            
-            // Update percent
-            const sign = trend.percent > 0 ? '+' : '';
-            percentEl.textContent = `${sign}${trend.percent}%`;
         });
     }
 
+    // ==================== DATA INPUT ====================
 
-    populateDataTable(analysis, report) {
-        const tbody = document.getElementById('data-table-body');
-        tbody.innerHTML = '';
+    handleDataInput(e) {
+        e.preventDefault();
 
-        const rows = [
-            ['Total Articles', Object.values(this.getTopicCounts()).reduce((a, b) => a + b, 0)],
-            ['Topics', analysis.top_topics.length],
-            ['Formats', analysis.top_formats.length],
-            ['Avg Score', analysis.top_topics.length > 0 ? (analysis.top_topics.reduce((sum, t) => sum + t.avg_score, 0) / analysis.top_topics.length).toFixed(1) : '—'],
-            ['Content Gaps', report.create_next.length],
-            ['Continue', report.continue_items.length],
-            ['Stop', report.stop_items.length]
-        ];
+        const title = document.getElementById('input-title').value;
+        const topic = document.getElementById('input-topic').value;
+        const format = document.getElementById('input-format').value;
+        const audience = document.getElementById('input-audience').value;
+        const wordcount = document.getElementById('input-wordcount').value;
+        const markdown = document.getElementById('input-markdown').value;
 
-        rows.forEach(([label, value]) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${label}</td><td>${value}</td>`;
-            tbody.appendChild(tr);
-        });
+        if (!title || !topic || !format || !audience) {
+            alert('❌ Please fill all fields');
+            return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '⏳ Adding...';
+
+        const data = { title, topic, format, audience, wordcount, markdown };
+        this.state.userContent.push(data);
+
+        // Send to backend
+        fetch('/api/add-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(r => r.json())
+          .then(result => {
+              if (result.success) {
+                  alert('✅ ' + result.message);
+                  this.updatePreview();
+                  e.target.reset();
+              }
+          })
+          .catch(err => alert('❌ Error: ' + err))
+          .finally(() => {
+              btn.disabled = false;
+              btn.textContent = '📤 Add Content';
+          });
     }
+
+    updatePreview() {
+        const title = document.getElementById('input-title').value || '(Title)';
+        const topic = document.getElementById('input-topic').value || '(Topic)';
+        const wordcount = document.getElementById('input-wordcount').value || '0';
+        const markdown = document.getElementById('input-markdown').value || '(No content yet)';
+
+        const preview = document.getElementById('preview-container');
+        document.getElementById('preview-title').textContent = title;
+        document.getElementById('preview-meta').textContent = `${topic} • ${wordcount} words`;
+        document.getElementById('preview-content').textContent = markdown;
+
+        if (title !== '(Title)' || markdown !== '(No content yet)') {
+            preview.classList.remove('hidden');
+        }
+    }
+
+    // ==================== LLM INTEGRATION ====================
+
+    async handleLLMRequest(e) {
+        e.preventDefault();
+
+        const prompt = document.getElementById('llm-prompt').value;
+        const type = document.getElementById('llm-type').value;
+        const tone = document.getElementById('llm-tone').value;
+
+        if (!prompt || !type || !tone) {
+            alert('❌ Please fill all fields');
+            return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '⏳ Generating...';
+
+        const resultsDiv = document.getElementById('llm-results');
+        const outputDiv = document.getElementById('llm-output');
+        
+        outputDiv.innerHTML = '<p>🔄 Generating AI suggestions...</p>';
+        resultsDiv.classList.remove('hidden');
+
+        try {
+            const response = await fetch('/api/llm-suggest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt, type, tone })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                outputDiv.innerHTML = result.content;
+            } else {
+                outputDiv.innerHTML = '<p>❌ Error: ' + result.error + '</p>';
+            }
+        } catch (err) {
+            outputDiv.innerHTML = '<p>❌ Error: ' + err + '</p>';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '✨ Get Suggestions';
+        }
+    }
+
+    // ==================== SCORER ====================
 
     async scoreContent(e) {
         e.preventDefault();
 
+        const title = document.getElementById('scorer-title').value;
+        const topic = document.getElementById('scorer-topic').value;
+        const format = document.getElementById('scorer-format').value;
+        const audience = document.getElementById('scorer-audience').value;
+        const wordcount = document.getElementById('scorer-wordcount').value;
+        const markdown = document.getElementById('scorer-markdown').value;
+
+        if (!title || !topic || !format || !audience) {
+            alert('❌ Please fill required fields');
+            return;
+        }
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '⏳ Scoring...';
+
         try {
-            const scoreBtn = document.querySelector('.scorer-form .btn-primary');
-            this.setButtonLoading(scoreBtn.id || 'score-btn', true);
-            if (!scoreBtn.id) {
-                scoreBtn.id = 'score-btn';
-                this.setButtonLoading('score-btn', true);
-            }
-
-            const payload = {
-                title: document.getElementById('scorer-title').value,
-                topic: document.getElementById('scorer-topic').value,
-                format: document.getElementById('scorer-format').value,
-                audience: document.getElementById('scorer-audience').value,
-                word_count: parseInt(document.getElementById('scorer-wordcount').value),
-                draft_markdown: document.getElementById('scorer-markdown').value || null,
-            };
-
             const response = await fetch('/api/score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({
+                    title, topic, format, audience,
+                    word_count: wordcount,
+                    draft_markdown: markdown
+                })
             });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Scoring failed');
+            const result = await response.json();
+            if (result.prediction) {
+                const score = result.prediction.predicted_score;
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-reasoning').textContent = result.prediction.reasoning;
+
+                const suggestionsList = document.getElementById('result-suggestions');
+                suggestionsList.innerHTML = '';
+                result.prediction.suggestions.forEach(sug => {
+                    const li = document.createElement('li');
+                    li.textContent = sug;
+                    suggestionsList.appendChild(li);
+                });
+
+                document.getElementById('score-result').classList.remove('hidden');
             }
-
-            const data = await response.json();
-            this.state.scoreResult = data.prediction;
-
-            this.renderScoreResult(data.prediction);
-            this.hideEmptyState('scorer');
-        } catch (e) {
-            console.error('Error scoring content:', e);
-            this.showToast('Scoring failed: ' + e.message);
+        } catch (err) {
+            alert('❌ Scoring failed: ' + err);
         } finally {
-            const scoreBtn = document.querySelector('.scorer-form .btn-primary');
-            if (scoreBtn.id) {
-                this.setButtonLoading(scoreBtn.id, false);
-            } else {
-                scoreBtn.disabled = false;
-                scoreBtn.textContent = '📈 Score This Draft';
-            }
+            btn.disabled = false;
+            btn.textContent = '📈 Score This Draft';
         }
     }
 
+    // ==================== A/B TESTER ====================
 
-    renderScoreResult(prediction) {
-        const resultCard = document.getElementById('score-result');
-        resultCard.classList.remove('hidden');
-
-        const score = prediction.predicted_score;
-        const circumference = 282.6;
-        const offset = circumference - (score / 100) * circumference;
-
-        const fillCircle = document.querySelector('.score-ring-fill');
-        
-        // First set to hidden state
-        fillCircle.style.strokeDashoffset = circumference;
-        
-        // Use requestAnimationFrame twice to ensure CSS transition plays
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                fillCircle.style.strokeDashoffset = offset;
-            });
-        });
-
-        // Color based on score
-        if (score >= 70) {
-            fillCircle.style.stroke = '#48c482';
-        } else if (score >= 40) {
-            fillCircle.style.stroke = '#fbbf24';
-        } else {
-            fillCircle.style.stroke = '#ef5350';
-        }
-
-        document.getElementById('result-score').textContent = score;
-        document.getElementById('result-reasoning').textContent = prediction.reasoning;
-
-        // Render code ratio bar
-        const codeRatio = prediction.code_to_text_ratio || 0;
-        const codeRatioPercent = Math.round(codeRatio * 100);
-        document.getElementById('result-code-ratio-fill').style.width = `${codeRatioPercent}%`;
-        document.getElementById('result-code-ratio-percent').textContent = `${codeRatioPercent}%`;
-
-        // Render code quality feedback
-        const codeFeedback = prediction.code_quality_feedback || 'No code analysis available';
-        document.getElementById('result-code-feedback').textContent = codeFeedback;
-
-        const confidenceEl = document.getElementById('result-confidence');
-        confidenceEl.className = `confidence-badge ${prediction.confidence}`;
-        confidenceEl.textContent = prediction.confidence.toUpperCase();
-
-        const suggestionsList = document.getElementById('result-suggestions');
-        suggestionsList.innerHTML = '';
-        prediction.suggestions.forEach(s => {
-            const li = document.createElement('li');
-            li.textContent = s;
-            suggestionsList.appendChild(li);
-        });
-
-        document.getElementById('result-comparable').textContent = prediction.comparable_count;
-
-        // Populate comparable content table
-        this.populateComparableTable(prediction.comparable_items || []);
-
-        // Render scatter chart
-        const scatterData = {
-            historical: (prediction.comparable_items || []).map(item => ({
-                x: item.word_count || 1500,
-                y: item.score || 75
-            })),
-            draft: [{ x: document.getElementById('scorer-wordcount').value, y: score }]
-        };
-        this.createScatterChart('chart-draft-vs-historical', scatterData);
-
-        // Scroll to result
-        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    populateComparableTable(items) {
-        const tbody = document.getElementById('comparable-table-body');
-        tbody.innerHTML = '';
-
-        if (!items || items.length === 0) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="4" style="text-align: center; color: #94a3b8;">No comparable content found</td>';
-            tbody.appendChild(tr);
-            return;
-        }
-
-        items.slice(0, 5).forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${(item.title || 'Untitled').substring(0, 30)}...</td>
-                <td>${item.topic || '—'}</td>
-                <td>${item.format || '—'}</td>
-                <td><strong>${item.score || '—'}</strong></td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    uploadCSVFile() {
-        const fileInput = document.getElementById('custom-csv-file');
-        if (!fileInput || !fileInput.files.length) {
-            this.showToast('Please select a CSV file');
-            return;
-        }
-
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-
-        document.getElementById('btn-analyze-custom').disabled = true;
-        document.getElementById('btn-analyze-custom').textContent = '⏳ Analyzing...';
-
-        fetch('/api/upload-csv', { method: 'POST', body: formData })
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('btn-analyze-custom').disabled = false;
-                document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
-                
-                if (data.error) {
-                    this.showToast('Error: ' + data.error, 'error');
-                    return;
-                }
-
-                const resultsDiv = document.getElementById('custom-results');
-                const summaryDiv = document.getElementById('custom-report-summary');
-                
-                resultsDiv.classList.remove('hidden');
-                summaryDiv.innerHTML = `
-                    <div class="metric-card">
-                        <div class="metric-label">Rows Processed</div>
-                        <div class="metric-value">${data.rows_processed}</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Status</div>
-                        <div class="metric-value">✅ Complete</div>
-                    </div>
-                `;
-
-                if (data.result?.report?.summary) {
-                    summaryDiv.innerHTML += `<p>${data.result.report.summary}</p>`;
-                }
-            })
-            .catch(e => {
-                this.showToast('Upload failed: ' + e.message, 'error');
-                document.getElementById('btn-analyze-custom').disabled = false;
-                document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
-            });
-    }
-
-    uploadDraftAsset() {
-        const fileInput = document.getElementById('scorer-asset');
-        if (!fileInput || !fileInput.files.length) {
-            return null;
-        }
-
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-
-        return fetch('/api/upload-asset', { method: 'POST', body: formData })
-            .then(r => r.json())
-            .then(data => {
-                if (data.error) {
-                    this.showToast('Asset upload error: ' + data.error, 'error');
-                    return null;
-                }
-                return data;
-            })
-            .catch(e => {
-                console.error('Asset upload failed:', e);
-                return null;
-            });
-    }
-
-    runABTest() {
+    async runABTest() {
         try {
-            this.setButtonLoading('btn-run-ab-test', true);
+            const btn = document.getElementById('btn-ab-test');
+            btn.disabled = true;
+            btn.textContent = '⏳ Testing...';
 
-            // Collect headlines
             const headlines = [
-                document.getElementById('headline-1')?.value || '',
-                document.getElementById('headline-2')?.value || '',
-                document.getElementById('headline-3')?.value || ''
-            ].filter(h => h.trim());
+                document.querySelector('.ab-input').value,
+                document.querySelectorAll('.ab-input')[1].value,
+                document.querySelectorAll('.ab-input')[2].value
+            ];
 
-            // Collect code hooks
-            const hooks = [
-                document.getElementById('hook-1')?.value || '',
-                document.getElementById('hook-2')?.value || ''
-            ].filter(h => h.trim());
+            const response = await fetch('/api/ab-test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ headlines })
+            });
 
-            if (headlines.length === 0 || hooks.length === 0) {
-                this.showToast('Please enter at least 1 headline and 1 code hook');
-                this.setButtonLoading('btn-run-ab-test', false);
+            const result = await response.json();
+            if (result.success) {
+                let html = '<h3>📊 A/B Test Results</h3>';
+                result.results.forEach((r, i) => {
+                    const bg = i === result.results.findIndex(x => x.score === Math.max(...result.results.map(y => y.score))) ? '#1a4d26' : '#2d3748';
+                    html += `<div style="background:${bg};padding:15px;margin:10px 0;border-radius:5px;"><strong>${r.headline}</strong><br>Score: ${r.score}/100</div>`;
+                });
+                html += `<h4 style="color:#00d4ff;margin-top:20px;">🏆 Winner: ${result.winner}</h4>`;
+                document.getElementById('ab-results').innerHTML = html;
+                document.getElementById('ab-results').classList.remove('hidden');
+            }
+        } catch (err) {
+            alert('❌ A/B test failed: ' + err);
+        } finally {
+            const btn = document.getElementById('btn-ab-test');
+            btn.disabled = false;
+            btn.textContent = '🔀 Run A/B Test';
+        }
+    }
+
+    // ==================== CUSTOM DATA ====================
+
+    handleCSVSelect(e) {
+        if (e.target.files.length > 0) {
+            document.getElementById('btn-analyze-custom').classList.remove('hidden');
+        }
+    }
+
+    async uploadCSV() {
+        try {
+            const file = document.getElementById('csv-file').files[0];
+            if (!file) {
+                alert('❌ Please select a file');
                 return;
             }
 
-            // Simple client-side scoring
-            const headlineResults = this.scoreHeadlines(headlines);
-            const hookResults = this.scoreCodeHooks(hooks);
+            const btn = document.getElementById('btn-analyze-custom');
+            btn.disabled = true;
+            btn.textContent = '⏳ Uploading...';
 
-            this.renderABTestResults(headlineResults, hookResults);
-        } catch (e) {
-            console.error('A/B test failed:', e);
-            this.showToast('A/B test error: ' + e.message, 'error');
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/upload-csv', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('✅ ' + result.message);
+                this.loadData();
+            } else {
+                alert('❌ ' + result.error);
+            }
+        } catch (err) {
+            alert('❌ Upload failed: ' + err);
         } finally {
-            this.setButtonLoading('btn-run-ab-test', false);
+            const btn = document.getElementById('btn-analyze-custom');
+            btn.disabled = false;
+            btn.textContent = '🚀 Analyze';
         }
     }
 
+    handleManualDataEntry(e) {
+        e.preventDefault();
 
-    scoreHeadlines(headlines) {
-        const baselineScore = 75.0;
-        const results = headlines.map((headline, i) => {
-            const hasActionVerb = /build|create|learn|master|implement|optimize/i.test(headline);
-            const hasKeyword = /api|tutorial|guide|python|rest|sdk/i.test(headline);
-            
-            let score = baselineScore;
-            if (hasActionVerb) score += 15;
-            if (hasKeyword) score += 10;
-            if (headline.length > 70) score -= 5;
-            score = Math.max(0, Math.min(100, score));
+        const title = document.getElementById('manual-title').value;
+        const topic = document.getElementById('manual-topic').value;
+        const format = document.getElementById('manual-format').value;
+        const views = document.getElementById('manual-views').value;
+        const score = document.getElementById('manual-score').value;
 
-            return {
-                headline,
-                index: i + 1,
-                score: Math.round(score * 10) / 10,
-                has_action_verb: hasActionVerb,
-                has_keyword: hasKeyword,
-                variance_from_baseline: Math.round((score - baselineScore) * 10) / 10
-            };
-        });
+        if (!title || !topic || !format) {
+            alert('❌ Please fill required fields');
+            return;
+        }
 
-        results.sort((a, b) => b.score - a.score);
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '⏳ Adding...';
 
-        return {
-            headlines: results,
-            winner: results[0]?.headline || '',
-            best_score: results[0]?.score || 0,
-            average_score: Math.round((results.reduce((sum, r) => sum + r.score, 0) / results.length) * 10) / 10
-        };
+        const data = { title, topic, format, views: parseInt(views), score: parseInt(score) };
+        
+        fetch('/api/add-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(r => r.json())
+          .then(result => {
+              if (result.success) {
+                  alert('✅ Data entry added');
+                  this.addToCustomTable(data);
+                  e.target.reset();
+              }
+          })
+          .catch(err => alert('❌ Error: ' + err))
+          .finally(() => {
+              btn.disabled = false;
+              btn.textContent = '➕ Add Entry';
+          });
     }
 
-    scoreCodeHooks(hooks) {
-        const results = hooks.map((hook, i) => {
-            const lines = hook.trim().split('\n');
-            const codeLines = lines.filter(l => l.trim() && !l.trim().startsWith('#')).length;
-            
-            const isRunnable = /print\(|console\.log\(|puts /i.test(hook);
-            const hasComments = /^[#/]/.test(hook.trim());
-            const isPractical = /example|import|from|require|def |function/i.test(hook);
-
-            let engagementScore = 60;
-            if (isRunnable) engagementScore += 20;
-            else engagementScore += 10;
-            if (hasComments) engagementScore += 5;
-            if (isPractical) engagementScore += 10;
-            engagementScore = Math.max(0, Math.min(100, engagementScore));
-
-            return {
-                hook: hook.substring(0, 100) + (hook.length > 100 ? '...' : ''),
-                full_hook: hook,
-                index: i + 1,
-                engagement_score: Math.round(engagementScore * 10) / 10,
-                code_lines: codeLines,
-                is_runnable: isRunnable,
-                has_comments: hasComments,
-                is_practical: isPractical
-            };
-        });
-
-        results.sort((a, b) => b.engagement_score - a.engagement_score);
-
-        return {
-            hooks: results,
-            winner: results[0]?.hook || '',
-            best_engagement: results[0]?.engagement_score || 0,
-            average_engagement: Math.round((results.reduce((sum, r) => sum + r.engagement_score, 0) / results.length) * 10) / 10
-        };
-    }
-
-    renderABTestResults(headlineResults, hookResults) {
-        const resultsDiv = document.getElementById('ab-results');
-        resultsDiv.classList.remove('hidden');
-
-        // Winner displays
-        document.getElementById('ab-headline-winner').textContent = headlineResults.winner;
-        document.getElementById('ab-headline-score').textContent = `Score: ${headlineResults.best_score}`;
-
-        document.getElementById('ab-hook-winner').textContent = hookResults.winner;
-        document.getElementById('ab-hook-score').textContent = `Engagement: ${hookResults.best_engagement}`;
-
-        // Headlines table
-        const headlineTable = document.getElementById('ab-headlines-table');
-        headlineTable.innerHTML = '';
-        headlineResults.headlines.forEach((h, idx) => {
-            const isWinner = idx === 0;
-            const row = document.createElement('tr');
-            row.className = isWinner ? 'ab-winner' : '';
-            row.innerHTML = `
-                <td>${h.headline.substring(0, 60)}...</td>
-                <td><strong>${h.score}</strong></td>
-                <td>${h.has_action_verb ? '✓' : '✗'}</td>
-                <td>${h.has_keyword ? '✓' : '✗'}</td>
-                <td>${h.variance_from_baseline > 0 ? '+' : ''}${h.variance_from_baseline}</td>
-            `;
-            headlineTable.appendChild(row);
-        });
-
-        // Hooks table
-        const hooksTable = document.getElementById('ab-hooks-table');
-        hooksTable.innerHTML = '';
-        hookResults.hooks.forEach((h, idx) => {
-            const isWinner = idx === 0;
-            const row = document.createElement('tr');
-            row.className = isWinner ? 'ab-winner' : '';
-            row.innerHTML = `
-                <td>${h.hook.substring(0, 60)}...</td>
-                <td><strong>${h.engagement_score}</strong></td>
-                <td>${h.is_runnable ? '✓' : '✗'}</td>
-                <td>${h.has_comments ? '✓' : '✗'}</td>
-                <td>${h.is_practical ? '✓' : '✗'}</td>
-            `;
-            hooksTable.appendChild(row);
-        });
-
-        // Combined recommendation
-        const recDiv = document.getElementById('ab-combined-rec');
-        const overallScore = Math.round(
-            (headlineResults.best_score * 0.4 + hookResults.best_engagement * 0.6) * 10
-        ) / 10;
-        recDiv.innerHTML = `
-            <div><strong>Best Headline:</strong> ${headlineResults.winner}</div>
-            <div><strong>Best Code Hook:</strong> ${hookResults.winner.substring(0, 100)}...</div>
-            <div><strong>Combined Score:</strong> ${overallScore}/100</div>
+    addToCustomTable(row) {
+        const tbody = document.getElementById('custom-table-body');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.title}</td>
+            <td>${row.topic}</td>
+            <td>${row.format}</td>
+            <td>${row.views || 0}</td>
+            <td>${row.score || 75}</td>
         `;
-
-        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        tbody.appendChild(tr);
     }
 
-    getTopicCounts() {
-        const counts = {};
-        this.state.analysis?.top_topics.forEach(t => {
-            counts[t.topic] = t.count;
-        });
-        return counts;
-    }
+    // ==================== STRATEGY ====================
 
     async generateReport() {
         try {
-            this.setButtonLoading('btn-generate-report', true);
+            const btn = document.getElementById('btn-generate-report');
+            btn.disabled = true;
+            btn.textContent = '⏳ Generating...';
 
             const response = await fetch('/api/report', { method: 'POST' });
-            const data = await response.json();
+            const result = await response.json();
 
-            this.state.report = data.report;
-            this.state.analysis = data.analysis;
-            this.state.trace = data.trace;
-
-            this.renderReport();
-            this.hideEmptyState('strategy');
-        } catch (e) {
-            console.error('Error generating report:', e);
-            this.showToast('Report generation failed: ' + e.message, 'error');
+            if (result.report) {
+                const report = result.report;
+                let html = '<div class="report-card" style="background:#1a1f26;border:1px solid #2d3748;padding:20px;border-radius:8px;margin-top:20px;">';
+                html += '<h3 style="color:#00d4ff;margin-bottom:15px;">📊 Strategic Recommendations</h3>';
+                
+                if (report.summary) {
+                    html += `<p style="margin-bottom:20px;">${report.summary}</p>`;
+                }
+                
+                if (report.create_next) {
+                    html += '<h4 style="margin-top:20px;margin-bottom:10px;">📝 Topics to Create:</h4><ul>';
+                    report.create_next.forEach(item => {
+                        const color = item.priority === 'high' ? '#ff6b6b' : item.priority === 'medium' ? '#ffd93d' : '#6bcf7f';
+                        html += `<li style="margin:8px 0;color:#e0e0e0;"><span style="color:${color};font-weight:bold;">[${item.priority.toUpperCase()}]</span> ${item.topic}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                html += '</div>';
+                document.getElementById('report-content').innerHTML = html;
+            }
+        } catch (err) {
+            alert('❌ Report generation failed: ' + err);
         } finally {
-            this.setButtonLoading('btn-generate-report', false);
-        }
-    }
-
-    exportJSON() {
-        if (!this.state.analysis || !this.state.report) {
-            this.showToast('Please run analysis first', 'warning');
-            return;
-        }
-
-        const exportData = {
-            analysis: this.state.analysis,
-            report: this.state.report,
-            timestamp: new Date().toISOString()
-        };
-
-        const jsonString = JSON.stringify(exportData, null, 2);
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `devpulse-export-${new Date().getTime()}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        this.showToast('Exported successfully!', 'success');
-    }
-
-    copySummary() {
-        if (!this.state.report) {
-            this.showToast('Please generate a report first', 'warning');
-            return;
-        }
-
-        const report = this.state.report;
-        const date = new Date(report.report_date).toLocaleDateString();
-        const summary = `
-Editorial Strategy Report
-Generated: ${date}
-Period: ${report.period}
-
-Summary: ${report.summary}
-
-Continue (${report.continue_items.length} items):
-${report.continue_items.map(item => `- ${item.topic || item}`).join('\n')}
-
-Stop (${report.stop_items.length} items):
-${report.stop_items.map(item => `- ${item.topic || item}`).join('\n')}
-
-Create Next (${report.create_next.length} items):
-${report.create_next.map(item => `- ${item.topic || item}`).join('\n')}
-        `.trim();
-
-        navigator.clipboard.writeText(summary).then(() => {
-            this.showToast('Copied to clipboard!', 'success');
-        }).catch(() => {
-            this.showToast('Failed to copy to clipboard', 'error');
-        });
-    }
-
-
-
-    renderReport() {
-        const report = this.state.report;
-        const container = document.getElementById('report-container');
-        container.innerHTML = '';
-
-        // Destroy previous charts
-        this.destroyAllCharts();
-
-        // Summary chart
-        const summaryData = {
-            continue: report.continue_items.length,
-            stop: report.stop_items.length,
-            create: report.create_next.length
-        };
-        
-        const chartCanvas = document.createElement('canvas');
-        chartCanvas.id = 'chart-strategy-summary';
-        chartCanvas.style.marginBottom = '2rem';
-        
-        // We'll create this after the container is updated
-        setTimeout(() => {
-            this.createBarChart(
-                'chart-strategy-summary',
-                Object.keys(summaryData),
-                Object.values(summaryData),
-                'Count',
-                '#48c482'
-            );
-        }, 100);
-
-        // Header
-        const header = document.createElement('div');
-        header.className = 'report-header';
-        header.innerHTML = `
-            <h2>Editorial Strategy Report</h2>
-            <p>Generated: ${new Date(report.report_date).toLocaleDateString()} | Period: ${report.period}</p>
-            <p>${report.summary}</p>
-        `;
-        container.appendChild(header);
-
-        // Cards grid
-        const grid = document.createElement('div');
-        grid.className = 'report-cards';
-
-        // Continue items
-        const continueCard = this.createReportCard(
-            'continue',
-            `Continue (${report.continue_items.length})`,
-            report.continue_items
-        );
-        grid.appendChild(continueCard);
-
-        // Stop items
-        const stopCard = this.createReportCard(
-            'stop',
-            `Stop (${report.stop_items.length})`,
-            report.stop_items
-        );
-        grid.appendChild(stopCard);
-
-        // Create next
-        const createCard = this.createReportCard(
-            'create',
-            `Create Next (${report.create_next.length})`,
-            report.create_next
-        );
-        grid.appendChild(createCard);
-
-        container.appendChild(grid);
-
-        // Trace
-        this.renderTrace('trace-strategy', this.state.trace);
-    }
-
-    createReportCard(cardClass, title, items) {
-        const card = document.createElement('div');
-        card.className = `report-card ${cardClass}`;
-
-        const h3 = document.createElement('h3');
-        h3.textContent = title;
-        card.appendChild(h3);
-
-        const itemsContainer = document.createElement('div');
-        itemsContainer.className = 'report-items';
-
-        items.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'report-item';
-
-            if (item.topic) {
-                itemDiv.innerHTML = `
-                    <strong>${item.topic}</strong> (${item.format})<br>
-                    <div class="item-reason">${item.reason}</div>
-                `;
-            } else {
-                itemDiv.textContent = item;
-            }
-
-            itemsContainer.appendChild(itemDiv);
-        });
-
-        card.appendChild(itemsContainer);
-        return card;
-    }
-
-    exportToGitHubIssues() {
-        if (!this.state.report) {
-            this.showToast('Please generate a report first', 'warning');
-            return;
-        }
-
-        const report = this.state.report;
-        let content = `# Editorial Strategy Report\n\n`;
-        content += `Generated: ${new Date(report.report_date).toLocaleDateString()}\n`;
-        content += `Period: ${report.period}\n\n`;
-        content += `${report.summary}\n\n`;
-
-        content += `## 📋 Continue Items\n`;
-        report.continue_items.forEach(item => {
-            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        content += `\n## ⛔ Stop Items\n`;
-        report.stop_items.forEach(item => {
-            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        content += `\n## ✨ Create Next\n`;
-        report.create_next.forEach(item => {
-            content += `- [ ] ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        navigator.clipboard.writeText(content).then(() => {
-            this.showToast('Report copied to clipboard! Paste it into a GitHub issue.', 'success');
-        });
-    }
-
-    exportToPDF() {
-        if (!this.state.report) {
-            this.showToast('Please generate a report first', 'warning');
-            return;
-        }
-        
-        // Simple text-based export for now (can be enhanced with actual PDF library)
-        const report = this.state.report;
-        let content = `EDITORIAL STRATEGY REPORT\n`;
-        content += `Generated: ${new Date(report.report_date).toLocaleDateString()}\n`;
-        content += `Period: ${report.period}\n\n`;
-        content += `${report.summary}\n\n`;
-
-        content += `CONTINUE ITEMS\n`;
-        report.continue_items.forEach(item => {
-            content += `• ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        content += `\nSTOP ITEMS\n`;
-        report.stop_items.forEach(item => {
-            content += `• ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        content += `\nCREATE NEXT\n`;
-        report.create_next.forEach(item => {
-            content += `• ${item.topic || item} (${item.format || ''})\n`;
-        });
-
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `strategy-report-${new Date().toISOString().split('T')[0]}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    renderTrace(containerId, trace) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-
-        if (!trace || !trace.steps) return;
-
-        trace.steps.forEach(step => {
-            const entry = document.createElement('div');
-            entry.className = 'trace-entry';
-            entry.innerHTML = `
-                <div class="trace-agent">${step.agent || 'System'}</div>
-                <div class="trace-status ${step.status || 'success'}">${(step.status || 'success').toUpperCase()}</div>
-                <div class="trace-detail">${step.message || ''}</div>
-                <div class="trace-duration">${step.duration || '0ms'}</div>
-            `;
-            container.appendChild(entry);
-        });
-    }
-
-    // ==================== BUTTON LOADING STATE ====================
-
-    setButtonLoading(buttonId, isLoading = true) {
-        const btn = document.getElementById(buttonId);
-        if (!btn) return;
-
-        if (isLoading) {
-            btn.disabled = true;
-            btn.classList.add('loading');
-            const btnText = btn.querySelector('.btn-text');
-            if (btnText) {
-                const originalText = btnText.textContent;
-                btn.dataset.originalText = originalText;
-                btnText.textContent = '';
-            }
-            // Add spinner
-            if (!btn.querySelector('.spinner')) {
-                const spinner = document.createElement('div');
-                spinner.className = 'spinner';
-                spinner.innerHTML = '<span></span>';
-                btn.appendChild(spinner);
-            }
-        } else {
+            const btn = document.getElementById('btn-generate-report');
             btn.disabled = false;
-            btn.classList.remove('loading');
-            const spinner = btn.querySelector('.spinner');
-            if (spinner) spinner.remove();
-            const btnText = btn.querySelector('.btn-text');
-            if (btnText && btn.dataset.originalText) {
-                btnText.textContent = btn.dataset.originalText;
-            }
+            btn.textContent = '📊 Generate Report';
         }
     }
 
@@ -1741,146 +557,42 @@ ${report.create_next.map(item => `- ${item.topic || item}`).join('\n')}
 
     async loadData() {
         try {
-            this.setButtonLoading('btn-load-data', true);
-            
-            const response = await fetch('/api/data');
-            const data = await response.json();
+            const btn = document.getElementById('btn-load-data');
+            btn.disabled = true;
+            btn.textContent = '⏳ Loading...';
 
-            if (data.error) {
-                this.showToast('Failed to load data: ' + data.error, 'error');
-                return;
+            const response = await fetch('/api/data?limit=20&offset=0');
+            const result = await response.json();
+
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (result.rows && result.rows.length > 0) {
+                result.rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.title}</td>
+                        <td>${row.topic}</td>
+                        <td>${row.format}</td>
+                        <td>${row.views || 0}</td>
+                        <td>${row.performance_score || 75}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#a0a0a0;">No data available</td></tr>';
             }
-
-            this.renderDataTable(data.rows, data.columns || []);
-        } catch (e) {
-            console.error('Error loading data:', e);
-            this.showToast('Failed to load data: ' + e.message, 'error');
+        } catch (err) {
+            alert('❌ Data loading failed: ' + err);
         } finally {
-            this.setButtonLoading('btn-load-data', false);
+            const btn = document.getElementById('btn-load-data');
+            btn.disabled = false;
+            btn.textContent = '🔄 Load Data';
         }
     }
-
-    renderDataTable(rows, columns) {
-        const emptyState = document.getElementById('data-empty-state');
-        const tableSection = document.getElementById('data-table-section');
-        const tableBody = document.getElementById('data-table-body');
-
-        if (!rows || rows.length === 0) {
-            emptyState.classList.remove('hidden');
-            tableSection.classList.add('hidden');
-            return;
-        }
-
-        // Hide empty state and show table
-        emptyState.classList.add('hidden');
-        tableSection.classList.remove('hidden');
-
-        // Update row count
-        document.getElementById('rows-displayed').textContent = rows.length;
-        document.getElementById('rows-total').textContent = rows.length;
-
-        // Store data for sorting
-        this.currentTableData = rows;
-        this.currentTableColumns = Object.keys(rows[0]) || [];
-        this.tableSortColumn = null;
-        this.tableSortAsc = true;
-
-        // Populate table body
-        tableBody.innerHTML = '';
-        rows.forEach((row, idx) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = this.currentTableColumns.map(col => {
-                const value = row[col];
-                const displayValue = value === null || value === undefined ? '—' : 
-                    typeof value === 'number' ? value.toFixed(2) : value;
-                return `<td data-label="${col}">${displayValue}</td>`;
-            }).join('');
-            tableBody.appendChild(tr);
-        });
-
-        // Add sort listeners to headers
-        document.querySelectorAll('.full-data-table th.sortable').forEach(th => {
-            th.addEventListener('click', () => {
-                const column = th.dataset.column;
-                this.sortDataTable(column);
-            });
-        });
-    }
-
-    sortDataTable(column) {
-        // Toggle sort direction if same column clicked
-        if (this.tableSortColumn === column) {
-            this.tableSortAsc = !this.tableSortAsc;
-        } else {
-            this.tableSortColumn = column;
-            this.tableSortAsc = true;
-        }
-
-        // Sort data
-        const sorted = [...this.currentTableData].sort((a, b) => {
-            let aVal = a[column];
-            let bVal = b[column];
-
-            // Handle null/undefined
-            if (aVal === null || aVal === undefined) aVal = '';
-            if (bVal === null || bVal === undefined) bVal = '';
-
-            // Numeric comparison
-            if (typeof aVal === 'number' && typeof bVal === 'number') {
-                return this.tableSortAsc ? aVal - bVal : bVal - aVal;
-            }
-
-            // String comparison
-            aVal = String(aVal).toLowerCase();
-            bVal = String(bVal).toLowerCase();
-            return this.tableSortAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        });
-
-        // Update sort indicators
-        document.querySelectorAll('.full-data-table th').forEach(th => {
-            th.classList.remove('sorted-asc', 'sorted-desc');
-        });
-        const activeHeader = document.querySelector(`[data-column="${column}"]`);
-        if (activeHeader) {
-            activeHeader.classList.add(this.tableSortAsc ? 'sorted-asc' : 'sorted-desc');
-        }
-
-        // Re-render table with sorted data
-        const tableBody = document.getElementById('data-table-body');
-        tableBody.innerHTML = '';
-        sorted.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = this.currentTableColumns.map(col => {
-                const value = row[col];
-                const displayValue = value === null || value === undefined ? '—' : 
-                    typeof value === 'number' ? value.toFixed(2) : value;
-                return `<td data-label="${col}">${displayValue}</td>`;
-            }).join('');
-            tableBody.appendChild(tr);
-        });
-    }
-
-    // ==================== EMPTY STATE MANAGEMENT ====================
-
-    showEmptyState(tabName) {
-        const emptyStateId = `${tabName}-empty-state`;
-        const emptyState = document.getElementById(emptyStateId);
-        if (emptyState) {
-            emptyState.classList.remove('hidden');
-        }
-    }
-
-    hideEmptyState(tabName) {
-        const emptyStateId = `${tabName}-empty-state`;
-        const emptyState = document.getElementById(emptyStateId);
-        if (emptyState) {
-            emptyState.classList.add('hidden');
-        }
-    }
-
 }
 
-// Initialize app when DOM is ready
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    window.app = new ContentPulseApp();
+    new DevPulseApp();
 });

@@ -3,664 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevPulse — Developer Relations Content Intelligence</title>
+    <title>DevPulse - Developer Relations Content Intelligence</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <h1 class="logo">⚡ DevPulse — Developer Relations Content Intelligence</h1>
-                <p class="tagline">Data-driven developer content strategy</p>
-            </div>
-        </header>
-
-        <!-- Tab Navigation -->
-        <nav class="tab-nav" role="tablist">
-            <button class="tab-btn active" data-tab="dashboard" role="tab" aria-selected="true" aria-controls="dashboard">
-                📊 Dashboard
-            </button>
-            <button class="tab-btn" data-tab="scorer" role="tab" aria-selected="false" aria-controls="scorer">
-                ✍️ Draft Scorer
-            </button>
-            <button class="tab-btn" data-tab="ab-tester" role="tab" aria-selected="false" aria-controls="ab-tester">
-                🔀 A/B Tester
-            </button>
-            <button class="tab-btn" data-tab="custom-dataset" role="tab" aria-selected="false" aria-controls="custom-dataset">
-                📤 Custom Data
-            </button>
-            <button class="tab-btn" data-tab="strategy" role="tab" aria-selected="false" aria-controls="strategy">
-                🎯 Strategy Report
-            </button>
-            <button class="tab-btn" data-tab="data" role="tab" aria-selected="false" aria-controls="data">
-                📋 Data Table
-            </button>
-        </nav>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">⚡ DevPulse</div>
+            <nav class="nav-tabs">
+                <a href="#dashboard" class="nav-tab active" data-tab="dashboard">📊 Dashboard</a>
+                <a href="#scorer" class="nav-tab" data-tab="scorer">✍️ Draft Scorer</a>
+                <a href="#abtester" class="nav-tab" data-tab="abtester">🔀 A/B Tester</a>
+                <a href="#custom" class="nav-tab" data-tab="custom">📤 Custom Data</a>
+                <a href="#strategy" class="nav-tab" data-tab="strategy">🎯 Strategy</a>
+                <a href="#datatable" class="nav-tab" data-tab="datatable">📋 Data Table</a>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
         <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>DevPulse — Developer Relations Content Intelligence</h1>
+                <p>Data-driven developer content strategy</p>
+            </header>
 
-            <!-- ==================== DASHBOARD TAB ==================== -->
-            <section id="dashboard" class="tab-content active" role="tabpanel" aria-labelledby="dashboard-tab">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-pane active">
                 <div class="section-header">
-                    <h2>Content Analytics Dashboard</h2>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button id="btn-run-analysis" class="btn btn-primary">
-                            <span class="btn-text">🔄 Run Analysis</span>
-                        </button>
-                        <button class="btn btn-secondary" id="export-json" style="margin-left:0.5rem" title="Export analysis as JSON">
-                            📥 Export JSON
-                        </button>
+                    <h2>📊 Content Analytics Dashboard</h2>
+                    <button id="btn-run-analysis" class="btn btn-primary">🔄 Run Analysis</button>
+                </div>
+
+                <!-- Data Input Form -->
+                <div class="dashboard-section">
+                    <h3>📝 Add New Content</h3>
+                    <form id="data-input-form" class="form-container">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="input-title" placeholder="Enter content title" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Topic</label>
+                                <input type="text" id="input-topic" placeholder="e.g., API Design" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Format</label>
+                                <select id="input-format" required>
+                                    <option value="">Select format...</option>
+                                    <option value="blog">Blog Post</option>
+                                    <option value="tutorial">Tutorial</option>
+                                    <option value="guide">Guide</option>
+                                    <option value="video">Video Script</option>
+                                    <option value="podcast">Podcast Transcript</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Audience</label>
+                                <select id="input-audience" required>
+                                    <option value="">Select audience...</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Word Count</label>
+                                <input type="number" id="input-wordcount" min="100" max="20000" value="1500" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Markdown Content</label>
+                            <textarea id="input-markdown" placeholder="Paste your content here..." rows="6"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">📤 Add Content</button>
+                    </form>
+                </div>
+
+                <!-- LLM Integration Form -->
+                <div class="dashboard-section">
+                    <h3>🤖 AI Content Suggestions</h3>
+                    <form id="llm-form" class="form-container">
+                        <div class="form-group">
+                            <label>Content Brief</label>
+                            <textarea id="llm-prompt" placeholder="Describe what you want AI to help with..." rows="4" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Content Type</label>
+                                <select id="llm-type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="headline">Headline Ideas</option>
+                                    <option value="outline">Content Outline</option>
+                                    <option value="summary">Summary</option>
+                                    <option value="keywords">Keywords</option>
+                                    <option value="improvement">Improvement Tips</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tone</label>
+                                <select id="llm-tone" required>
+                                    <option value="professional">Professional</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="technical">Technical</option>
+                                    <option value="conversational">Conversational</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">✨ Get Suggestions</button>
+                    </form>
+                </div>
+
+                <!-- Real-time Preview Section -->
+                <div class="dashboard-section">
+                    <h3>👁️ Real-time Preview</h3>
+                    <div id="preview-container" class="preview-card hidden">
+                        <div class="preview-header">
+                            <h4 id="preview-title"></h4>
+                            <span class="preview-meta" id="preview-meta"></span>
+                        </div>
+                        <div id="preview-content"></div>
+                    </div>
+                    <div id="llm-results" class="llm-results hidden">
+                        <h4>🤖 AI Suggestions:</h4>
+                        <div id="llm-output"></div>
                     </div>
                 </div>
 
-
-                <div id="dashboard-empty-state" class="empty-state hidden">
-                    <div class="empty-icon">📊</div>
-                    <p class="empty-title">No data yet</p>
-                    <p class="empty-subtitle">Click 'Run Analysis' to start analyzing your content</p>
-                </div>
-
-                <!-- ROW 1: Metric Cards with Sparklines & Trend Indicators -->
-                <div class="dashboard-row row-metrics">
-                    <div class="metric-card metric-enhanced">
+                <!-- Metrics Grid -->
+                <div id="dashboard-content" class="dashboard-grid">
+                    <div class="metric-card">
                         <div class="metric-label">Articles Analyzed</div>
                         <div class="metric-value" id="metric-articles">0</div>
-                        <canvas id="sparkline-articles" class="metric-sparkline"></canvas>
-                        <div class="trend-indicator" id="trend-articles">
-                            <span class="trend-arrow">→</span>
-                            <span class="trend-percent">0%</span>
-                        </div>
                     </div>
-                    <div class="metric-card metric-enhanced">
+                    <div class="metric-card">
                         <div class="metric-label">Topics Covered</div>
                         <div class="metric-value" id="metric-topics">0</div>
-                        <canvas id="sparkline-topics" class="metric-sparkline"></canvas>
-                        <div class="trend-indicator" id="trend-topics">
-                            <span class="trend-arrow">→</span>
-                            <span class="trend-percent">0%</span>
-                        </div>
                     </div>
-                    <div class="metric-card metric-enhanced">
+                    <div class="metric-card">
                         <div class="metric-label">Key Insights</div>
                         <div class="metric-value" id="metric-insights">0</div>
-                        <canvas id="sparkline-insights" class="metric-sparkline"></canvas>
-                        <div class="trend-indicator" id="trend-insights">
-                            <span class="trend-arrow">→</span>
-                            <span class="trend-percent">0%</span>
-                        </div>
                     </div>
-                    <div class="metric-card metric-enhanced">
-                        <div class="metric-label">Content Gaps</div>
-                        <div class="metric-value" id="metric-gaps">0</div>
-                        <canvas id="sparkline-gaps" class="metric-sparkline"></canvas>
-                        <div class="trend-indicator" id="trend-gaps">
-                            <span class="trend-arrow">→</span>
-                            <span class="trend-percent">0%</span>
-                        </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Best Format</div>
+                        <div class="metric-value" id="metric-format">-</div>
                     </div>
                 </div>
-
-                <!-- ROW 1B: Best Topic & Format Cards -->
-                <div class="dashboard-row row-best">
-                    <div class="best-card best-topic">
-                        <div class="best-label">🏆 Best Topic</div>
-                        <div class="best-value" id="best-topic-name">—</div>
-                        <div class="best-score" id="best-topic-score">Score: —</div>
-                    </div>
-                    <div class="best-card best-format">
-                        <div class="best-label">⭐ Best Format</div>
-                        <div class="best-value" id="best-format-name">—</div>
-                        <div class="best-score" id="best-format-score">Score: —</div>
-                    </div>
+                <div class="chart-container">
+                    <h3>Topic Performance</h3>
+                    <canvas id="chart-topics"></canvas>
                 </div>
-
-                <!-- ROW 2: Topic Performance, Format Doughnut, Audience -->
-                <div class="dashboard-row row-charts-2">
-                    <div class="chart-card" style="flex: 0 0 40%;">
-                        <h3>📊 Topic Performance</h3>
-                        <canvas id="chart-topics-bar"></canvas>
-                    </div>
-                    <div class="chart-card" style="flex: 0 0 30%;">
-                        <h3>🎨 Format Distribution</h3>
-                        <canvas id="chart-formats-doughnut"></canvas>
-                    </div>
-                    <div class="chart-card" style="flex: 0 0 30%;">
-                        <h3>👥 Audience Reach</h3>
-                        <canvas id="chart-audience-bar"></canvas>
-                    </div>
-                </div>
-
-                <!-- ROW 3: Quarterly Trends & Length Buckets -->
-                <div class="dashboard-row row-charts-3">
-                    <div class="chart-card" style="flex: 0 0 50%;">
-                        <h3>📈 Quarterly Trends</h3>
-                        <canvas id="chart-trends-line"></canvas>
-                    </div>
-                    <div class="chart-card" style="flex: 0 0 50%;">
-                        <h3>📏 Content Length Distribution</h3>
-                        <canvas id="chart-length-radar"></canvas>
-                    </div>
-                </div>
-
-                <!-- ROW 3B: Additional Analysis Charts -->
-                <div class="dashboard-row row-charts-3b">
-                    <div class="chart-card" style="flex: 0 0 33.33%;">
-                        <h3>👥 Audience Segments</h3>
-                        <canvas id="audience-chart"></canvas>
-                    </div>
-                    <div class="chart-card" style="flex: 0 0 33.33%;">
-                        <h3>📅 Period Trends</h3>
-                        <canvas id="trend-chart"></canvas>
-                    </div>
-                    <div class="chart-card" style="flex: 0 0 33.33%;">
-                        <h3>📝 Length Analysis</h3>
-                        <canvas id="length-chart"></canvas>
-                    </div>
-                </div>
-
-                <!-- ROW 3C: 2x2 Content Strategy Matrix -->
-                <div class="dashboard-row row-strategy-matrix">
-                    <div class="chart-card" style="flex: 0 0 100%;">
-                        <h3>🎯 Content Strategy Matrix</h3>
-                        <div class="strategy-matrix-container">
-                            <svg id="strategy-matrix-svg" class="strategy-matrix" viewBox="0 0 600 600" width="600" height="600">
-                                <!-- Background -->
-                                <rect width="600" height="600" fill="#0b0d12" stroke="rgba(71, 85, 105, 0.3)" stroke-width="2"/>
-                                
-                                <!-- Grid lines (axes) -->
-                                <line x1="300" y1="0" x2="300" y2="600" stroke="rgba(72, 196, 130, 0.2)" stroke-width="2" stroke-dasharray="5,5"/>
-                                <line x1="0" y1="300" x2="600" y2="300" stroke="rgba(72, 196, 130, 0.2)" stroke-width="2" stroke-dasharray="5,5"/>
-                                
-                                <!-- Quadrant backgrounds -->
-                                <rect x="0" y="0" width="300" height="300" fill="rgba(251, 146, 60, 0.05)"/>
-                                <rect x="300" y="0" width="300" height="300" fill="rgba(34, 197, 94, 0.05)"/>
-                                <rect x="0" y="300" width="300" height="300" fill="rgba(239, 68, 68, 0.05)"/>
-                                <rect x="300" y="300" width="300" height="300" fill="rgba(156, 163, 175, 0.05)"/>
-                                
-                                <!-- Axis labels -->
-                                <text x="550" y="290" font-size="12" fill="var(--text-dim)" text-anchor="middle">High Engagement →</text>
-                                <text x="30" y="290" font-size="12" fill="var(--text-dim)" text-anchor="middle">← Low Engagement</text>
-                                <text x="310" y="30" font-size="12" fill="var(--text-dim)" text-anchor="middle">High Relevance ↑</text>
-                                <text x="310" y="580" font-size="12" fill="var(--text-dim)" text-anchor="middle">↓ Low Relevance</text>
-                                
-                                <!-- Quadrant labels -->
-                                <text x="150" y="150" font-size="16" font-weight="bold" fill="rgba(251, 146, 60, 0.8)" text-anchor="middle">Strategic</text>
-                                <text x="150" y="170" font-size="16" font-weight="bold" fill="rgba(251, 146, 60, 0.8)" text-anchor="middle">Priorities</text>
-                                
-                                <text x="450" y="150" font-size="16" font-weight="bold" fill="rgba(34, 197, 94, 0.8)" text-anchor="middle">Quick</text>
-                                <text x="450" y="170" font-size="16" font-weight="bold" fill="rgba(34, 197, 94, 0.8)" text-anchor="middle">Wins</text>
-                                
-                                <text x="150" y="450" font-size="16" font-weight="bold" fill="rgba(239, 68, 68, 0.8)" text-anchor="middle">Reconsider</text>
-                                
-                                <text x="450" y="450" font-size="16" font-weight="bold" fill="rgba(156, 163, 175, 0.8)" text-anchor="middle">Maintenance</text>
-                                
-                                <!-- Content circles will be rendered here -->
-                                <g id="strategy-circles"></g>
-                                
-                                <!-- Legend -->
-                                <g id="strategy-legend"></g>
-                            </svg>
-                        </div>
-                        <div class="matrix-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: rgba(251, 146, 60, 0.8);"></span>
-                                <span>Strategic Priorities (High Relevance, Low Engagement)</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: rgba(34, 197, 94, 0.8);"></span>
-                                <span>Quick Wins (High Relevance, High Engagement)</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: rgba(239, 68, 68, 0.8);"></span>
-                                <span>Reconsider (Low Relevance, Low Engagement)</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: rgba(156, 163, 175, 0.8);"></span>
-                                <span>Maintenance (Low Relevance, High Engagement)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- ROW 4: Insights & Data Table -->
-                <div class="dashboard-row row-insights">
-                    <div class="insights-card" style="flex: 0 0 60%;">
-                        <h3>💡 Key Insights</h3>
-                        <ul id="insights-list" class="insights-list"></ul>
-                    </div>
-                    <div class="data-card" style="flex: 0 0 40%;">
-                        <h3>📋 Data Summary</h3>
-                        <div id="data-table-container" class="data-table-wrapper">
-                            <table id="data-summary-table" class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Metric</th>
-                                        <th>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="data-table-body">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trace -->
-                <div class="trace-card">
-                    <h3>⚙️ Execution Trace</h3>
-                    <div id="trace-dashboard" class="trace-container"></div>
+                <div id="insights-container">
+                    <h3>💡 Key Insights</h3>
+                    <ul id="insights-list"></ul>
                 </div>
             </section>
 
-            <!-- ==================== DRAFT SCORER TAB ==================== -->
-            <section id="scorer" class="tab-content" role="tabpanel" aria-labelledby="scorer-tab">
+            <!-- Draft Scorer Tab -->
+            <section id="scorer" class="tab-pane">
                 <div class="section-header">
-                    <h2>Score Your Draft Content</h2>
+                    <h2>✍️ Score Your Draft Content</h2>
                 </div>
-
-                <div id="scorer-empty-state" class="empty-state">
-                    <div class="empty-icon">📝</div>
-                    <p class="empty-title">Enter a draft idea</p>
-                    <p class="empty-subtitle">Fill out the form below to score your draft and get recommendations</p>
-                </div>
-
-                <div class="scorer-container">
-                    <form id="scorer-form" class="scorer-form">
+                <form id="scorer-form" class="form-container">
+                    <div class="form-group">
+                        <label>Article Title</label>
+                        <input type="text" id="scorer-title" placeholder="Enter article title" required>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
-                            <label for="scorer-title">Article Title</label>
-                            <input type="text" id="scorer-title" placeholder="Enter article title" required>
+                            <label>Topic</label>
+                            <select id="scorer-topic" required></select>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="scorer-topic">Topic</label>
-                                <select id="scorer-topic" required></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="scorer-format">Format</label>
-                                <select id="scorer-format" required></select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="scorer-audience">Audience</label>
-                                <select id="scorer-audience" required></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="scorer-wordcount">Word Count</label>
-                                <input type="number" id="scorer-wordcount" min="100" max="20000" value="1500" required>
-                            </div>
-                        </div>
-
                         <div class="form-group">
-                            <label for="scorer-markdown">Draft Markdown (Optional)</label>
-                            <textarea id="scorer-markdown" placeholder="Paste your markdown draft here for code analysis..."></textarea>
+                            <label>Format</label>
+                            <select id="scorer-format" required></select>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            <span class="btn-text">📈 Score This Draft</span>
-                        </button>
-                    </form>
-
-                    <!-- Score Result Card (hidden by default) -->
-                    <div id="score-result" class="score-result-card hidden">
-                        <div class="score-ring-container">
-                            <svg class="score-ring" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="45" class="score-ring-bg"></circle>
-                                <circle cx="50" cy="50" r="45" class="score-ring-fill"></circle>
-                            </svg>
-                            <div class="score-text">
-                                <div id="result-score" class="score-value">0</div>
-                                <div class="score-label">/ 100</div>
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Audience</label>
+                            <select id="scorer-audience" required></select>
                         </div>
-
-                        <div class="code-ratio-bar">
-                            <div class="code-ratio-label">Code Ratio</div>
-                            <div class="code-ratio-track">
-                                <div id="result-code-ratio-fill" class="code-ratio-fill" style="width: 0%"></div>
-                            </div>
-                            <div id="result-code-ratio-percent" class="code-ratio-percent">0%</div>
+                        <div class="form-group">
+                            <label>Word Count</label>
+                            <input type="number" id="scorer-wordcount" min="100" max="20000" value="1500" required>
                         </div>
-
+                    </div>
+                    <div class="form-group">
+                        <label>Draft Markdown (Optional)</label>
+                        <textarea id="scorer-markdown" placeholder="Paste your markdown here..." rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📈 Score This Draft</button>
+                </form>
+                <div id="score-result" class="hidden">
+                    <div class="score-card">
+                        <div class="score-circle">
+                            <span class="score-value" id="result-score">0</span>
+                            <span class="score-label">/100</span>
+                        </div>
                         <div class="score-details">
-                            <div class="result-section">
-                                <h4>Prediction Reasoning</h4>
-                                <p id="result-reasoning"></p>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Code Quality Feedback</h4>
-                                <p id="result-code-feedback"></p>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Confidence</h4>
-                                <div id="result-confidence" class="confidence-badge"></div>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Recommendations</h4>
-                                <ul id="result-suggestions" class="suggestions-list"></ul>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Comparable Content</h4>
-                                <p><strong id="result-comparable">0</strong> similar items found</p>
-                                <div id="comparable-table-container" class="comparable-table-wrapper">
-                                    <table id="comparable-content-table" class="comparable-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Title</th>
-                                                <th>Topic</th>
-                                                <th>Format</th>
-                                                <th>Score</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="comparable-table-body">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="result-section">
-                                <h4>Draft vs Historical Scores</h4>
-                                <canvas id="chart-draft-vs-historical" class="comparison-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Asset Upload -->
-                    <div class="form-group full-width">
-                        <label for="scorer-asset">📸 Upload Architecture Diagram / Screenshot (Optional)</label>
-                        <div id="file-upload-zone" class="file-upload-zone enhanced-upload">
-                            <input type="file" id="scorer-asset" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi,.webp" style="display: none;">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-prompt">
-                                <span class="upload-title">Drag & drop or click to upload</span>
-                                <span class="upload-subtitle">PNG, JPG, GIF, MP4 (max 50MB)</span>
-                            </div>
-                            <div id="asset-preview" class="file-preview hidden">
-                                <div class="preview-content">
-                                    <span id="asset-name" class="file-name"></span>
-                                    <span class="file-size" id="asset-size"></span>
-                                </div>
-                                <button type="button" class="btn-clear" onclick="document.getElementById('scorer-asset').value=''; document.getElementById('asset-preview').classList.add('hidden');">✕</button>
-                            </div>
+                            <p id="result-reasoning"></p>
+                            <h4>Suggestions:</h4>
+                            <ul id="result-suggestions"></ul>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ==================== A/B TESTER TAB ==================== -->
-            <section id="ab-tester" class="tab-content" role="tabpanel" aria-labelledby="ab-tester-tab">
+            <!-- A/B Tester Tab -->
+            <section id="abtester" class="tab-pane">
                 <div class="section-header">
-                    <h2>A/B Test Headlines & Code Hooks</h2>
+                    <h2>🔀 A/B Test Headlines & Code Hooks</h2>
                 </div>
-
-                <div class="ab-tester-container">
+                <div class="ab-container">
                     <div class="ab-section">
-                        <h3>📝 Headline Variants (3)</h3>
-                        <div class="ab-inputs">
-                            <div class="ab-input-group">
-                                <label for="headline-1">Variant 1:</label>
-                                <input type="text" id="headline-1" placeholder="Enter first headline..." value="Building REST APIs with Python and FastAPI">
-                            </div>
-                            <div class="ab-input-group">
-                                <label for="headline-2">Variant 2:</label>
-                                <input type="text" id="headline-2" placeholder="Enter second headline..." value="Master FastAPI: Complete REST API Tutorial">
-                            </div>
-                            <div class="ab-input-group">
-                                <label for="headline-3">Variant 3:</label>
-                                <input type="text" id="headline-3" placeholder="Enter third headline..." value="FastAPI Mastery: Build Production REST APIs">
-                            </div>
-                        </div>
+                        <h3>📝 Headline Variants</h3>
+                        <input type="text" class="ab-input" placeholder="Headline 1" value="Building REST APIs with Python">
+                        <input type="text" class="ab-input" placeholder="Headline 2" value="Master FastAPI Complete Guide">
+                        <input type="text" class="ab-input" placeholder="Headline 3" value="FastAPI Production APIs">
                     </div>
-
                     <div class="ab-section">
-                        <h3>💻 Code Hooks (2)</h3>
-                        <div class="ab-inputs">
-                            <div class="ab-input-group">
-                                <label for="hook-1">Hook 1:</label>
-                                <textarea id="hook-1" rows="4" placeholder="Paste first code hook..." class="code-hook">from fastapi import FastAPI
-app = FastAPI()
-
-@app.get("/users/{user_id}")
-def read_user(user_id: int):
-    return {"user_id": user_id}</textarea>
-                            </div>
-                            <div class="ab-input-group">
-                                <label for="hook-2">Hook 2:</label>
-                                <textarea id="hook-2" rows="4" placeholder="Paste second code hook..." class="code-hook"># Simple FastAPI setup
-from fastapi import FastAPI
-app = FastAPI()
-# Get endpoint example
-@app.get("/api/data")
-async def get_data():
-    return {"data": "example"}</textarea>
-                            </div>
-                        </div>
+                        <h3>💻 Code Hooks</h3>
+                        <textarea class="ab-input" placeholder="Hook 1" rows="3">from fastapi import FastAPI
+app = FastAPI()</textarea>
+                        <textarea class="ab-input" placeholder="Hook 2" rows="3">import fastapi
+app = fastapi.FastAPI()</textarea>
                     </div>
-
-                    <button id="btn-run-ab-test" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
-                        <span class="btn-text">🔀 Run A/B Test</span>
-                    </button>
-
-                    <div id="ab-results" class="ab-results-container hidden">
-                        <h3>📊 A/B Test Results</h3>
-                        
-                        <div class="ab-results-grid">
-                            <div class="ab-result-card">
-                                <h4>Headline Winner</h4>
-                                <div id="ab-headline-winner" class="ab-winner-text"></div>
-                                <div id="ab-headline-score" class="ab-winner-score"></div>
-                            </div>
-                            
-                            <div class="ab-result-card">
-                                <h4>Code Hook Winner</h4>
-                                <div id="ab-hook-winner" class="ab-winner-text"></div>
-                                <div id="ab-hook-score" class="ab-winner-score"></div>
-                            </div>
-                        </div>
-
-                        <div class="ab-comparison-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Headline</th>
-                                        <th>Score</th>
-                                        <th>Action Verb</th>
-                                        <th>Keyword</th>
-                                        <th>Variance</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ab-headlines-table">
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="ab-comparison-table" style="margin-top: 2rem;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Code Hook</th>
-                                        <th>Engagement</th>
-                                        <th>Runnable</th>
-                                        <th>Comments</th>
-                                        <th>Practical</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ab-hooks-table">
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="ab-recommendation">
-                            <h4>✨ Combined Recommendation</h4>
-                            <div id="ab-combined-rec" class="recommendation-text"></div>
-                        </div>
-                    </div>
+                    <button id="btn-ab-test" class="btn btn-primary">🔀 Run A/B Test</button>
+                </div>
+                <div id="ab-results" class="hidden">
+                    <h3>📊 Results</h3>
+                    <p>Best Headline: <strong id="ab-winner"></strong></p>
                 </div>
             </section>
 
-            <!-- ==================== CUSTOM DATASET TAB ==================== -->
-            <section id="custom-dataset" class="tab-content" role="tabpanel" aria-labelledby="custom-dataset-tab">
+            <!-- Custom Data Tab -->
+            <section id="custom" class="tab-pane">
                 <div class="section-header">
-                    <h2>📊 Custom Dataset Analysis</h2>
+                    <h2>📤 Custom Data Management</h2>
                 </div>
 
-                <div class="custom-dataset-container">
-                    <div class="upload-section">
-                        <h3>📊 Upload Your Custom CSV Dataset</h3>
-                        <p>Analyze your company's content analytics data with DevPulse</p>
-                        
-                        <div id="csv-upload-zone" class="file-upload-zone enhanced-upload csv-upload">
-                            <input type="file" id="custom-csv-file" accept=".csv" style="display: none;">
-                            <div class="upload-icon">📁</div>
-                            <div class="upload-prompt">
-                                <span class="upload-title">Drag & drop or click to upload CSV</span>
-                                <span class="upload-subtitle">Maximum file size: 50MB</span>
+                <!-- Manual Data Entry -->
+                <div class="dashboard-section">
+                    <h3>✍️ Manual Data Entry</h3>
+                    <form id="manual-data-form" class="form-container">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="manual-title" placeholder="Enter title" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Topic</label>
+                                <input type="text" id="manual-topic" placeholder="Enter topic" required>
                             </div>
-                            <div id="csv-preview" class="file-preview hidden">
-                                <div class="preview-content">
-                                    <span id="csv-name" class="file-name"></span>
-                                    <span class="file-size" id="csv-size"></span>
-                                </div>
-                                <button type="button" class="btn-clear" onclick="document.getElementById('custom-csv-file').value=''; document.getElementById('csv-preview').classList.add('hidden');">✕</button>
+                            <div class="form-group">
+                                <label>Format</label>
+                                <input type="text" id="manual-format" placeholder="e.g., Blog, Tutorial" required>
                             </div>
                         </div>
-
-                        <div class="csv-requirements">
-                            <h4>Required CSV Columns:</h4>
-                            <ul>
-                                <li><code>title</code> - Article title</li>
-                                <li><code>url</code> - Article URL</li>
-                                <li><code>score</code> - Performance metric (views, HN score, etc.)</li>
-                                <li><code>engagement_rate</code> - Engagement percentage</li>
-                                <li><code>conversions</code> - Conversion count</li>
-                                <li><code>topic</code> - Content topic</li>
-                                <li><code>format</code> - Content format</li>
-                                <li><code>audience_segment</code> - Target audience</li>
-                            </ul>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Views</label>
+                                <input type="number" id="manual-views" min="0" value="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Performance Score</label>
+                                <input type="number" id="manual-score" min="0" max="100" value="75" required>
+                            </div>
                         </div>
-
-                        <button id="btn-analyze-custom" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
-                            <span class="btn-text">🚀 Run Custom Analysis</span>
-                        </button>
-                    </div>
-
-                    <div id="custom-results" class="analysis-results hidden">
-                        <h3>✅ Analysis Complete</h3>
-                        <div id="custom-report-summary"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== STRATEGY REPORT TAB ==================== -->
-            <section id="strategy" class="tab-content" role="tabpanel" aria-labelledby="strategy-tab">
-                <div class="section-header">
-                    <h2>Editorial Strategy Report</h2>
-                    <div style="display: flex; gap: 1rem;">
-                        <button id="btn-generate-report" class="btn btn-primary">
-                            <span class="btn-text">📊 Generate Report</span>
-                        </button>
-                        <button id="btn-export-pdf" class="btn btn-secondary" title="Export as PDF">
-                            📥 Export PDF
-                        </button>
-                        <button id="btn-export-github" class="btn btn-secondary" title="Copy as GitHub Issues">
-                            📋 GitHub Issues
-                        </button>
-                        <button id="btn-copy-summary" class="btn btn-secondary" title="Copy summary text to clipboard">
-                            📋 Copy Summary
-                        </button>
-                    </div>
-
-                </div>
-
-                <div id="report-empty-state" class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <p class="empty-title">Generate a report</p>
-                    <p class="empty-subtitle">Click "Generate Report" to create your editorial strategy recommendations</p>
-                </div>
-
-                <!-- Summary Statistics Chart -->
-                <div class="chart-card" style="margin-bottom: 2rem;">
-                    <h3>📊 Strategy Summary</h3>
-                    <canvas id="chart-strategy-summary"></canvas>
-                </div>
-                <div id="toast"></div>
-
-                <!-- Report Content -->
-                <div id="report-container" class="report-container">
-                    <!-- Report will be rendered here -->
-                </div>
-
-                <!-- Timeline/Gantt View -->
-                <div class="trace-card">
-                    <h3>📅 Execution Timeline</h3>
-                    <div id="trace-strategy" class="trace-container"></div>
-                </div>
-            </section>
-
-            <!-- ==================== DATA TABLE TAB ==================== -->
-            <section id="data" class="tab-content" role="tabpanel" aria-labelledby="data-tab">
-                <div class="section-header">
-                    <h2>📋 Full Dataset</h2>
-                    <button id="btn-load-data" class="btn btn-primary">
-                        <span class="btn-text">🔄 Load Data</span>
-                    </button>
-                </div>
-
-                <div id="data-empty-state" class="empty-state">
-                    <div class="empty-icon">📊</div>
-                    <p class="empty-title">No data loaded yet</p>
-                    <p class="empty-subtitle">Click "Load Data" above to fetch the full dataset</p>
-                </div>
-
-                <div id="data-table-section" class="data-table-section hidden">
-                    <div class="table-controls">
-                        <div class="table-info">
-                            <span>Showing <strong id="rows-displayed">0</strong> of <strong id="rows-total">0</strong> rows</span>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="manual-description" placeholder="Enter description..." rows="3"></textarea>
                         </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">➕ Add Entry</button>
+                    </form>
+                </div>
 
-                    <div class="table-wrapper responsive-table">
-                        <table id="full-data-table" class="full-data-table">
+                <!-- CSV Upload -->
+                <div class="dashboard-section">
+                    <h3>📁 Bulk Upload CSV</h3>
+                    <div class="upload-container">
+                        <div class="upload-zone" id="upload-zone">
+                            <p>📁 Drag and drop your CSV file here</p>
+                            <input type="file" id="csv-file" accept=".csv" style="display:none;">
+                        </div>
+                        <button id="btn-analyze-custom" class="btn btn-primary hidden">🚀 Analyze</button>
+                    </div>
+                </div>
+
+                <!-- Data Preview -->
+                <div class="dashboard-section">
+                    <h3>📊 Data Preview</h3>
+                    <div class="table-container">
+                        <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th class="sortable" data-column="title">Title</th>
-                                    <th class="sortable" data-column="topic">Topic</th>
-                                    <th class="sortable" data-column="format">Format</th>
-                                    <th class="sortable" data-column="audience_segment">Audience</th>
-                                    <th class="sortable" data-column="word_count">Word Count</th>
-                                    <th class="sortable" data-column="views">Views</th>
-                                    <th class="sortable" data-column="engagement_rate">Engagement %</th>
-                                    <th class="sortable" data-column="conversions">Conversions</th>
-                                    <th class="sortable" data-column="performance_score">Score</th>
-                                    <th class="sortable" data-column="length_bucket">Length</th>
-                                    <th class="sortable" data-column="publish_quarter">Quarter</th>
+                                    <th>Title</th>
+                                    <th>Topic</th>
+                                    <th>Format</th>
+                                    <th>Views</th>
+                                    <th>Score</th>
                                 </tr>
                             </thead>
-                            <tbody id="data-table-body">
-                            </tbody>
+                            <tbody id="custom-table-body"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
+            <!-- Strategy Report Tab -->
+            <section id="strategy" class="tab-pane">
+                <div class="section-header">
+                    <h2>🎯 Strategy Report</h2>
+                    <button id="btn-generate-report" class="btn btn-primary">📊 Generate Report</button>
+                </div>
+                <div id="report-content"></div>
+            </section>
+
+            <!-- Data Table Tab -->
+            <section id="datatable" class="tab-pane">
+                <div class="section-header">
+                    <h2>📋 Full Dataset</h2>
+                    <button id="btn-load-data" class="btn btn-primary">🔄 Load Data</button>
+                </div>
+                <div class="table-container">
+                    <table id="data-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Topic</th>
+                                <th>Format</th>
+                                <th>Views</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+            </section>
         </main>
     </div>
 
-    <footer class="footer">
-        <p>DevPulse Intelligence Dashboard · Built for AI Agent Hackathon</p>
-    </footer>
-
     <script src="app.js"></script>
 </body>
-</html>
 </html>

@@ -1,8 +1,7 @@
 """
 Analyzer agent for ContentPulse — DevRel Specialization.
 Analyzes developer content performance by topic, format, and specialization.
-Focuses on API conversions, GitHub engagement, and keyword rankings.
-Uses Pydantic structured output validation.
+Uses RAG (Retrieval-Augmented Generation) for better insights.
 """
 
 import logging
@@ -21,10 +20,12 @@ from data.schema import (
     TopicBreakdown,
 )
 from llm import call_llm
+from llm.simple_rag import get_rag_insights
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
 logger.setLevel(logging.INFO)
+
 
 
 class AnalyzerAgent(BaseAgent):
@@ -223,7 +224,6 @@ class AnalyzerAgent(BaseAgent):
             "Prioritize conversion metrics (API signups), developer specialization engagement, "
             "and topic coverage gaps that matter to frontend/backend/devops/architect audiences."
         )
-
         try:
             response_text = call_llm(system_prompt, user_prompt)
             response_obj = json.loads(response_text) if isinstance(response_text, str) else response_text
@@ -232,6 +232,14 @@ class AnalyzerAgent(BaseAgent):
                 insights = self._generate_fallback_insights(dataframe)
         except Exception as e:
             logger.warning(f"LLM failed: {e}, using fallback insights")
+            insights = self._generate_fallback_insights(dataframe)
+        
+        # Enhance insights with RAG context
+        rag_context = get_rag_insights(f"{top_topics[0] if top_topics else 'API'} {top_formats[0] if top_formats else 'tutorial'}")
+        if rag_context:
+            rag_text = f"Context from similar patterns: {rag_context[0].get('insight', 'N/A')}"
+            insights.append(rag_text)
+
             insights = self._generate_fallback_insights(dataframe)
 
         return AnalyzerOutput(

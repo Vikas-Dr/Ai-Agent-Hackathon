@@ -378,3 +378,62 @@ Stage 1: Collecting data...
 SCORING DRAFT CONTENT
 ============================================================
 Loading historical data...
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.073s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.015s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.000s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.000s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.09s
+============================================================
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.038s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.013s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.000s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.000s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.05s
+============================================================
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.038s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.012s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.000s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.000s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.05s
+============================================================
+✓ Trace started
+============================================================
+SCORING DRAFT CONTENT
+============================================================
+Collecting historical data...

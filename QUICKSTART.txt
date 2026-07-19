@@ -1,0 +1,138 @@
+#!/bin/bash
+# Quick start guide for DevPulse
+
+echo "
+╔══════════════════════════════════════════════════════════════════╗
+║                   🚀 DEVPULSE - QUICK START 🚀                   ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📖 FULL DOCUMENTATION: README.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚡ FASTEST START (2 minutes):
+
+  macOS/Linux:
+    chmod +x run.sh
+    ./run.sh
+
+  Windows:
+    run.bat
+
+  Then open: http://localhost:5050
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 MANUAL SETUP:
+
+  1. Create virtual environment:
+     python3 -m venv venv
+
+  2. Activate it:
+     source venv/bin/activate        # macOS/Linux
+     venv\Scripts\activate            # Windows
+
+  3. Install dependencies:
+     pip install -r requirements.txt
+
+  4. Start the server:
+     python ui/api_server.py
+
+  5. Open browser:
+     http://localhost:5050
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 WHAT YOU GET:
+
+  📊 Dashboard Tab
+     • Real-time content analytics
+     • Multiple charts and visualizations
+     • Strategy matrix (2x2 positioning)
+     • Key insights
+
+  ✍️ Draft Scorer Tab
+     • Score your content before publishing
+     • AI-powered predictions
+     • Code quality analysis
+     • Comparable content recommendations
+
+  🔀 A/B Tester Tab
+     • Test multiple headlines
+     • Compare code hooks
+     • Get winning recommendations
+
+  📤 Custom Data Tab
+     • Upload your company's CSV data
+     • Analyze with DevPulse
+     • Get personalized insights
+
+  🎯 Strategy Report Tab
+     • AI-generated recommendations
+     • Editorial priorities
+     • Content gap analysis
+     • Export as PDF or GitHub issues
+
+  📋 Data Table Tab
+     • Browse full dataset
+     • Sort and filter
+     • Download data
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 API ENDPOINTS:
+
+  Dashboard:  http://localhost:5050
+  API Base:   http://localhost:5050/api
+  Health:     http://localhost:5050/api/health
+
+  GET  /api/topics        → Available topics
+  GET  /api/formats       → Content formats
+  GET  /api/audiences     → Audience segments
+  POST /api/report        → Run analysis
+  GET  /api/data          → Get dataset
+  POST /api/score         → Score content
+  POST /api/upload-csv    → Upload custom data
+  POST /api/upload-asset  → Upload image/video
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ NEED HELP?
+
+  See README.md for:
+  • Complete setup instructions
+  • Feature guides with screenshots
+  • Troubleshooting section
+  • Example workflows
+  • Configuration options
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 UI/UX FEATURES:
+
+  ✨ Modern animations with smooth transitions
+  ✨ Beautiful gradient buttons and cards
+  ✨ Loading spinners and progress indicators
+  ✨ Toast notifications (success/error/warning)
+  ✨ Real-time metric updates
+  ✨ Interactive charts with Chart.js
+  ✨ Fully responsive design
+  ✨ Accessibility support
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 SYSTEM REQUIREMENTS:
+
+  • Python 3.9+
+  • Modern web browser (Chrome, Firefox, Safari, Edge)
+  • ~50MB disk space
+  • Internet connection (for initial setup)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ready? Let's go! 🚀
+
+  Run: ./run.sh   (or run.bat on Windows)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"

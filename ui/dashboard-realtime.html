@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPulse - Real-time Dashboard</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .status-badge.online {
+            background-color: #00d400;
+            color: #000;
+        }
+
+        .status-badge.offline {
+            background-color: #ff3333;
+            color: #fff;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 153, 204, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .metric-label {
+            font-size: 0.85em;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-unit {
+            font-size: 0.6em;
+            color: #a0a0a0;
+            margin-left: 5px;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-wrapper {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 153, 204, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            height: 350px;
+        }
+
+        .chart-title {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #00d4ff;
+            z-index: 10;
+        }
+
+        canvas {
+            margin-top: 30px;
+        }
+
+        .agents-panel {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 153, 204, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .agents-panel h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .agent-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00d4ff;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .agent-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .agent-name {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .agent-info {
+            font-size: 0.85em;
+            color: #a0a0a0;
+        }
+
+        .system-health {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .health-item {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .health-label {
+            font-size: 0.8em;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .health-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .health-bar {
+            height: 6px;
+            background: rgba(0, 100, 100, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .event-log {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 153, 204, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .event-log h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .event-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #00ff88;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #b0b0b0;
+            animation: slideIn 0.2s ease;
+        }
+
+        .event-timestamp {
+            color: #00d4ff;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .event-type {
+            color: #00ff88;
+            margin-right: 10px;
+        }
+
+        .event-detail {
+            color: #a0a0a0;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff88;
+        }
+
+        .connection-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            color: #a0a0a0;
+        }
+
+        .connection-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #00ff00;
+            margin-right: 8px;
+            animation: pulse 1s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                ⚡ DevPulse Real-Time Dashboard
+            </h1>
+            <div class="status-badge online" id="connectionStatus">
+                ● CONNECTED
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Active Agents</div>
+                <div class="metric-value"><span id="agentsActive">0</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Records Processed</div>
+                <div class="metric-value"><span id="recordsProcessed">0</span><span class="metric-unit">rows</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Events</div>
+                <div class="metric-value"><span id="eventsTotal">0</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Connected Clients</div>
+                <div class="metric-value"><span id="connectedClients">1</span></div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="chart-container">
+            <!-- Response Times Chart -->
+            <div class="chart-wrapper">
+                <div class="chart-title">Response Times (ms)</div>
+                <canvas id="responseTimesChart"></canvas>
+            </div>
+
+            <!-- Event Rate Chart -->
+            <div class="chart-wrapper">
+                <div class="chart-title">Events Timeline</div>
+                <canvas id="eventsTimelineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- System Health & Active Agents -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <!-- Active Agents Panel -->
+            <div class="agents-panel">
+                <h2>🤖 Active Agents</h2>
+                <div id="agentsList">
+                    <p style="color: #a0a0a0; font-size: 0.9em;">No agents active</p>
+                </div>
+            </div>
+
+            <!-- System Health Panel -->
+            <div class="agents-panel">
+                <h2>📊 System Health</h2>
+                <div class="system-health">
+                    <div class="health-item">
+                        <div class="health-label">CPU Usage</div>
+                        <div class="health-value"><span id="cpuUsage">0</span>%</div>
+                        <div class="health-bar">
+                            <div class="health-fill" id="cpuBar"></div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-label">Memory Usage</div>
+                        <div class="health-value"><span id="memoryUsage">0</span>%</div>
+                        <div class="health-bar">
+                            <div class="health-fill" id="memoryBar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Log -->
+        <div class="event-log">
+            <h2>📋 Event Log (Live)</h2>
+            <div id="eventLog" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- Connection Info -->
+    <div class="connection-info">
+        <span class="connection-indicator" id="connectionIndicator"></span>
+        <span id="connectionText">Connected</span>
+    </div>
+
+    <script>
+        // ==================== WEBSOCKET CONNECTION ====================
+        
+        const socket = io();
+        const MAX_LOG_ENTRIES = 50;
+        let eventLog = [];
+        let eventTimestamps = [];
+        let responseTimes = [];
+        let charts = {};
+
+        // ==================== CHART CONFIGURATION ====================
+
+        const chartConfig = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#a0a0a0',
+                        font: { size: 12 }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#a0a0a0' },
+                    grid: { color: 'rgba(0, 212, 255, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#a0a0a0' },
+                    grid: { color: 'rgba(0, 212, 255, 0.1)' }
+                }
+            }
+        };
+
+        // Initialize charts
+        function initCharts() {
+            // Response Times Chart
+            const responseCtx = document.getElementById('responseTimesChart').getContext('2d');
+            charts.responseTimes = new Chart(responseCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'API Response Time (ms)',
+                        data: [],
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#00ff88',
+                        pointBorderColor: '#00d4ff',
+                        pointRadius: 4
+                    }]
+                },
+                options: { ...chartConfig, scales: { ...chartConfig.scales, y: { ...chartConfig.scales.y, beginAtZero: true } } }
+            });
+
+            // Events Timeline Chart
+            const eventsCtx = document.getElementById('eventsTimelineChart').getContext('2d');
+            charts.eventsTimeline = new Chart(eventsCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Events per minute',
+                        data: [],
+                        backgroundColor: 'rgba(0, 255, 136, 0.7)',
+                        borderColor: '#00ff88',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartConfig
+            });
+        }
+
+        // ==================== EVENT HANDLERS ====================
+
+        socket.on('connect', function() {
+            console.log('Connected to DevPulse server');
+            updateConnectionStatus(true);
+            socket.emit('request_status');
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Disconnected from DevPulse server');
+            updateConnectionStatus(false);
+        });
+
+        socket.on('connection_response', function(data) {
+            console.log('Connection response:', data);
+            if (data.status) {
+                updateStatus(data.status);
+            }
+        });
+
+        socket.on('agent_event', function(data) {
+            console.log('Agent event:', data);
+            handleAgentEvent(data);
+        });
+
+        socket.on('records_updated', function(data) {
+            console.log('Records updated:', data);
+            document.getElementById('recordsProcessed').textContent = data.records_processed.toLocaleString();
+        });
+
+        socket.on('status_update', function(data) {
+            console.log('Status update:', data);
+            updateStatus(data);
+        });
+
+        // ==================== UI UPDATES ====================
+
+        function updateConnectionStatus(connected) {
+            const badge = document.getElementById('connectionStatus');
+            const indicator = document.getElementById('connectionIndicator');
+            const text = document.getElementById('connectionText');
+
+            if (connected) {
+                badge.classList.remove('offline');
+                badge.classList.add('online');
+                badge.textContent = '● CONNECTED';
+                indicator.style.backgroundColor = '#00ff00';
+                text.textContent = 'Connected';
+            } else {
+                badge.classList.remove('online');
+                badge.classList.add('offline');
+                badge.textContent = '● DISCONNECTED';
+                indicator.style.backgroundColor = '#ff3333';
+                text.textContent = 'Disconnected - Reconnecting...';
+            }
+        }
+
+        function updateStatus(status) {
+            if (status.agents_active !== undefined) {
+                document.getElementById('agentsActive').textContent = status.agents_active;
+            }
+            if (status.records_processed !== undefined) {
+                document.getElementById('recordsProcessed').textContent = status.records_processed.toLocaleString();
+            }
+            if (status.events_total !== undefined) {
+                document.getElementById('eventsTotal').textContent = status.events_total;
+            }
+            if (status.system_health) {
+                updateSystemHealth(status.system_health);
+            }
+        }
+
+        function updateSystemHealth(health) {
+            document.getElementById('cpuUsage').textContent = health.cpu || 0;
+            document.getElementById('memoryUsage').textContent = health.memory || 0;
+            document.getElementById('cpuBar').style.width = (health.cpu || 0) + '%';
+            document.getElementById('memoryBar').style.width = (health.memory || 0) + '%';
+        }
+
+        function handleAgentEvent(event) {
+            // Update metrics
+            document.getElementById('eventsTotal').textContent = event.event_id;
+            
+            // Add to active agents
+            addActiveAgent(event.agent, event.type);
+            
+            // Add to event log
+            addEventToLog(event);
+            
+            // Update timeline
+            updateTimeline();
+        }
+
+        function addActiveAgent(agentName, eventType) {
+            const agentsList = document.getElementById('agentsList');
+            let agentElement = document.querySelector(`[data-agent="${agentName}"]`);
+            
+            if (!agentElement) {
+                agentElement = document.createElement('div');
+                agentElement.className = 'agent-item';
+                agentElement.setAttribute('data-agent', agentName);
+                agentsList.appendChild(agentElement);
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            agentElement.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <span class="agent-status"></span>
+                    <span class="agent-name">${agentName}</span>
+                </div>
+                <div class="agent-info">${eventType} - ${timestamp}</div>
+            `;
+            
+            // Remove after 5 seconds if completed
+            if (eventType === 'agent_completed') {
+                setTimeout(() => {
+                    if (agentElement.parentNode) {
+                        agentElement.parentNode.removeChild(agentElement);
+                    }
+                }, 5000);
+            }
+        }
+
+        function addEventToLog(event) {
+            const timestamp = new Date(event.timestamp).toLocaleTimeString();
+            const eventItem = `
+                <div class="event-item">
+                    <span class="event-timestamp">${timestamp}</span>
+                    <span class="event-type">[${event.type}]</span>
+                    <span class="event-detail">${event.agent}</span>
+                </div>
+            `;
+            
+            eventLog.unshift(eventItem);
+            if (eventLog.length > MAX_LOG_ENTRIES) {
+                eventLog.pop();
+            }
+            
+            document.getElementById('eventLog').innerHTML = eventLog.join('');
+        }
+
+        function updateTimeline() {
+            const now = new Date().getTime();
+            eventTimestamps.push(now);
+            
+            // Remove timestamps older than 1 minute
+            eventTimestamps = eventTimestamps.filter(ts => now - ts < 60000);
+            
+            // Update chart every 10 events
+            if (eventTimestamps.length % 10 === 0) {
+                const labels = Array.from({length: 6}, (_, i) => `${5 - i}m`);
+                const data = Array.from({length: 6}, (_, i) => {
+                    const rangeStart = now - (5 - i) * 10000;
+                    const rangeEnd = now - (4 - i) * 10000;
+                    return eventTimestamps.filter(ts => ts >= rangeStart && ts < rangeEnd).length;
+                });
+                
+                if (charts.eventsTimeline) {
+                    charts.eventsTimeline.data.labels = labels;
+                    charts.eventsTimeline.data.datasets[0].data = data;
+                    charts.eventsTimeline.update();
+                }
+            }
+        }
+
+        // ==================== REQUEST PERIODIC STATUS ====================
+
+        setInterval(() => {
+            socket.emit('request_status');
+        }, 2000);
+
+        // ==================== INITIALIZE ====================
+
+        window.addEventListener('load', () => {
+            initCharts();
+            socket.emit('request_status');
+        });
+    </script>
+</body>
+</html>

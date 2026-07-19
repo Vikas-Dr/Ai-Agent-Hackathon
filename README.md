@@ -1,422 +1,610 @@
-DEVPULSE - Developer Relations Content Intelligence
+# 📊 DevPulse — Developer Relations Content Intelligence
 
-Overview
+**A production-ready dashboard for analyzing, scoring, and optimizing developer content strategy using AI-powered insights.**
 
-DevPulse is a multi-agent AI system for developer relations (DevRel) teams. It translates developer content performance data into actionable editorial decisions, focusing on API adoption, SDK/framework coverage, developer experience metrics, and GitHub engagement.
+![DevPulse](https://img.shields.io/badge/DevPulse-v1.0-48c482?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square)
+![Flask](https://img.shields.io/badge/Flask-2.0+-green?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
-Core Capabilities
+---
 
-- Memory System: Agent remembers past queries and insights
-- Semantic Search: Find similar content without exact matching
-- ReACT Reasoning: Shows thinking through THOUGHT > ACTION > OBSERVATION
-- Tool Registry: Extensible, pluggable tools
-- Multi-Turn Conversations: Context-aware follow-ups
+## 🎯 What is DevPulse?
 
-Architecture
+DevPulse is a comprehensive platform for developer relations teams to:
 
-System Design
+- **📊 Analyze Content Performance** — Understand topic, format, and audience trends across your content library
+- **⭐ Score Draft Content** — Get AI-powered predictions on how well a piece of content will perform before publishing
+- **🔀 Run A/B Tests** — Compare headlines and code hooks to find what resonates with developers
+- **📤 Upload Custom Data** — Analyze your company's own content metrics with DevPulse
+- **🎯 Generate Strategy Reports** — Get actionable editorial recommendations based on data
 
-The platform consists of:
+---
 
-Data Layer
-- Hacker News API integration
-- CSV data (200 articles)
-- DevRel metrics collection
-- Pydantic validation
+## 🚀 Quick Start
 
-Intelligence Layer
-- Memory System for context retention
-- ReACT Planner for multi-step reasoning
-- Vector Search for semantic matching
-- Tool Registry for extensibility
+### Prerequisites
 
-Agent Pipeline
-1. CollectorAgent - Load and enrich data
-2. AnalyzerAgent - DevRel metrics and insights
-3. PredictorAgent - Code analysis and scoring
-4. StrategistAgent - SDK/framework gap identification
-5. ReportAgent - DevRel recommendations
+- **Python 3.9+**
+- **pip** (Python package manager)
+- **Modern web browser** (Chrome, Firefox, Safari, Edge)
 
-Interfaces
-- Flask API with REST endpoints
-- Interactive dashboard UI
-- Command-line tools
+### Installation & Setup
 
-Module Structure
+#### 1. Clone or Download the Repository
 
-devpulse/
-- config.py: Central configuration
-- requirements.txt: Python dependencies
-- .env.example: Environment template
+```bash
+cd DevPulse
+```
 
-data/
-- schema.py: Pydantic models
-- integrate_data.py: HN API fetcher
-- sample_content_data.csv: 200 articles dataset
+#### 2. Create a Virtual Environment (Recommended)
 
-agents/
-- base_agent.py: Base agent class
-- collector.py: Data loading
-- analyzer.py: Metrics and aggregations
-- predictor.py: Code analysis and scoring
-- strategist.py: Gap identification
-- report.py: Strategy recommendations
+```bash
+python -m venv venv
 
-llm/
-- client.py: Google Gemini and HuggingFace
-- __init__.py: Exports
-
-orchestrator/
-- pipeline.py: Full pipeline execution
-- scorer.py: Single content prediction
-- trace.py: Execution tracing
-- __init__.py: Exports
-
-agentic_rag_hackathon.py: Core agentic system (450 LOC)
-
-ui/
-- api_server.py: Flask API
-- index.html: Dashboard SPA
-- index.css: Styling
-- app.js: Frontend logic
-
-utils/
-- code_parser.py: Markdown code analysis
-
-tests/
-- test_schema.py: Schema validation
-- test_agents.py: Agent integration
-
-logs/: Runtime logs
-assets/: Screenshots, exports
-
-Installation and Setup
-
-Prerequisites
-
-- Python 3.11+
-- macOS/Linux or Windows with WSL
-- 4GB RAM minimum
-- Git
-
-Quick Start (5 minutes)
-
-1. Clone and enter directory
-git clone <repo-url>
-cd devpulse
-
-2. Create virtual environment
-python3 -m venv venv
+# On macOS/Linux:
 source venv/bin/activate
 
-3. Install dependencies
+# On Windows:
+venv\Scripts\activate
+```
+
+#### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. Start the API Server
+
+```bash
+python ui/api_server.py
+```
+
+You'll see output like:
+
+```
+ * Running on http://0.0.0.0:5050
+ * Press CTRL+C to quit
+```
+
+#### 5. Open the Dashboard
+
+Open your browser and navigate to:
+
+```
+http://localhost:5050
+```
+
+You should see the DevPulse dashboard with the following tabs:
+- 📊 **Dashboard** — View analytics and metrics
+- ✍️ **Draft Scorer** — Score your content
+- 🔀 **A/B Tester** — Test headlines and code
+- 📤 **Custom Data** — Upload your own CSV data
+- 🎯 **Strategy Report** — Generate recommendations
+- 📋 **Data Table** — Browse full dataset
+
+---
+
+## 📋 Features Overview
+
+### 1. Dashboard (📊)
+
+Real-time analytics dashboard showing:
+
+- **Metric Cards** with trend indicators
+  - Articles Analyzed
+  - Topics Covered
+  - Key Insights
+  - Content Gaps
+- **Charts & Visualizations**
+  - Topic Performance (bar chart)
+  - Format Distribution (doughnut chart)
+  - Quarterly Trends (line chart)
+  - Audience Reach analysis
+- **Content Strategy Matrix** — Visualize content by engagement vs. relevance
+- **Key Insights** — AI-generated strategic recommendations
+- **Execution Trace** — See step-by-step analysis pipeline
+
+**How to Use:**
+
+1. Click the **"🔄 Run Analysis"** button to analyze the default HackerNews dataset
+2. View real-time metrics and charts as they populate
+3. Explore insights and strategy recommendations
+4. Export analysis as JSON
+
+### 2. Draft Scorer (✍️)
+
+Score your content idea before publishing:
+
+- **Form Fields:**
+  - Article Title
+  - Topic (dropdown)
+  - Format (dropdown)
+  - Audience Segment (dropdown)
+  - Word Count (numeric)
+  - Draft Markdown (optional)
+  - Asset Upload (screenshot/video)
+
+- **Score Output:**
+  - Predicted performance score (0-100)
+  - Code quality ratio (if markdown provided)
+  - Confidence level
+  - Comparable historical content
+  - Recommendations
+
+**How to Use:**
+
+1. Fill in the form with your content details
+2. Click **"📈 Score This Draft"**
+3. View your predicted score and recommendations
+4. Compare against historical content
+
+### 3. A/B Tester (🔀)
+
+Test multiple headline and code hook variants:
+
+- **Test 3 headline variants** to find the best opening
+- **Compare 2 code hooks** for developer engagement
+- **Get recommendations** on which combination performs best
+
+**How to Use:**
+
+1. Enter your headline variants (or use defaults)
+2. Enter code hook variants (or use defaults)
+3. Click **"🔀 Run A/B Test"**
+4. View winner recommendations and scoring breakdown
+
+### 4. Custom Data Upload (📤)
+
+Analyze your company's content with your own CSV data:
+
+**Required CSV Columns:**
+
+```
+- title              (Article title)
+- url                (Article URL)
+- score              (Performance metric: views, HN score, etc.)
+- engagement_rate    (Engagement percentage)
+- conversions        (Conversion count)
+- topic              (Content topic)
+- format             (Content format)
+- audience_segment   (Target audience)
+```
+
+**How to Use:**
+
+1. Prepare a CSV file with your content data
+2. Click the upload zone (or drag-drop)
+3. Click **"🚀 Run Custom Analysis"**
+4. View analysis results specific to your data
+
+### 5. Strategy Report (🎯)
+
+Generate comprehensive editorial strategy recommendations:
+
+- Strategic priorities for topics and formats
+- Content gaps and opportunities
+- Audience segment recommendations
+- Publication cadence analysis
+- Actionable next steps
+
+**Export Options:**
+
+- 📥 **Export PDF** — Download full report as PDF
+- 📋 **GitHub Issues** — Export recommendations as GitHub issues
+- 📋 **Copy Summary** — Copy text to clipboard
+
+**How to Use:**
+
+1. Click **"📊 Generate Report"**
+2. Review strategic recommendations
+3. Export in your preferred format
+
+### 6. Data Table (📋)
+
+Browse and sort the full dataset:
+
+- View all analyzed content
+- Sort by any column (Title, Topic, Format, etc.)
+- Search and filter capabilities
+- Download dataset
+
+---
+
+## ⚙️ API Endpoints Reference
+
+All endpoints are accessible at `http://localhost:5050/api/`
+
+### Configuration Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/topics` | GET | Get available topics |
+| `/api/formats` | GET | Get available content formats |
+| `/api/audiences` | GET | Get audience segments |
+
+### Analysis Endpoints
+
+| Endpoint | Method | Description | Body |
+|----------|--------|-------------|------|
+| `/api/report` | POST | Run full analysis pipeline | `{}` |
+| `/api/data` | GET | Get full dataset | — |
+| `/api/score` | POST | Score a draft | See below |
+
+### Score Endpoint Request Body
+
+```json
+{
+  "title": "Building REST APIs with FastAPI",
+  "topic": "Backend Development",
+  "format": "Tutorial",
+  "audience_segment": "Intermediate",
+  "word_count": 1500,
+  "draft_markdown": "# My Article\n\nContent here...",
+  "asset_path": "/path/to/screenshot.png"
+}
+```
+
+### Upload Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/upload-csv` | POST | Upload custom CSV dataset |
+| `/api/upload-asset` | POST | Upload screenshot/video for scoring |
+
+---
+
+## 🎨 Dashboard UI Features
+
+### Modern Design System
+
+- **Dark Theme** with vibrant accent colors
+- **Glassmorphism Cards** with backdrop blur effects
+- **Smooth Animations** for all transitions
+- **Responsive Layout** — works on desktop, tablet, and mobile
+- **Real-time Updates** with visual indicators
+- **Interactive Charts** powered by Chart.js
+
+### Visual Elements
+
+- **Metric Cards** with sparkline trends
+- **Strategy Matrix** showing 2x2 content positioning
+- **Trend Indicators** with up/down arrows
+- **Toast Notifications** for success/error feedback
+- **Loading Spinners** during analysis
+- **Empty States** with helpful prompts
+
+---
+
+## 🏗️ Project Architecture
+
+### Frontend
+
+```
+ui/
+├── index.html      # Main dashboard HTML (6 tabs)
+├── app.js          # JavaScript logic (1,886 lines)
+└── index.css       # Styling & animations (1,982 lines)
+```
+
+### Backend
+
+```
+├── ui/api_server.py        # Flask API server (346 lines)
+├── orchestrator/           # Pipeline orchestration
+│   ├── pipeline.py         # Main analysis pipeline
+│   ├── scorer.py           # Content scoring logic
+│   └── trace.py            # Execution tracing
+├── agents/                 # AI agents
+│   ├── collector.py        # Data collection
+│   ├── analyzer.py         # Content analysis
+│   ├── predictor.py        # Score prediction
+│   ├── strategist.py       # Strategy generation
+│   └── ...
+├── data/                   # Data processing
+├── retrieval/              # Vector search
+├── memory/                 # RAG memory system
+└── llm/                    # LLM client
+```
+
+### Configuration
+
+```
+config.py              # Global configuration
+requirements.txt       # Python dependencies
+.env / .env.example    # Environment variables
+```
+
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# API Configuration
+FLASK_HOST=0.0.0.0
+FLASK_PORT=5050
+FLASK_DEBUG=False
+
+# Data Configuration
+DATA_PATH=assets/data/
+
+# Logging
+LOG_LEVEL=INFO
+```
+
+Copy `.env.example` to `.env` if provided.
+
+### Python Configuration
+
+Edit `config.py` to customize:
+
+```python
+# Topics, formats, and audiences
+TOPICS = ["Backend Development", "Frontend Development", ...]
+FORMATS = ["Blog Post", "Tutorial", "Video", ...]
+AUDIENCE_SEGMENTS = ["Beginner", "Intermediate", "Advanced"]
+
+# Directories
+ASSETS_DIR = Path(__file__).parent / "assets"
+LOGS_DIR = Path(__file__).parent / "logs"
+```
+
+---
+
+## 📊 Data Structure
+
+### Analysis Result Format
+
+The pipeline returns a structured result:
+
+```python
+{
+    "report": {
+        "summary": "...",
+        "top_topics": [...],
+        "top_formats": [...],
+        "insights": [...],
+        "create_next": [...]  # Content gap recommendations
+    },
+    "analysis": {
+        "top_topics": [...],
+        "top_formats": [...],
+        "audiences": [...],
+        "quarterly_data": {...},
+        "length_distribution": {...},
+        "period_trends": [...],
+        "insights": [...]
+    },
+    "trace": {
+        "steps": [...]  # Execution trace for debugging
+    }
+}
+```
+
+---
+
+## 🚨 Troubleshooting
+
+### Server Won't Start
+
+**Error:** `Address already in use`
+
+**Solution:**
+```bash
+# On macOS/Linux:
+lsof -ti :5050 | xargs kill -9
+
+# On Windows:
+netstat -ano | findstr :5050
+taskkill /PID <PID> /F
+```
+
+Then restart:
+
+```bash
+python ui/api_server.py
+```
+
+### Dashboard Shows "No Data Yet"
+
+**Solution:** Click the **"🔄 Run Analysis"** button in the Dashboard tab to load the default dataset.
+
+### Scoring Endpoint Returns Error
+
+**Check:**
+- All required fields are provided (title, topic, format, audience_segment, word_count)
+- Topic, format, and audience_segment values match available options
+- Word count is between 100-20,000
+
+### Charts Not Displaying
+
+**Solution:**
+1. Check browser console for errors (F12 → Console)
+2. Ensure Chart.js CDN is loaded (check Network tab)
+3. Try refreshing the page (Ctrl+Shift+R)
+
+### Custom CSV Upload Fails
+
+**Check:**
+- CSV file has required columns: `title`, `url`, `score`, `engagement_rate`, `conversions`, `topic`, `format`, `audience_segment`
+- File size is under 50MB
+- File is valid CSV format (no encoding issues)
+
+---
+
+## 📁 File Organization
+
+```
+DevPulse/
+├── README.md                      # This file
+├── requirements.txt               # Python dependencies
+├── config.py                      # Configuration
+├── ui/
+│   ├── api_server.py             # Flask server
+│   ├── index.html                # Dashboard UI
+│   ├── app.js                    # JavaScript logic
+│   └── index.css                 # Styling
+├── orchestrator/                 # Pipeline orchestration
+├── agents/                       # AI agents
+├── data/                         # Data processing
+├── retrieval/                    # Vector search
+├── memory/                       # RAG memory
+├── llm/                          # LLM client
+├── utils/                        # Utilities
+├── tools/                        # Tool registry
+├── assets/                       # Data & uploads
+│   ├── data/                     # Sample datasets
+│   └── user_uploads/             # Custom uploads
+└── logs/                         # Application logs
+```
+
+---
+
+## 🔗 Quick Links
+
+- **Dashboard:** http://localhost:5050
+- **API Base:** http://localhost:5050/api
+- **Topics Endpoint:** http://localhost:5050/api/topics
+- **Formats Endpoint:** http://localhost:5050/api/formats
+- **Audiences Endpoint:** http://localhost:5050/api/audiences
+
+---
+
+## 📝 Example Workflows
+
+### Workflow 1: Analyze Performance
+
+1. Go to **Dashboard** tab
+2. Click **"🔄 Run Analysis"**
+3. Review metrics, charts, and insights
+4. Click **"📥 Export JSON"** to save results
+
+### Workflow 2: Score Your Idea
+
+1. Go to **Draft Scorer** tab
+2. Fill in your content details
+3. Paste your draft markdown (optional)
+4. Click **"📈 Score This Draft"**
+5. View score and recommendations
+
+### Workflow 3: Test Headlines
+
+1. Go to **A/B Tester** tab
+2. Enter 3 headline variants
+3. Enter 2 code hook variants
+4. Click **"🔀 Run A/B Test"**
+5. View winner and scoring breakdown
+
+### Workflow 4: Analyze Custom Data
+
+1. Go to **Custom Data** tab
+2. Upload your CSV file
+3. Click **"🚀 Run Custom Analysis"**
+4. Review analysis specific to your data
+
+### Workflow 5: Generate Strategy
+
+1. Go to **Strategy Report** tab
+2. Click **"📊 Generate Report"**
+3. Review recommendations
+4. Export as PDF or GitHub Issues
+
+---
+
+## 🛠️ Development
+
+### Adding New Topics/Formats/Audiences
+
+Edit `config.py`:
+
+```python
+TOPICS = ["Topic 1", "Topic 2", ...]
+FORMATS = ["Format 1", "Format 2", ...]
+AUDIENCE_SEGMENTS = ["Segment 1", "Segment 2", ...]
+```
+
+Restart the server:
+
+```bash
+python ui/api_server.py
+```
+
+### Extending the Dashboard
+
+1. **Add new charts:** Edit `ui/app.js` and add Chart.js rendering
+2. **Modify styles:** Edit `ui/index.css`
+3. **Update HTML:** Edit `ui/index.html` to add new elements
+4. **Add new tabs:** Duplicate an existing section in HTML and add event listeners in JavaScript
+
+### Adding Custom Agents
+
+Create new agent files in `agents/` directory:
+
+```python
+# agents/my_agent.py
+from agents.base_agent import BaseAgent
+
+class MyAgent(BaseAgent):
+    def execute(self):
+        # Your logic here
+        return result, trace, metadata
+```
+
+Register in the pipeline (`orchestrator/pipeline.py`).
+
+---
+
+## 📦 Dependencies
+
+Key dependencies (see `requirements.txt` for full list):
+
+- **Flask** — Web framework for API server
+- **Chart.js** — Frontend charting library (CDN)
+- **pandas** — Data processing
+- **scikit-learn** — Machine learning
+- **numpy** — Numerical computing
+- **python-dotenv** — Environment management
+
+---
+
+## 🤝 Support & Feedback
+
+For issues, questions, or feature requests:
+
+1. Check this README for troubleshooting
+2. Review logs in `logs/` directory
+3. Check browser console (F12) for frontend errors
+
+---
+
+## 📄 License
+
+MIT License — See LICENSE file for details.
+
+---
+
+## 🎉 Get Started
+
+```bash
+# 1. Install dependencies
 pip install -r requirements.txt
 
-4. Configure environment
-cp .env.example .env
+# 2. Start server
+python ui/api_server.py
 
-5. Load data
-PYTHONPATH=. python3 data/integrate_data.py
+# 3. Open browser
+# http://localhost:5050
 
-6. See it work
-python run_hackathon.py --demo
+# 4. Click "Run Analysis" to begin!
+```
 
-Usage
+**Happy analyzing!** 🚀
 
-Option 1: Interactive Dashboard
+---
 
-Start the server:
-PYTHONPATH=. python3 -m ui.api_server
-
-Then visit: http://localhost:5050
-
-Tabs available:
-- Dashboard: DevRel Metrics, Insights
-- Draft Scorer: Code Analysis, Prediction
-- Strategy: Continue/Stop/Create Cards
-- Chat: Multi-turn conversation with memory
-
-Option 2: Quick Demo
-
-python run_hackathon.py --demo
-
-Shows all features working in 2 minutes.
-
-Option 3: Full Pipeline
-
-python run_hackathon.py --pipeline
-
-Runs complete analysis with agentic features.
-
-Option 4: Command-Line API
-
-from orchestrator import run_pipeline
-
-result = run_pipeline(enable_agentic=True)
-print(f"Report: {result['report']['summary']}")
-print(f"Memory size: {result['agentic']['memory_size']}")
-
-Option 5: Programmatic Access
-
-from agents import CollectorAgent, AnalyzerAgent
-
-c = CollectorAgent(str(DATA_PATH))
-result, dur, status = c.execute()
-df = result['dataframe']
-
-a = AnalyzerAgent()
-analysis, _, _ = a.execute(dataframe=df)
-print(f"Insights: {analysis.insights}")
-
-Features
-
-Memory System
-
-Agent remembers past queries and insights.
-
-Usage:
-from agentic_rag_hackathon import QuickMemory
-
-memory = QuickMemory()
-
-memory.remember_query(
-    query="What topics are trending?",
-    result={"insights": ["API Design +20%"]},
-    agent="AnalyzerAgent"
-)
-
-memory.store_insight("trends", "API Design growing")
-
-print(memory.get_context())
-
-Semantic Search
-
-Find similar content without exact matching.
-
-Usage:
-from agentic_rag_hackathon import QuickVectorStore
-
-store = QuickVectorStore()
-
-store.add("api_design", "Building RESTful APIs")
-store.add("web_apis", "Creating web service APIs")
-
-results = store.search("API development", k=2)
-
-ReACT Reasoning
-
-Agent shows its thinking process.
-
-Usage:
-from agentic_rag_hackathon import create_agentic_context
-
-agentic = create_agentic_context()
-thoughts = agentic["react"].think_and_act("What's missing?", "AnalyzerAgent")
-
-for thought in thoughts["thoughts"]:
-    print(thought)
-
-Tool Registry
-
-Extensible, pluggable tools.
-
-Usage:
-from agentic_rag_hackathon import ToolKit
-
-tools = ToolKit()
-tools.add_tool("search", lambda q: find_similar(q))
-tools.add_tool("summarize", lambda t: summarize(t))
-
-result = tools.call("search", q="API design")
-
-Configuration
-
-config.py Constants
-
-TOPICS: 10 DevRel topics (API Design, Authentication, Cloud Infrastructure, etc.)
-
-FORMATS: 7 content types (technical_blog, tutorial, code_example, etc.)
-
-AUDIENCE_SEGMENTS: 4 developer roles (frontend, backend, devops, architects)
-
-PERFORMANCE_WEIGHTS: {views: 0.30, engagement: 0.25, conversions: 0.25, rank: 0.10}
-
-TRENDING_TOPICS: FinOps, AI Agents, Platform Engineering, WebAssembly, etc.
-
-Environment Variables (.env)
-
-MOCK_LLM=true (use mock, no API calls)
-GOOGLE_API_KEY=your-key (for real LLM)
-LLM_PROVIDER=gemini
-LLM_MODEL=gemini-2.5-flash
-DATA_PATH=data/sample_content_data.csv
-
-Agents
-
-1. Collector Agent
-
-Loads and cleans the content dataset.
-
-Input: CSV file with 200 articles
-Output: Validated DataFrame with 18 columns
-Performance: Less than 0.05s for 200 rows
-
-Adds derived fields: length_bucket, publish_month, performance_score
-
-2. Analyzer Agent
-
-Computes insights from historical data.
-
-Input: DataFrame from Collector
-Output: AnalyzerOutput with insights, top_topics, top_formats
-Performance: Less than 0.01s for 200 rows
-
-Uses LLM for insight generation with fallback
-
-3. Predictor Agent
-
-Predicts performance of draft content.
-
-Input: Draft {title, topic, format, audience, word_count}
-Output: PredictorOutput with score, reasoning, suggestions
-Performance: Less than 0.01s
-
-Uses fuzzy matching and vector search for similar content
-
-4. Strategist Agent
-
-Identifies content gaps and opportunities.
-
-Input: AnalyzerOutput
-Output: StrategistOutput with gaps and reasons
-Performance: Less than 0.01s
-
-Compares covered vs trending topics
-
-5. Report Agent
-
-Generates strategic recommendations.
-
-Input: AnalyzerOutput and StrategistOutput
-Output: ReportOutput with continue/stop/create items
-Performance: Less than 0.01s
-
-No redundant LLM calls, just assembles results
-
-Dashboard UI
-
-Theme
-
-Background: Dark (#0b0d12)
-Surface: Glassmorphic overlay
-Primary: Green (#48c482)
-Text: Light slate (#e2e8f0)
-Accents: Red for stop, Amber for create
-
-Tabs
-
-Dashboard: Metrics, charts, insights, execution trace
-Draft Scorer: Form input, prediction score, recommendations
-Strategy Report: Continue/Stop/Create cards
-Chat: Multi-turn conversation with memory
-
-Responsive Design
-
-Desktop (>768px): Multi-column grid
-Tablet (481-768px): 2-column metrics
-Mobile (<480px): Single-column, touch-optimized
-
-Testing
-
-Test Suite
-
-30+ tests covering:
-- Schema validation (17 tests)
-- Agent functionality (13 tests)
-
-Running Tests
-
-PYTHONPATH=. python3 -m pytest tests/ -v
-
-Expected: 30 passed
-
-API Reference
-
-Endpoints
-
-GET /api/topics
-Returns available topics list
-
-GET /api/formats
-Returns available formats list
-
-GET /api/audiences
-Returns audience segments
-
-POST /api/report
-Runs full pipeline with optional agentic features
-Parameters: enable_agentic (boolean)
-
-POST /api/score
-Predicts performance of draft content
-Parameters: title, topic, format, audience_segment, word_count, draft_markdown (optional)
-
-Troubleshooting
-
-Issue: "Module not found"
-Solution: export PYTHONPATH=.
-
-Issue: "No API key"
-Solution: Set MOCK_LLM=true in .env
-
-Issue: "Port in use"
-Solution: Kill process or use different port
-
-Issue: "Data missing"
-Solution: Run python3 data/integrate_data.py
-
-Issue: "Tests failing"
-Solution: Check requirements.txt versions match
-
-Support
-
-1. Check README.md Troubleshooting section
-2. Review Data Flow to understand pipeline
-3. Run tests: PYTHONPATH=. pytest tests/ -v
-4. Check logs in logs/ directory
-5. Read INSTALL.md for detailed setup
-
-Roadmap
-
-- Memory system with SQLite (in progress)
-- Redis caching for repeated reports
-- Multi-user workspace support
-- Custom topic/format/audience definitions
-- A/B testing analytics
-- Content calendar export
-- Slack integration for alerts
-- Real-time content performance dashboard
-- Automated report scheduling
-
-License
-
-MIT License - See LICENSE file
-
-Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Write tests
-4. Ensure pytest passes
-5. Submit pull request
-
-Summary
-
-DevPulse is a complete multi-agent AI system for developer relations with integrated memory, semantic search, reasoning capabilities, and extensible tools.
-
-Ready for production deployment.
-
-Status: Complete and tested
-Setup time: 5 minutes
-Demo time: 2 minutes
-Production ready: Yes
+**DevPulse v1.0** — Built for data-driven developer relations teams.
