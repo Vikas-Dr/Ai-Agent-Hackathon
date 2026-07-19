@@ -37,3 +37,35 @@ Initialized AnalyzerAgent
 ✓ LLM generated 6 insights
 AnalyzerAgent completed successfully in 0.01s
 ✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.05s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Predicting for: Leadership/whitepaper/executives
+Found 17 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.03s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Predicting for: Leadership/whitepaper/executives
+Found 17 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
