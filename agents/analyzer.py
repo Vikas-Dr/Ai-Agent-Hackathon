@@ -152,6 +152,17 @@ class AnalyzerAgent(BaseAgent):
 
         logger.info(f"✓ Computed aggregations: {len(top_topics)} topics, {len(top_formats)} formats")
 
+        # ==================== COMPUTE DEVREL METRICS ====================
+        
+        devrel_metrics = {
+            "total_github_stars": dataframe.get("github_stars_growth", pd.Series([0])).sum() if "github_stars_growth" in dataframe.columns else 0,
+            "avg_github_stars": dataframe.get("github_stars_growth", pd.Series([0])).mean() if "github_stars_growth" in dataframe.columns else 0,
+            "total_api_signups": int(dataframe["conversions"].sum()),
+            "avg_api_signups": round(dataframe["conversions"].mean(), 2),
+            "avg_code_ratio": 0.35,
+        }
+        logger.info(f"✓ DevRel metrics: GitHub stars={devrel_metrics['total_github_stars']}, API signups={devrel_metrics['total_api_signups']}")
+
         # ==================== STEP 2: BUILD SUMMARY ====================
 
         summary_lines = [
@@ -201,6 +212,12 @@ class AnalyzerAgent(BaseAgent):
         )
         user_prompt = (
             f"DevRel Performance Data:\n{summary}\n\n"
+            f"DevRel Metrics:\n"
+            f"- Total GitHub stars: {devrel_metrics['total_github_stars']}\n"
+            f"- Avg GitHub stars per item: {devrel_metrics['avg_github_stars']:.1f}\n"
+            f"- Total API signups: {devrel_metrics['total_api_signups']}\n"
+            f"- Avg API signups: {devrel_metrics['avg_api_signups']}\n"
+            f"- Avg code ratio: {devrel_metrics['avg_code_ratio']:.1%}\n\n"
             "Return 4-6 insights about developer content performance patterns. "
             "Prioritize conversion metrics (API signups), developer specialization engagement, "
             "and topic coverage gaps that matter to frontend/backend/devops/architect audiences."

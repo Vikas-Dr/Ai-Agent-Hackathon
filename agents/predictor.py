@@ -12,6 +12,7 @@ import pandas as pd
 from agents.base_agent import BaseAgent
 from data.schema import PredictorInput, PredictorOutput
 from llm import call_llm
+from utils.code_parser import analyze_technical_draft
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
@@ -37,6 +38,7 @@ class PredictorAgent(BaseAgent):
         format: str | None = None,
         audience_segment: str | None = None,
         word_count: int | None = None,
+        draft_markdown: str | None = None,
     ) -> PredictorOutput:
         """
         Predict content performance.
@@ -130,10 +132,22 @@ class PredictorAgent(BaseAgent):
         summary = "\n".join(summary_parts)
         logger.debug(f"Summary:\n{summary}")
 
-        # ==================== STEP 4: LLM CALL ====================
+        # ==================== STEP 4: CODE ANALYSIS (IF PROVIDED) ====================
+
+        code_analysis_text = ""
+        if draft_markdown:
+            code_analysis = analyze_technical_draft(draft_markdown)
+            code_ratio = code_analysis.get("code_to_text_ratio", 0)
+            languages = code_analysis.get("languages", [])
+            languages_str = ", ".join(languages) if languages else "none"
+            code_analysis_text = f"\nCode quality: {code_ratio:.1%} code ratio detected with {languages_str} examples."
+            logger.info(f"Code analysis: ratio={code_ratio:.1%}, languages={languages_str}")
+
+        # ==================== STEP 5: LLM CALL ====================
 
         system_prompt = (
             "You are a content predictor expert. Return JSON matching the PredictorOutput schema."
+            + code_analysis_text
         )
         user_prompt = (
             f"Proposed content:\n"

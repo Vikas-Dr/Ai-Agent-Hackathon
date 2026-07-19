@@ -9,20 +9,11 @@ from typing import Any
 
 from agents.base_agent import BaseAgent
 from data.schema import AnalyzerOutput, StrategistOutput
+from config import TRENDING_DEVREL_TOPICS
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler("logs/agents.log"))
 logger.setLevel(logging.INFO)
-
-# Emerging DevRel Topics: developer platforms/frameworks with coverage gaps
-TRENDING_DEVREL_TOPICS = [
-    "AI/ML APIs & SDKs",
-    "Vector Databases",
-    "Rust Web Frameworks",
-    "GraphQL Subscriptions",
-    "Observability Platforms",
-    "API Rate Limiting Patterns",
-]
 
 
 class StrategistAgent(BaseAgent):
@@ -64,11 +55,11 @@ class StrategistAgent(BaseAgent):
         # ==================== DETECT GAPS ====================
 
         # Gap 1: Trending topics not covered
-        for trending in TRENDING_TOPICS:
+        for trending in TRENDING_DEVREL_TOPICS:
             if trending not in covered_topics:
                 gaps.append(trending)
                 reasons.append(
-                    f"Zero coverage of trending topic '{trending}' — first-mover opportunity"
+                    f"Developer framework/SDK gap: '{trending}' has zero coverage — first-mover advantage for DevRel"
                 )
                 logger.info(f"Gap: Trending topic not covered: {trending}")
 
@@ -78,7 +69,7 @@ class StrategistAgent(BaseAgent):
             if score < 40:
                 gaps.append(topic)
                 reasons.append(
-                    f"Low average score ({score:.1f}) for topic '{topic}' — consider refreshing or reframing"
+                    f"Developer SDK/framework underperformance: '{topic}' scores {score:.1f} — refresh integration guides or build new samples"
                 )
                 logger.info(f"Gap: Low-scoring topic: {topic} ({score:.1f})")
 

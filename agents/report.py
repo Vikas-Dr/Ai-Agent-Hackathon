@@ -93,7 +93,7 @@ class ReportAgent(BaseAgent):
             create_next.append(
                 CreateNextItem(
                     topic=gap,
-                    format=best_format,
+                    format="tutorial",
                     target_audience="developers",
                     reasoning=reason,
                 )
@@ -106,9 +106,9 @@ class ReportAgent(BaseAgent):
             continue_items[0].topic if continue_items else "high-performers"
         )
         summary = (
-            f"Recommend continuing investment in {top_continue} and similar topics. "
-            f"Pause {len(stop_items)} underperforming content streams. "
-            f"Launch {len(create_next)} new topics to capture trending opportunities."
+            f"DevRel recommendation: Focus on {top_continue} and high-engagement developer content. "
+            f"Pause {len(stop_items)} underperforming streams. "
+            f"Launch {len(create_next)} new developer guides/tutorials to drive SDK and framework adoption."
         )
         logger.info(f"Summary: {summary}")
 
