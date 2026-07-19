@@ -24,6 +24,9 @@
             <button class="tab-btn" data-tab="scorer">
                 ✍️ Draft Scorer
             </button>
+            <button class="tab-btn" data-tab="ab-tester">
+                🔀 A/B Tester
+            </button>
             <button class="tab-btn" data-tab="strategy">
                 🎯 Strategy Report
             </button>
@@ -176,6 +179,117 @@
                             <div class="result-section meta">
                                 <span>Comparable content: <strong id="result-comparable">0</strong> items</span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== A/B TESTER TAB ==================== -->
+            <section id="ab-tester" class="tab-content">
+                <div class="section-header">
+                    <h2>A/B Test Headlines & Code Hooks</h2>
+                </div>
+
+                <div class="ab-tester-container">
+                    <div class="ab-section">
+                        <h3>📝 Headline Variants (3)</h3>
+                        <div class="ab-inputs">
+                            <div class="ab-input-group">
+                                <label for="headline-1">Variant 1:</label>
+                                <input type="text" id="headline-1" placeholder="Enter first headline..." value="Building REST APIs with Python and FastAPI">
+                            </div>
+                            <div class="ab-input-group">
+                                <label for="headline-2">Variant 2:</label>
+                                <input type="text" id="headline-2" placeholder="Enter second headline..." value="Master FastAPI: Complete REST API Tutorial">
+                            </div>
+                            <div class="ab-input-group">
+                                <label for="headline-3">Variant 3:</label>
+                                <input type="text" id="headline-3" placeholder="Enter third headline..." value="FastAPI Mastery: Build Production REST APIs">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ab-section">
+                        <h3>💻 Code Hooks (2)</h3>
+                        <div class="ab-inputs">
+                            <div class="ab-input-group">
+                                <label for="hook-1">Hook 1:</label>
+                                <textarea id="hook-1" rows="4" placeholder="Paste first code hook..." class="code-hook">from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/users/{user_id}")
+def read_user(user_id: int):
+    return {"user_id": user_id}</textarea>
+                            </div>
+                            <div class="ab-input-group">
+                                <label for="hook-2">Hook 2:</label>
+                                <textarea id="hook-2" rows="4" placeholder="Paste second code hook..." class="code-hook"># Simple FastAPI setup
+from fastapi import FastAPI
+app = FastAPI()
+# Get endpoint example
+@app.get("/api/data")
+async def get_data():
+    return {"data": "example"}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btn-run-ab-test" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                        🔀 Run A/B Test
+                    </button>
+
+                    <div id="ab-results" class="ab-results-container hidden">
+                        <h3>📊 A/B Test Results</h3>
+                        
+                        <div class="ab-results-grid">
+                            <div class="ab-result-card">
+                                <h4>Headline Winner</h4>
+                                <div id="ab-headline-winner" class="ab-winner-text"></div>
+                                <div id="ab-headline-score" class="ab-winner-score"></div>
+                            </div>
+                            
+                            <div class="ab-result-card">
+                                <h4>Code Hook Winner</h4>
+                                <div id="ab-hook-winner" class="ab-winner-text"></div>
+                                <div id="ab-hook-score" class="ab-winner-score"></div>
+                            </div>
+                        </div>
+
+                        <div class="ab-comparison-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Headline</th>
+                                        <th>Score</th>
+                                        <th>Action Verb</th>
+                                        <th>Keyword</th>
+                                        <th>Variance</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ab-headlines-table">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="ab-comparison-table" style="margin-top: 2rem;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Code Hook</th>
+                                        <th>Engagement</th>
+                                        <th>Runnable</th>
+                                        <th>Comments</th>
+                                        <th>Practical</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ab-hooks-table">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="ab-recommendation">
+                            <h4>✨ Combined Recommendation</h4>
+                            <div id="ab-combined-rec" class="recommendation-text"></div>
                         </div>
                     </div>
                 </div>

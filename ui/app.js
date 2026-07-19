@@ -33,6 +33,9 @@ class ContentPulseApp {
 
         // Strategy
         document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
+
+        // A/B Tester
+        document.getElementById('btn-run-ab-test').addEventListener('click', () => this.runABTest());
     }
 
     async loadConfig() {
@@ -286,6 +289,166 @@ class ContentPulseApp {
 
         // Scroll to result
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    runABTest() {
+        try {
+            // Collect headlines
+            const headlines = [
+                document.getElementById('headline-1')?.value || '',
+                document.getElementById('headline-2')?.value || '',
+                document.getElementById('headline-3')?.value || ''
+            ].filter(h => h.trim());
+
+            // Collect code hooks
+            const hooks = [
+                document.getElementById('hook-1')?.value || '',
+                document.getElementById('hook-2')?.value || ''
+            ].filter(h => h.trim());
+
+            if (headlines.length === 0 || hooks.length === 0) {
+                alert('Please enter at least 1 headline and 1 code hook');
+                return;
+            }
+
+            // Simple client-side scoring
+            const headlineResults = this.scoreHeadlines(headlines);
+            const hookResults = this.scoreCodeHooks(hooks);
+
+            this.renderABTestResults(headlineResults, hookResults);
+        } catch (e) {
+            console.error('A/B test failed:', e);
+            alert('A/B test error: ' + e.message);
+        }
+    }
+
+    scoreHeadlines(headlines) {
+        const baselineScore = 75.0;
+        const results = headlines.map((headline, i) => {
+            const hasActionVerb = /build|create|learn|master|implement|optimize/i.test(headline);
+            const hasKeyword = /api|tutorial|guide|python|rest|sdk/i.test(headline);
+            
+            let score = baselineScore;
+            if (hasActionVerb) score += 15;
+            if (hasKeyword) score += 10;
+            if (headline.length > 70) score -= 5;
+            score = Math.max(0, Math.min(100, score));
+
+            return {
+                headline,
+                index: i + 1,
+                score: Math.round(score * 10) / 10,
+                has_action_verb: hasActionVerb,
+                has_keyword: hasKeyword,
+                variance_from_baseline: Math.round((score - baselineScore) * 10) / 10
+            };
+        });
+
+        results.sort((a, b) => b.score - a.score);
+
+        return {
+            headlines: results,
+            winner: results[0]?.headline || '',
+            best_score: results[0]?.score || 0,
+            average_score: Math.round((results.reduce((sum, r) => sum + r.score, 0) / results.length) * 10) / 10
+        };
+    }
+
+    scoreCodeHooks(hooks) {
+        const results = hooks.map((hook, i) => {
+            const lines = hook.trim().split('\n');
+            const codeLines = lines.filter(l => l.trim() && !l.trim().startsWith('#')).length;
+            
+            const isRunnable = /print\(|console\.log\(|puts /i.test(hook);
+            const hasComments = /^[#/]/.test(hook.trim());
+            const isPractical = /example|import|from|require|def |function/i.test(hook);
+
+            let engagementScore = 60;
+            if (isRunnable) engagementScore += 20;
+            else engagementScore += 10;
+            if (hasComments) engagementScore += 5;
+            if (isPractical) engagementScore += 10;
+            engagementScore = Math.max(0, Math.min(100, engagementScore));
+
+            return {
+                hook: hook.substring(0, 100) + (hook.length > 100 ? '...' : ''),
+                full_hook: hook,
+                index: i + 1,
+                engagement_score: Math.round(engagementScore * 10) / 10,
+                code_lines: codeLines,
+                is_runnable: isRunnable,
+                has_comments: hasComments,
+                is_practical: isPractical
+            };
+        });
+
+        results.sort((a, b) => b.engagement_score - a.engagement_score);
+
+        return {
+            hooks: results,
+            winner: results[0]?.hook || '',
+            best_engagement: results[0]?.engagement_score || 0,
+            average_engagement: Math.round((results.reduce((sum, r) => sum + r.engagement_score, 0) / results.length) * 10) / 10
+        };
+    }
+
+    renderABTestResults(headlineResults, hookResults) {
+        const resultsDiv = document.getElementById('ab-results');
+        resultsDiv.classList.remove('hidden');
+
+        // Winner displays
+        document.getElementById('ab-headline-winner').textContent = headlineResults.winner;
+        document.getElementById('ab-headline-score').textContent = `Score: ${headlineResults.best_score}`;
+
+        document.getElementById('ab-hook-winner').textContent = hookResults.winner;
+        document.getElementById('ab-hook-score').textContent = `Engagement: ${hookResults.best_engagement}`;
+
+        // Headlines table
+        const headlineTable = document.getElementById('ab-headlines-table');
+        headlineTable.innerHTML = '';
+        headlineResults.headlines.forEach((h, idx) => {
+            const isWinner = idx === 0;
+            const row = document.createElement('tr');
+            row.className = isWinner ? 'ab-winner' : '';
+            row.innerHTML = `
+                <td>${h.headline.substring(0, 60)}...</td>
+                <td><strong>${h.score}</strong></td>
+                <td>${h.has_action_verb ? '✓' : '✗'}</td>
+                <td>${h.has_keyword ? '✓' : '✗'}</td>
+                <td>${h.variance_from_baseline > 0 ? '+' : ''}${h.variance_from_baseline}</td>
+            `;
+            headlineTable.appendChild(row);
+        });
+
+        // Hooks table
+        const hooksTable = document.getElementById('ab-hooks-table');
+        hooksTable.innerHTML = '';
+        hookResults.hooks.forEach((h, idx) => {
+            const isWinner = idx === 0;
+            const row = document.createElement('tr');
+            row.className = isWinner ? 'ab-winner' : '';
+            row.innerHTML = `
+                <td>${h.hook.substring(0, 60)}...</td>
+                <td><strong>${h.engagement_score}</strong></td>
+                <td>${h.is_runnable ? '✓' : '✗'}</td>
+                <td>${h.has_comments ? '✓' : '✗'}</td>
+                <td>${h.is_practical ? '✓' : '✗'}</td>
+            `;
+            hooksTable.appendChild(row);
+        });
+
+        // Combined recommendation
+        const recDiv = document.getElementById('ab-combined-rec');
+        const overallScore = Math.round(
+            (headlineResults.best_score * 0.4 + hookResults.best_engagement * 0.6) * 10
+        ) / 10;
+        recDiv.innerHTML = `
+            <div><strong>Best Headline:</strong> ${headlineResults.winner}</div>
+            <div><strong>Best Code Hook:</strong> ${hookResults.winner.substring(0, 100)}...</div>
+            <div><strong>Combined Score:</strong> ${overallScore}/100</div>
+        `;
+
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     getTopicCounts() {
