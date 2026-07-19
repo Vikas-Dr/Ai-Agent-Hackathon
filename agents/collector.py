@@ -53,7 +53,8 @@ class CollectorAgent(BaseAgent):
         # Strip whitespace from string columns
         string_cols = df_raw.select_dtypes(include="object").columns
         for col in string_cols:
-            df_raw[col] = df_raw[col].str.strip()
+            df_raw[col] = df_raw[col].apply(str.strip)
+
 
         # Validate rows
         valid_rows = []
