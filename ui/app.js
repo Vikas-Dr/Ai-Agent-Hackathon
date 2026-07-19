@@ -33,6 +33,7 @@ class ContentPulseApp {
 
         // Strategy
         document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
+        document.getElementById('btn-export-github').addEventListener('click', () => this.exportToGitHubIssues());
 
         // A/B Tester
         document.getElementById('btn-run-ab-test').addEventListener('click', () => this.runABTest());

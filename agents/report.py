@@ -126,6 +126,42 @@ class ReportAgent(BaseAgent):
         logger.info(f"✓ Generated report with {len(continue_items)} continue, {len(stop_items)} stop, {len(create_next)} create")
 
         return report
+    
+    def _format_github_issue(self, item) -> str:
+        """Format CreateNextItem as GitHub issue markdown."""
+        from utils.sandbox_generator import generate_sandbox_code, get_available_languages
+        
+        languages = get_available_languages(item.topic)
+        primary_language = languages[0] if languages else "python"
+        sandbox_code = generate_sandbox_code(item.topic, primary_language)
+        
+        issue = f"""## {item.topic} Tutorial
+
+**Target Audience**: {item.target_audience.title()}  
+**Format**: {item.format.replace('_', ' ').title()}  
+**Reason**: {item.reasoning}
+
+### Starter Code
+
+```{primary_language}
+{sandbox_code}
+```
+
+### Checklist
+
+- [ ] Outline & structure
+- [ ] Code examples (runnable)
+- [ ] Error handling guide
+- [ ] Performance tips
+- [ ] SEO optimization
+- [ ] Peer review
+- [ ] Publish
+
+### Labels
+`devrel` `content` `tutorial` `{primary_language}`
+"""
+        return issue
+
 
 
 __all__ = ["ReportAgent"]
