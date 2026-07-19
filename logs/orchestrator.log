@@ -1627,3 +1627,21 @@ Trace: ReportAgent (success, 0.000s)
 PIPELINE COMPLETE (ASYNC)
 Total duration: 0.06s
 ============================================================
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.073s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.016s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.000s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.001s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.09s
+============================================================
