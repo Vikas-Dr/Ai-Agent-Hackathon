@@ -1645,3 +1645,63 @@ Trace: ReportAgent (success, 0.001s)
 PIPELINE COMPLETE (ASYNC)
 Total duration: 0.09s
 ============================================================
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.022s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.011s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.001s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.001s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.04s
+============================================================
+✓ Trace started
+============================================================
+SCORING DRAFT CONTENT
+============================================================
+Collecting historical data...
+Trace: CollectorAgent (success, 0.022s)
+Predicting performance...
+Trace: PredictorAgent (success, 0.002s)
+============================================================
+SCORING COMPLETE
+Total duration: 0.02s
+============================================================
+Creating event loop for async pipeline execution
+✓ Trace started
+============================================================
+STARTING CONTENTPULSE PIPELINE (ASYNC MODE)
+============================================================
+Stage 1: Collecting data...
+Trace: CollectorAgent (success, 0.026s)
+Stage 2: Analyzing content (parallel execution)...
+Trace: AnalyzerAgent (success, 0.011s)
+Stage 3: Identifying gaps...
+Trace: StrategistAgent (success, 0.001s)
+Stage 4: Generating report...
+Trace: ReportAgent (success, 0.001s)
+✓ Trace saved to logs/pipeline_trace.json
+============================================================
+PIPELINE COMPLETE (ASYNC)
+Total duration: 0.04s
+============================================================
+✓ Trace started
+============================================================
+SCORING DRAFT CONTENT
+============================================================
+Collecting historical data...
+Trace: CollectorAgent (success, 0.023s)
+Predicting performance...
+Trace: PredictorAgent (success, 0.002s)
+============================================================
+SCORING COMPLETE
+Total duration: 0.02s
+============================================================

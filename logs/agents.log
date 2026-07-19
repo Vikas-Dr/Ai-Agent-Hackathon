@@ -8390,3 +8390,531 @@ Create: Serverless & Edge — Developer SDK/framework underperformance: 'Serverl
 Summary: DevRel recommendation: Focus on high-performers and high-engagement developer content. Pause 2 underperforming streams. Launch 14 new developer guides/tutorials to drive SDK and framework adoption.
 ✓ Generated report with 0 continue, 2 stop, 14 create
 ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.06s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/technical_blog/backend
+Predicting for: API Design/technical_blog/backend
+Found 17 comparable rows
+Found 17 comparable rows
+✓ LLM predicted score=75, confidence=high (Pydantic validated)
+✓ LLM predicted score=75, confidence=high (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/tutorial/architects
+Predicting for: API Design/tutorial/architects
+Found 21 comparable rows
+Found 21 comparable rows
+✓ LLM predicted score=63, confidence=medium (Pydantic validated)
+✓ LLM predicted score=63, confidence=medium (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.02s
+Initialized StrategistAgent
+Covered topics: {'Database & Data', 'Cloud Infrastructure', 'DevOps & CI/CD', 'Frontend Frameworks', 'Web Security', 'Authentication', 'Mobile Development', 'Serverless & Edge', 'API Design', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Database & Data', 'Cloud Infrastructure', 'DevOps & CI/CD', 'Frontend Frameworks', 'Web Security', 'Authentication', 'Mobile Development', 'Serverless & Edge', 'API Design', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: tutorial
+Stop: API Design (score 34.2)
+Stop: Python & Data Science (score 32.7)
+Create: AI Agents & MCP — Developer framework/SDK gap: 'AI Agents & MCP' has zero coverage — first-mover advantage for DevRel
+Create: WebAssembly — Developer framework/SDK gap: 'WebAssembly' has zero coverage — first-mover advantage for DevRel
+Create: Platform Engineering — Developer framework/SDK gap: 'Platform Engineering' has zero coverage — first-mover advantage for DevRel
+Create: Developer Experience (DX) — Developer framework/SDK gap: 'Developer Experience (DX)' has zero coverage — first-mover advantage for DevRel
+Create: Edge Functions — Developer framework/SDK gap: 'Edge Functions' has zero coverage — first-mover advantage for DevRel
+Create: Rust for Systems — Developer framework/SDK gap: 'Rust for Systems' has zero coverage — first-mover advantage for DevRel
+Create: Database & Data — Developer SDK/framework underperformance: 'Database & Data' scores 37.3 — refresh integration guides or build new samples
+Create: Cloud Infrastructure — Developer SDK/framework underperformance: 'Cloud Infrastructure' scores 38.6 — refresh integration guides or build new samples
+Create: Frontend Frameworks — Developer SDK/framework underperformance: 'Frontend Frameworks' scores 35.6 — refresh integration guides or build new samples
+Create: Web Security — Developer SDK/framework underperformance: 'Web Security' scores 35.7 — refresh integration guides or build new samples
+Create: Authentication — Developer SDK/framework underperformance: 'Authentication' scores 39.8 — refresh integration guides or build new samples
+Create: Serverless & Edge — Developer SDK/framework underperformance: 'Serverless & Edge' scores 36.2 — refresh integration guides or build new samples
+Create: API Design — Developer SDK/framework underperformance: 'API Design' scores 34.2 — refresh integration guides or build new samples
+Create: Python & Data Science — Developer SDK/framework underperformance: 'Python & Data Science' scores 32.7 — refresh integration guides or build new samples
+Summary: DevRel recommendation: Focus on high-performers and high-engagement developer content. Pause 2 underperforming streams. Launch 14 new developer guides/tutorials to drive SDK and framework adoption.
+✓ Generated report with 0 continue, 2 stop, 14 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+Initialized StrategistAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Covered topics: {'Database & Data', 'Cloud Infrastructure', 'DevOps & CI/CD', 'Frontend Frameworks', 'Web Security', 'Authentication', 'Mobile Development', 'Serverless & Edge', 'API Design', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: tutorial
+Stop: API Design (score 34.2)
+Stop: Python & Data Science (score 32.7)
+Create: AI Agents & MCP — Developer framework/SDK gap: 'AI Agents & MCP' has zero coverage — first-mover advantage for DevRel
+Create: WebAssembly — Developer framework/SDK gap: 'WebAssembly' has zero coverage — first-mover advantage for DevRel
+Create: Platform Engineering — Developer framework/SDK gap: 'Platform Engineering' has zero coverage — first-mover advantage for DevRel
+Create: Developer Experience (DX) — Developer framework/SDK gap: 'Developer Experience (DX)' has zero coverage — first-mover advantage for DevRel
+Create: Edge Functions — Developer framework/SDK gap: 'Edge Functions' has zero coverage — first-mover advantage for DevRel
+Create: Rust for Systems — Developer framework/SDK gap: 'Rust for Systems' has zero coverage — first-mover advantage for DevRel
+Create: Database & Data — Developer SDK/framework underperformance: 'Database & Data' scores 37.3 — refresh integration guides or build new samples
+Create: Cloud Infrastructure — Developer SDK/framework underperformance: 'Cloud Infrastructure' scores 38.6 — refresh integration guides or build new samples
+Create: Frontend Frameworks — Developer SDK/framework underperformance: 'Frontend Frameworks' scores 35.6 — refresh integration guides or build new samples
+Create: Web Security — Developer SDK/framework underperformance: 'Web Security' scores 35.7 — refresh integration guides or build new samples
+Create: Authentication — Developer SDK/framework underperformance: 'Authentication' scores 39.8 — refresh integration guides or build new samples
+Create: Serverless & Edge — Developer SDK/framework underperformance: 'Serverless & Edge' scores 36.2 — refresh integration guides or build new samples
+Create: API Design — Developer SDK/framework underperformance: 'API Design' scores 34.2 — refresh integration guides or build new samples
+Create: Python & Data Science — Developer SDK/framework underperformance: 'Python & Data Science' scores 32.7 — refresh integration guides or build new samples
+Summary: DevRel recommendation: Focus on high-performers and high-engagement developer content. Pause 2 underperforming streams. Launch 14 new developer guides/tutorials to drive SDK and framework adoption.
+✓ Generated report with 0 continue, 2 stop, 14 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/technical_blog/backend
+Predicting for: API Design/technical_blog/backend
+Found 17 comparable rows
+Found 17 comparable rows
+✓ LLM predicted score=77, confidence=high (Pydantic validated)
+✓ LLM predicted score=77, confidence=high (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.04s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.06s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.03s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/technical_blog/backend
+Predicting for: API Design/technical_blog/backend
+Found 17 comparable rows
+Found 17 comparable rows
+✓ LLM predicted score=72, confidence=medium (Pydantic validated)
+✓ LLM predicted score=72, confidence=medium (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/tutorial/architects
+Predicting for: API Design/tutorial/architects
+Found 21 comparable rows
+Found 21 comparable rows
+✓ LLM predicted score=64, confidence=medium (Pydantic validated)
+✓ LLM predicted score=64, confidence=medium (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Database & Data', 'Serverless & Edge', 'Authentication', 'DevOps & CI/CD', 'Frontend Frameworks', 'API Design', 'Mobile Development', 'Cloud Infrastructure', 'Web Security', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Database & Data', 'Serverless & Edge', 'Authentication', 'DevOps & CI/CD', 'Frontend Frameworks', 'API Design', 'Mobile Development', 'Cloud Infrastructure', 'Web Security', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: tutorial
+Stop: API Design (score 34.2)
+Stop: Python & Data Science (score 32.7)
+Create: AI Agents & MCP — Developer framework/SDK gap: 'AI Agents & MCP' has zero coverage — first-mover advantage for DevRel
+Create: WebAssembly — Developer framework/SDK gap: 'WebAssembly' has zero coverage — first-mover advantage for DevRel
+Create: Platform Engineering — Developer framework/SDK gap: 'Platform Engineering' has zero coverage — first-mover advantage for DevRel
+Create: Developer Experience (DX) — Developer framework/SDK gap: 'Developer Experience (DX)' has zero coverage — first-mover advantage for DevRel
+Create: Edge Functions — Developer framework/SDK gap: 'Edge Functions' has zero coverage — first-mover advantage for DevRel
+Create: Rust for Systems — Developer framework/SDK gap: 'Rust for Systems' has zero coverage — first-mover advantage for DevRel
+Create: Database & Data — Developer SDK/framework underperformance: 'Database & Data' scores 37.3 — refresh integration guides or build new samples
+Create: Serverless & Edge — Developer SDK/framework underperformance: 'Serverless & Edge' scores 36.2 — refresh integration guides or build new samples
+Create: Authentication — Developer SDK/framework underperformance: 'Authentication' scores 39.8 — refresh integration guides or build new samples
+Create: Frontend Frameworks — Developer SDK/framework underperformance: 'Frontend Frameworks' scores 35.6 — refresh integration guides or build new samples
+Create: API Design — Developer SDK/framework underperformance: 'API Design' scores 34.2 — refresh integration guides or build new samples
+Create: Cloud Infrastructure — Developer SDK/framework underperformance: 'Cloud Infrastructure' scores 38.6 — refresh integration guides or build new samples
+Create: Web Security — Developer SDK/framework underperformance: 'Web Security' scores 35.7 — refresh integration guides or build new samples
+Create: Python & Data Science — Developer SDK/framework underperformance: 'Python & Data Science' scores 32.7 — refresh integration guides or build new samples
+Summary: DevRel recommendation: Focus on high-performers and high-engagement developer content. Pause 2 underperforming streams. Launch 14 new developer guides/tutorials to drive SDK and framework adoption.
+✓ Generated report with 0 continue, 2 stop, 14 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.03s
+Initialized AnalyzerAgent
+Initialized StrategistAgent
+✓ Computed aggregations: 10 topics, 3 formats
+✓ DevRel metrics: GitHub stars=6956, API signups=4516
+✓ Generated 6 fallback insights
+AnalyzerAgent completed successfully in 0.01s
+Covered topics: {'Database & Data', 'Serverless & Edge', 'Authentication', 'DevOps & CI/CD', 'Frontend Frameworks', 'API Design', 'Mobile Development', 'Cloud Infrastructure', 'Web Security', 'Python & Data Science'}
+Gap: Trending topic not covered: AI Agents & MCP
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: Developer Experience (DX)
+Gap: Trending topic not covered: Edge Functions
+Gap: Trending topic not covered: Rust for Systems
+Gap: Low-scoring topic: Database & Data (37.3)
+Gap: Low-scoring topic: Serverless & Edge (36.2)
+Gap: Low-scoring topic: Authentication (39.8)
+Gap: Low-scoring topic: Frontend Frameworks (35.6)
+Gap: Low-scoring topic: API Design (34.2)
+Gap: Low-scoring topic: Cloud Infrastructure (38.6)
+Gap: Low-scoring topic: Web Security (35.7)
+Gap: Low-scoring topic: Python & Data Science (32.7)
+✓ Identified 14 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: tutorial
+Stop: API Design (score 34.2)
+Stop: Python & Data Science (score 32.7)
+Create: AI Agents & MCP — Developer framework/SDK gap: 'AI Agents & MCP' has zero coverage — first-mover advantage for DevRel
+Create: WebAssembly — Developer framework/SDK gap: 'WebAssembly' has zero coverage — first-mover advantage for DevRel
+Create: Platform Engineering — Developer framework/SDK gap: 'Platform Engineering' has zero coverage — first-mover advantage for DevRel
+Create: Developer Experience (DX) — Developer framework/SDK gap: 'Developer Experience (DX)' has zero coverage — first-mover advantage for DevRel
+Create: Edge Functions — Developer framework/SDK gap: 'Edge Functions' has zero coverage — first-mover advantage for DevRel
+Create: Rust for Systems — Developer framework/SDK gap: 'Rust for Systems' has zero coverage — first-mover advantage for DevRel
+Create: Database & Data — Developer SDK/framework underperformance: 'Database & Data' scores 37.3 — refresh integration guides or build new samples
+Create: Serverless & Edge — Developer SDK/framework underperformance: 'Serverless & Edge' scores 36.2 — refresh integration guides or build new samples
+Create: Authentication — Developer SDK/framework underperformance: 'Authentication' scores 39.8 — refresh integration guides or build new samples
+Create: Frontend Frameworks — Developer SDK/framework underperformance: 'Frontend Frameworks' scores 35.6 — refresh integration guides or build new samples
+Create: API Design — Developer SDK/framework underperformance: 'API Design' scores 34.2 — refresh integration guides or build new samples
+Create: Cloud Infrastructure — Developer SDK/framework underperformance: 'Cloud Infrastructure' scores 38.6 — refresh integration guides or build new samples
+Create: Web Security — Developer SDK/framework underperformance: 'Web Security' scores 35.7 — refresh integration guides or build new samples
+Create: Python & Data Science — Developer SDK/framework underperformance: 'Python & Data Science' scores 32.7 — refresh integration guides or build new samples
+Summary: DevRel recommendation: Focus on high-performers and high-engagement developer content. Pause 2 underperforming streams. Launch 14 new developer guides/tutorials to drive SDK and framework adoption.
+✓ Generated report with 0 continue, 2 stop, 14 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Starting streaming collection from data/sample_content_data.csv
+Streaming CSV file: data/sample_content_data.csv
+✓ Batch 1: Processed 100 rows, valid: 100, dropped: 0
+✓ Batch 2: Processed 100 rows, valid: 100, dropped: 0
+✓ Completed streaming: 200 total rows, 200 valid, 0 dropped
+✓ Enriched data with performance_score (range: 10.0 - 95.2)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: API Design/technical_blog/backend
+Predicting for: API Design/technical_blog/backend
+Found 17 comparable rows
+Found 17 comparable rows
+✓ LLM predicted score=78, confidence=high (Pydantic validated)
+✓ LLM predicted score=78, confidence=high (Pydantic validated)
+PredictorAgent completed successfully in 0.00s
