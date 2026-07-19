@@ -93,25 +93,11 @@ def score_draft(
         }
 
     dataframe = collector_result["dataframe"]
-    
-    # Inject multimodal feedback if available
-    if asset_feedback:
-        # Feedback will be added by predictor
-        pass
-
-    # ==================== PREDICTOR ====================
-    logger.info("Predicting performance...")
-
-        )
-
 
     # ==================== PREDICTOR ====================
     logger.info("Predicting performance...")
     predictor = PredictorAgent()
-    prediction, predictor_duration, predictor_status = predictor.execute(
-        dataframe=dataframe,
-        title=title,
-        topic=topic,
+
         format=fmt,
         audience_segment=audience_segment,
         word_count=word_count,
