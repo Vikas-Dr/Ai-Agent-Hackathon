@@ -26,6 +26,7 @@
             <nav class="nav-tabs" aria-label="Main Navigation">
                 <a href="#dashboard" class="nav-tab active" data-tab="dashboard" id="nav-dashboard">📊 Dashboard</a>
                 <a href="#scorer" class="nav-tab" data-tab="scorer" id="nav-scorer">✍️ Draft Scorer</a>
+                <a href="#abtester" class="nav-tab" data-tab="abtester" id="nav-abtester">🔀 A/B Tester</a>
                 <a href="#custom" class="nav-tab" data-tab="custom" id="nav-custom">📤 Custom Data</a>
                 <a href="#strategy" class="nav-tab" data-tab="strategy" id="nav-strategy">🎯 Strategy</a>
                 <a href="#datatable" class="nav-tab" data-tab="datatable" id="nav-datatable">📋 Data Table</a>
@@ -117,6 +118,10 @@
                             <label for="scorer-markdown">Draft Markdown Content (Optional)</label>
                             <textarea id="scorer-markdown" placeholder="Paste your markdown content here. This will enable code ratio analysis..." rows="6"></textarea>
                         </div>
+                        <div class="form-group" style="margin-top:16px;">
+                            <label for="scorer-asset">📸 Optional: Upload Screenshot/Video Asset (Multimodal Analysis)</label>
+                            <input type="file" id="scorer-asset" accept="image/*,video/*" style="width:100%; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:8px; padding:10px; color:#fff; cursor:pointer;">
+                        </div>
                         <button type="submit" class="btn btn-primary btn-submit">📈 Score This Draft</button>
                     </form>
 
@@ -139,7 +144,34 @@
                 </div>
             </section>
 
-            <!-- Custom Data Management Tab -->
+            <!-- A/B Tester Tab -->
+            <section id="abtester" class="tab-pane" aria-labelledby="nav-abtester">
+                <div class="section-header">
+                    <h2>🔀 A/B Test Headings & Content Variants</h2>
+                </div>
+                <div class="ab-container card">
+                    <div class="ab-section">
+                        <h3>📝 Headline / Title Variants</h3>
+                        <div class="form-group" style="margin-bottom:16px;">
+                            <label for="ab-headline-1">Variant A</label>
+                            <input type="text" id="ab-headline-1" class="ab-input" placeholder="e.g. Master FastAPI in Production" value="Master FastAPI in Production" style="width:100%;">
+                        </div>
+                        <div class="form-group" style="margin-bottom:16px;">
+                            <label for="ab-headline-2">Variant B</label>
+                            <input type="text" id="ab-headline-2" class="ab-input" placeholder="e.g. FastAPI Complete Production Guide" value="FastAPI Complete Production Guide" style="width:100%;">
+                        </div>
+                        <div class="form-group" style="margin-bottom:16px;">
+                            <label for="ab-headline-3">Variant C</label>
+                            <input type="text" id="ab-headline-3" class="ab-input" placeholder="e.g. 5 Tips for FastAPI Production" value="5 Tips for FastAPI Production" style="width:100%;">
+                        </div>
+                    </div>
+                    <button id="btn-ab-test" class="btn btn-primary btn-submit">🔀 Run A/B Performance Test</button>
+                </div>
+                <div id="ab-results" class="ab-results-container hidden card" style="margin-top:24px;">
+                    <h3>📊 Comparison Results</h3>
+                    <div id="ab-results-list"></div>
+                </div>
+            </section>
             <section id="custom" class="tab-pane" aria-labelledby="nav-custom">
                 <div class="section-header">
                     <h2>📤 Content Performance Data Management</h2>

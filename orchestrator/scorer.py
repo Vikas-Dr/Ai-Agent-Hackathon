@@ -123,6 +123,15 @@ def score_draft(
             "trace": trace.to_dict(),
         }
 
+    # Apply multimodal score boost and append feedback to suggestions
+    if asset_path and 'asset_analysis' in locals():
+        boosted = multimodal_scoring_boost(asset_analysis, prediction.predicted_score)
+        prediction.predicted_score = min(100, int(boosted))
+        if asset_feedback:
+            # Add asset analysis feedback items as recommendations
+            feedback_items = [line.strip() for line in asset_feedback.split('\n') if line.strip()]
+            prediction.suggestions = feedback_items + prediction.suggestions
+
     logger.info("=" * 60)
     logger.info("SCORING COMPLETE")
     logger.info(f"Total duration: {trace.total_duration:.2f}s")

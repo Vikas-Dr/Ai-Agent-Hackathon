@@ -157,10 +157,10 @@ class AnalyzerAgent(BaseAgent):
         # ==================== COMPUTE DEVREL METRICS ====================
         
         devrel_metrics = {
-            "total_github_stars": dataframe.get("github_stars_growth", pd.Series([0])).sum() if "github_stars_growth" in dataframe.columns else 0,
-            "avg_github_stars": dataframe.get("github_stars_growth", pd.Series([0])).mean() if "github_stars_growth" in dataframe.columns else 0,
+            "total_github_stars": int(dataframe.get("github_stars_growth", pd.Series([0])).sum()) if "github_stars_growth" in dataframe.columns else 0,
+            "avg_github_stars": round(float(dataframe.get("github_stars_growth", pd.Series([0])).mean()), 2) if "github_stars_growth" in dataframe.columns else 0.0,
             "total_api_signups": int(dataframe["conversions"].sum()),
-            "avg_api_signups": round(dataframe["conversions"].mean(), 2),
+            "avg_api_signups": round(float(dataframe["conversions"].mean()), 2),
             "avg_code_ratio": 0.35,
         }
         logger.info(f"✓ DevRel metrics: GitHub stars={devrel_metrics['total_github_stars']}, API signups={devrel_metrics['total_api_signups']}")
@@ -235,12 +235,15 @@ class AnalyzerAgent(BaseAgent):
             insights = self._generate_fallback_insights(dataframe)
         
         # Enhance insights with RAG context
-        rag_context = get_rag_insights(f"{top_topics[0] if top_topics else 'API'} {top_formats[0] if top_formats else 'tutorial'}")
-        if rag_context:
-            rag_text = f"Context from similar patterns: {rag_context[0].get('insight', 'N/A')}"
-            insights.append(rag_text)
-
-            insights = self._generate_fallback_insights(dataframe)
+        try:
+            query_topic = top_topics[0].topic if top_topics else 'API Design'
+            query_format = top_formats[0].format if top_formats else 'tutorial'
+            rag_context = get_rag_insights(f"{query_topic} {query_format}")
+            if rag_context and isinstance(insights, list):
+                rag_text = f"💡 Context from similar patterns: {rag_context[0].get('insight', 'N/A')}"
+                insights.append(rag_text)
+        except Exception as e:
+            logger.warning(f"RAG integration failed: {e}")
 
         return AnalyzerOutput(
             insights=insights,

@@ -154,9 +154,9 @@ def call_llm(
     if MOCK_LLM:
         system_lower = system_prompt.lower()
         if "analyzer" in system_lower or "analytics" in system_lower:
-            mock_str = _mock_analyzer_response()
+            mock_str = _mock_analyzer_response(user_prompt)
         elif "predictor" in system_lower or "predict" in system_lower:
-            mock_str = _mock_predictor_response()
+            mock_str = _mock_predictor_response(user_prompt)
         else:
             mock_str = _mock_generic_response()
         if response_schema:

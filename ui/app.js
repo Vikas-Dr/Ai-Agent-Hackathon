@@ -154,6 +154,12 @@ class DevPulseApp {
         if (loadDataBtn) {
             loadDataBtn.addEventListener('click', () => this.loadData());
         }
+
+        // A/B Tester button
+        const abBtn = document.getElementById('btn-ab-test');
+        if (abBtn) {
+            abBtn.addEventListener('click', () => this.runABTest());
+        }
     }
 
     // ==================== DASHBOARD & REAL PIPELINE ANALYSIS ====================
@@ -181,10 +187,13 @@ class DevPulseApp {
                 document.getElementById('metric-topics').textContent = analysis.top_topics ? analysis.top_topics.length : '0';
                 document.getElementById('metric-insights').textContent = analysis.insights ? analysis.insights.length : '0';
                 
-                const topFormat = analysis.top_formats && analysis.top_formats.length > 0
-                    ? (analysis.top_formats[0].format || analysis.top_formats[0])
+                const topFormatObj = analysis.top_formats && analysis.top_formats.length > 0
+                    ? analysis.top_formats[0]
                     : '-';
-                document.getElementById('metric-format').textContent = topFormat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                const topFormatStr = typeof topFormatObj === 'string' 
+                    ? topFormatObj 
+                    : (topFormatObj && topFormatObj.format ? topFormatObj.format : '-');
+                document.getElementById('metric-format').textContent = topFormatStr.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
                 // Populate Insights listing card
                 const insightsList = document.getElementById('insights-list');
@@ -288,21 +297,41 @@ class DevPulseApp {
         const audience = document.getElementById('scorer-audience').value;
         const wordcount = document.getElementById('scorer-wordcount').value;
         const markdown = document.getElementById('scorer-markdown').value;
+        const assetFile = document.getElementById('scorer-asset').files[0];
 
         const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.textContent = '⏳ Evaluating Draft...';
 
         try {
-            const response = await fetch('/api/score', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title, topic, format, audience,
-                    word_count: parseInt(wordcount),
-                    draft_markdown: markdown
-                })
-            });
+            let response;
+            if (assetFile) {
+                // Use FormData for file upload
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('topic', topic);
+                formData.append('format', format);
+                formData.append('audience', audience);
+                formData.append('word_count', parseInt(wordcount));
+                formData.append('draft_markdown', markdown);
+                formData.append('asset', assetFile);
+
+                response = await fetch('/api/score', {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                // Standard JSON request
+                response = await fetch('/api/score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title, topic, format, audience,
+                        word_count: parseInt(wordcount),
+                        draft_markdown: markdown
+                    })
+                });
+            }
 
             const result = await response.json();
             if (result.prediction) {
@@ -341,6 +370,69 @@ class DevPulseApp {
         } finally {
             btn.disabled = false;
             btn.textContent = '📈 Score This Draft';
+        }
+    }
+
+    // ==================== A/B PERFORMANCE TESTER ====================
+
+    async runABTest() {
+        const btn = document.getElementById('btn-ab-test');
+        if (!btn) return;
+        btn.disabled = true;
+        btn.textContent = '⏳ Calculating...';
+
+        const headlines = [
+            document.getElementById('ab-headline-1').value,
+            document.getElementById('ab-headline-2').value,
+            document.getElementById('ab-headline-3').value
+        ].filter(h => h.trim() !== '');
+
+        if (headlines.length < 2) {
+            this.showToast('❌ Please enter at least 2 variants.', 'error');
+            btn.disabled = false;
+            btn.textContent = '🔀 Run A/B Performance Test';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/ab-test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ headlines })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                let html = '<div style="display:flex; flex-direction:column; gap:16px; margin-top:16px;">';
+                result.results.forEach(r => {
+                    const isWinner = r.headline === result.winner;
+                    const borderStyle = isWinner ? 'border: 2px solid var(--accent);' : 'border: 1px solid var(--border-color);';
+                    const glowClass = isWinner ? 'box-shadow: var(--glow-shadow);' : '';
+                    html += `
+                        <div style="background:var(--bg-primary); padding:16px; border-radius:10px; ${borderStyle} ${glowClass} display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-weight:700; color:#fff;">${r.headline}</div>
+                                <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Estimated conversions & engagement performance</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:24px; font-weight:800; color:${isWinner ? 'var(--accent)' : 'var(--text-secondary)'}; font-family:'JetBrains Mono';">${r.score}/100</div>
+                                ${isWinner ? '<span style="font-size:11px; color:#00ffd4; font-weight:700; text-transform:uppercase;">🏆 Top Performer</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                document.getElementById('ab-results-list').innerHTML = html;
+                document.getElementById('ab-results').classList.remove('hidden');
+                this.showToast('📈 A/B test complete!', 'success');
+            } else {
+                this.showToast('❌ Testing failed: ' + result.error, 'error');
+            }
+        } catch (err) {
+            this.showToast('❌ Testing error: ' + err.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '🔀 Run A/B Performance Test';
         }
     }
 
@@ -471,7 +563,8 @@ class DevPulseApp {
                 if (report.continue_items && report.continue_items.length > 0) {
                     html += '<h4 style="color: #00ffd4; margin-top: 20px; margin-bottom: 12px;">✅ What to Continue:</h4><ul>';
                     report.continue_items.forEach(item => {
-                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${item.format.replace(/_/g, ' ')})</strong>: ${item.reason}</li>`;
+                        const fmtName = (item.format || 'tutorial').replace(/_/g, ' ');
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${fmtName})</strong>: ${item.reason}</li>`;
                     });
                     html += '</ul>';
                 }
@@ -480,7 +573,8 @@ class DevPulseApp {
                 if (report.stop_items && report.stop_items.length > 0) {
                     html += '<h4 style="color: #ff6b6b; margin-top: 20px; margin-bottom: 12px;">🛑 What to Stop / Reallocate:</h4><ul>';
                     report.stop_items.forEach(item => {
-                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${item.format.replace(/_/g, ' ')})</strong>: ${item.reason}</li>`;
+                        const fmtName = (item.format || 'technical_blog').replace(/_/g, ' ');
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic} (${fmtName})</strong>: ${item.reason}</li>`;
                     });
                     html += '</ul>';
                 }
@@ -489,7 +583,8 @@ class DevPulseApp {
                 if (report.create_next && report.create_next.length > 0) {
                     html += '<h4 style="color: var(--accent); margin-top: 20px; margin-bottom: 12px;">🚀 Content Gaps & Gaps to Create Next:</h4><ul>';
                     report.create_next.forEach(item => {
-                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic}</strong> (Target: ${item.target_audience}, Recommended format: ${item.suggested_format.replace(/_/g, ' ')}): ${item.reasoning}</li>`;
+                        const fmtName = (item.suggested_format || item.format || 'tutorial').replace(/_/g, ' ');
+                        html += `<li style="margin: 8px 0 8px 16px; color: var(--text-primary);"><strong style="color:#fff;">${item.topic}</strong> (Target: ${item.target_audience || 'developers'}, Recommended format: ${fmtName}): ${item.reasoning}</li>`;
                     });
                     html += '</ul>';
                 }

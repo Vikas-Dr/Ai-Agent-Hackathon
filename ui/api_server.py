@@ -187,18 +187,54 @@ def add_data():
 def score_content():
     """Calculate and return score with recommendations using Predictor Agent."""
     try:
-        data = request.get_json()
+        temp_asset_path = None
+        
+        # Check if multipart form data (contains files)
+        if request.content_type and "multipart/form-data" in request.content_type:
+            title = request.form.get("title", "Untitled")
+            topic = request.form.get("topic", "API Design")
+            fmt = request.form.get("format", "technical_blog")
+            audience = request.form.get("audience") or request.form.get("audience_segment") or "developers"
+            word_count = int(request.form.get("word_count") or request.form.get("wordcount") or 1500)
+            draft_markdown = request.form.get("draft_markdown") or request.form.get("markdown") or ""
+            
+            # Save uploaded file
+            uploaded_file = request.files.get("file") or request.files.get("asset")
+            if uploaded_file and uploaded_file.filename:
+                temp_dir = Path("data/temp_assets")
+                temp_dir.mkdir(parents=True, exist_ok=True)
+                temp_asset_path = str(temp_dir / uploaded_file.filename)
+                uploaded_file.save(temp_asset_path)
+        else:
+            # JSON format
+            data = request.get_json() or {}
+            title = data.get("title", "Untitled")
+            topic = data.get("topic", "API Design")
+            fmt = data.get("format", "technical_blog")
+            audience = data.get("audience") or data.get("audience_segment") or "developers"
+            word_count = int(data.get("word_count") or data.get("wordcount") or 1500)
+            draft_markdown = data.get("draft_markdown") or data.get("markdown") or ""
+            
         temp_csv = save_stored_data_to_temp_csv()
         
         result = score_draft(
-            title=data.get("title", "Untitled"),
-            topic=data.get("topic", "API Design"),
-            fmt=data.get("format", "technical_blog"),
-            audience_segment=data.get("audience") or data.get("audience_segment") or "developers",
-            word_count=int(data.get("word_count") or data.get("wordcount") or 1500),
+            title=title,
+            topic=topic,
+            fmt=fmt,
+            audience_segment=audience,
+            word_count=word_count,
             data_path=temp_csv,
-            draft_markdown=data.get("draft_markdown") or data.get("markdown") or ""
+            draft_markdown=draft_markdown,
+            asset_path=temp_asset_path
         )
+        
+        # Clean up temp asset file
+        if temp_asset_path and Path(temp_asset_path).exists():
+            try:
+                Path(temp_asset_path).unlink()
+            except Exception:
+                pass
+                
         return jsonify(result), 200
     except Exception as e:
         return jsonify({
