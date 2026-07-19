@@ -385,7 +385,8 @@ html, body {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 0.75rem;
     background: rgba(0, 0, 0, 0.3);
@@ -393,13 +394,22 @@ html, body {
     border-radius: 8px;
     color: var(--text);
     font-size: 0.95rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: var(--green);
     box-shadow: 0 0 10px rgba(72, 196, 130, 0.2);
+}
+
+#scorer-markdown {
+    resize: vertical;
+    min-height: 150px;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .form-row {
@@ -560,6 +570,48 @@ html, body {
     color: var(--text-dim);
     font-size: 0.9rem;
     border-top: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+/* ==================== CODE RATIO BAR ==================== */
+
+.code-ratio-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.code-ratio-label {
+    font-weight: 600;
+    color: var(--text-dim);
+    min-width: 80px;
+    font-size: 0.9rem;
+}
+
+.code-ratio-track {
+    flex: 1;
+    height: 20px;
+    background: rgba(72, 196, 130, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.code-ratio-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), #36d4a9);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.code-ratio-percent {
+    min-width: 45px;
+    text-align: right;
+    color: var(--green);
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 /* ==================== REPORT ==================== */

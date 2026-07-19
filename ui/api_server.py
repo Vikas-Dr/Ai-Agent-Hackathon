@@ -84,6 +84,9 @@ def api_score():
                 400,
             )
 
+        # Extract optional draft_markdown
+        draft_markdown = data.get("draft_markdown", None)
+
         # Call scorer
         result = score_draft(
             title=data["title"],
@@ -91,6 +94,7 @@ def api_score():
             fmt=data["format"],
             audience_segment=data["audience_segment"],
             word_count=int(data["word_count"]),
+            draft_markdown=draft_markdown,
         )
         logger.info(
             f"Score computed: {result['prediction']['predicted_score']}"

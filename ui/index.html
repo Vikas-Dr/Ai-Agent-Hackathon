@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ContentPulse — Editorial AI</title>
+    <title>DevPulse — Developer Relations Content Intelligence</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -11,8 +11,8 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1 class="logo">⚡ ContentPulse</h1>
-                <p class="tagline">Data-driven editorial strategy</p>
+                <h1 class="logo">⚡ DevPulse — Developer Relations Content Intelligence</h1>
+                <p class="tagline">Data-driven developer content strategy</p>
             </div>
         </header>
 
@@ -121,6 +121,11 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="scorer-markdown">Draft Markdown (Optional)</label>
+                            <textarea id="scorer-markdown" placeholder="Paste your markdown draft here for code analysis..."></textarea>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">
                             📈 Score This Draft
                         </button>
@@ -139,6 +144,14 @@
                             </div>
                         </div>
 
+                        <div class="code-ratio-bar">
+                            <div class="code-ratio-label">Code Ratio</div>
+                            <div class="code-ratio-track">
+                                <div id="result-code-ratio-fill" class="code-ratio-fill" style="width: 0%"></div>
+                            </div>
+                            <div id="result-code-ratio-percent" class="code-ratio-percent">0%</div>
+                        </div>
+
                         <div class="score-details">
                             <div class="result-section">
                                 <h4>Prediction Reasoning</h4>
@@ -148,6 +161,11 @@
                             <div class="result-section">
                                 <h4>Confidence Level</h4>
                                 <div id="result-confidence" class="confidence-badge"></div>
+                            </div>
+
+                            <div class="result-section">
+                                <h4>Code Quality Feedback</h4>
+                                <p id="result-code-feedback"></p>
                             </div>
 
                             <div class="result-section">

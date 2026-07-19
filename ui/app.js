@@ -213,6 +213,7 @@ class ContentPulseApp {
                 format: document.getElementById('scorer-format').value,
                 audience_segment: document.getElementById('scorer-audience').value,
                 word_count: parseInt(document.getElementById('scorer-wordcount').value),
+                draft_markdown: document.getElementById('scorer-markdown').value || null,
             };
 
             const response = await fetch('/api/score', {
@@ -258,6 +259,16 @@ class ContentPulseApp {
 
         document.getElementById('result-score').textContent = score;
         document.getElementById('result-reasoning').textContent = prediction.reasoning;
+
+        // Render code ratio bar
+        const codeRatio = prediction.code_to_text_ratio || 0;
+        const codeRatioPercent = Math.round(codeRatio * 100);
+        document.getElementById('result-code-ratio-fill').style.width = `${codeRatioPercent}%`;
+        document.getElementById('result-code-ratio-percent').textContent = `${codeRatioPercent}%`;
+
+        // Render code quality feedback
+        const codeFeedback = prediction.code_quality_feedback || 'No code analysis available';
+        document.getElementById('result-code-feedback').textContent = codeFeedback;
 
         const confidenceEl = document.getElementById('result-confidence');
         confidenceEl.className = `confidence-badge ${prediction.confidence}`;

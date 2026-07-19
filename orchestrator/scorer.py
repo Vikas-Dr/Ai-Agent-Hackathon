@@ -24,6 +24,7 @@ def score_draft(
     audience_segment: str,
     word_count: int,
     data_path: str | None = None,
+    draft_markdown: str | None = None,
 ) -> dict[str, Any]:
     """
     Score a draft piece of content.
@@ -35,6 +36,7 @@ def score_draft(
         audience_segment: Target audience.
         word_count: Content length.
         data_path: Path to historical data (defaults to config.DATA_PATH).
+        draft_markdown: Optional markdown draft for code analysis.
 
     Returns:
         Dictionary with prediction and trace.
@@ -78,6 +80,7 @@ def score_draft(
         format=fmt,
         audience_segment=audience_segment,
         word_count=word_count,
+        draft_markdown=draft_markdown,
     )
 
     trace.add(
@@ -120,6 +123,7 @@ if __name__ == "__main__":
     word_count = int(sys.argv[4])
     audience = sys.argv[5] if len(sys.argv) > 5 else "developers"
     data_path = sys.argv[6] if len(sys.argv) > 6 else None
+    draft_markdown = sys.argv[7] if len(sys.argv) > 7 else None
 
     result = score_draft(
         title=title,
@@ -128,5 +132,6 @@ if __name__ == "__main__":
         audience_segment=audience,
         word_count=word_count,
         data_path=data_path,
+        draft_markdown=draft_markdown,
     )
     print(json.dumps(result, indent=2, default=str))
