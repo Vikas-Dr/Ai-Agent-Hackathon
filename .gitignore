@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Environment Secrets
+.env
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# User Logs & Assets
+logs/*.log
+logs/agents.log
+logs/llm_client.log
+data/temp_assets/
+data/temp_active_data.csv
+
+# OS Metadata
+.DS_Store
