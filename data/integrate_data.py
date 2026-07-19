@@ -11,6 +11,7 @@ import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Optional
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 
@@ -21,12 +22,20 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.FileHandler(LOGS_DIR / "integrate_data.log"))
 logger.setLevel(logging.INFO)
 
+# Create a persistent session with connection pooling for HTTP requests
+requests_session = requests.Session()
+requests_session.headers.update({
+    'User-Agent': 'ContentPulse/1.0 (DevRel Data Integration)',
+})
+
+
 # ==================== CONSTANTS ====================
 HN_TOP_STORIES_URL = "https://hacker-news.firebaseio.com/v0/topstories.json"
 HN_ITEM_URL = "https://hacker-news.firebaseio.com/v0/item/{id}.json"
 HN_NEWS_BASE = "https://news.ycombinator.com/item?id="
 STORIES_TO_FETCH = 200
 REQUEST_TIMEOUT = 10
+
 
 # DevRel Topic classification keywords for developer content
 TOPIC_KEYWORDS = {
@@ -40,6 +49,12 @@ TOPIC_KEYWORDS = {
     "Python & Data Science": r"Python|Django|FastAPI|Pandas|NumPy|ML|data science",
     "Web Security": r"security|XSS|CSRF|SSL|TLS|encryption|vulnerability",
     "Serverless & Edge": r"serverless|edge|Lambda|Cloudflare|function|CDN",
+}
+
+# Pre-compile regex patterns for performance
+COMPILED_TOPIC_PATTERNS = {
+    topic: re.compile(pattern, re.IGNORECASE)
+    for topic, pattern in TOPIC_KEYWORDS.items()
 }
 
 
@@ -123,7 +138,7 @@ def fetch_hn_top_stories() -> list[int]:
     """Fetch top story IDs from HN API."""
     try:
         logger.info(f"Fetching top {STORIES_TO_FETCH} story IDs from HN API...")
-        response = requests.get(
+        response = requests_session.get(
             HN_TOP_STORIES_URL, timeout=REQUEST_TIMEOUT
         )
         response.raise_for_status()
@@ -138,7 +153,7 @@ def fetch_hn_top_stories() -> list[int]:
 def fetch_hn_story(story_id: int) -> Optional[dict[str, Any]]:
     """Fetch a single story from HN API."""
     try:
-        response = requests.get(
+        response = requests_session.get(
             HN_ITEM_URL.format(id=story_id), timeout=REQUEST_TIMEOUT
         )
         response.raise_for_status()
@@ -150,23 +165,20 @@ def fetch_hn_story(story_id: int) -> Optional[dict[str, Any]]:
 
 # ==================== CLASSIFICATION ====================
 def classify_topic(title: str, topic_counts: dict[str, int]) -> str:
-    """Classify topic from title using keyword matching."""
+    """Classify topic from title using pre-compiled regex patterns."""
     title_lower = title.lower()
 
-    # Match keywords
-    for topic, keywords_pattern in TOPIC_KEYWORDS.items():
-        if re.search(keywords_pattern, title_lower, re.IGNORECASE):
+    # Match pre-compiled patterns (no regex compilation overhead)
+    for topic, pattern in COMPILED_TOPIC_PATTERNS.items():
+        if pattern.search(title_lower):
             return topic
 
     # Fallback: assign to topic with fewest rows
     return min(topic_counts.keys(), key=lambda t: topic_counts[t])
 
 
-def classify_format(url: str, title: str) -> str:
-    """Determine developer content format from URL and title."""
-    url_lower = url.lower()
-    title_lower = title.lower()
-
+def classify_format(url_lower: str, title_lower: str) -> str:
+    """Determine developer content format from URL and title (accepts pre-lowercased strings)."""
     # Map to DevRel formats: technical_blog, tutorial, code_example, documentation, case_study, webinar, sample_project
     if any(x in url_lower for x in ["youtube.com", "youtu.be", "webinar"]) or "webinar" in title_lower:
         return "webinar"
@@ -186,11 +198,12 @@ def classify_format(url: str, title: str) -> str:
 def classify_audience(topic: str) -> str:
     """Determine developer specialization by topic."""
     # Map topics to developer specializations (frontend, backend, devops, architects)
-    if any(x in topic.lower() for x in ["frontend", "mobile", "web"]):
+    topic_lower = topic.lower()
+    if any(x in topic_lower for x in ["frontend", "mobile", "web"]):
         return "frontend"
-    elif any(x in topic.lower() for x in ["backend", "api", "database", "python"]):
+    elif any(x in topic_lower for x in ["backend", "api", "database", "python"]):
         return "backend"
-    elif any(x in topic.lower() for x in ["devops", "cloud", "infrastructure", "serverless"]):
+    elif any(x in topic_lower for x in ["devops", "cloud", "infrastructure", "serverless"]):
         return "devops"
     else:
         # Architecture and platform roles
@@ -201,17 +214,22 @@ def classify_audience(topic: str) -> str:
 def transform_hn_story(
     hn_story: dict[str, Any], topic_counts: dict[str, int]
 ) -> Optional[RawContentRow]:
-    """Transform HN story to RawContentRow."""
+    """Transform HN story to RawContentRow with optimized string operations."""
     try:
         # Extract fields
         title = hn_story.get("title", "")[:200]  # Truncate to 200 chars
         if not title:
             return None
 
+        # Single lowercase pass for both classify_format and classify_audience
+        title_lower = title.lower()
+
         # URL
         url = hn_story.get("url")
         if not url:
             url = f"{HN_NEWS_BASE}{hn_story.get('id')}"
+        
+        url_lower = url.lower()
 
         # Views (score * 15-40 multiplier)
         score = hn_story.get("score", 0)
@@ -230,8 +248,8 @@ def transform_hn_story(
         # Topic (with balancing)
         topic = classify_topic(title, topic_counts)
 
-        # Format
-        format_type = classify_format(url, title)
+        # Format (pass pre-lowercased strings)
+        format_type = classify_format(url_lower, title_lower)
 
         # Audience
         audience = classify_audience(topic)
@@ -280,8 +298,6 @@ def transform_hn_story(
         )
         return row
 
-        return row
-
     except Exception as e:
         logger.debug(f"Failed to transform story: {e}")
         return None
@@ -320,17 +336,37 @@ def integrate_data() -> tuple[list[RawContentRow], int]:
     # Initialize topic counts for balancing
     topic_counts: dict[str, int] = {topic: 0 for topic in TOPICS}
 
-    # Fetch and transform stories
+    # Fetch and transform stories using concurrent requests
     rows: list[RawContentRow] = []
-    for story_id in story_ids:
-        hn_story = fetch_hn_story(story_id)
-        if not hn_story:
-            continue
-
-        row = transform_hn_story(hn_story, topic_counts)
-        if row:
-            rows.append(row)
-            topic_counts[row.topic] += 1
+    
+    print(f"\n📥 Loading {len(story_ids)} stories from Hacker News...")
+    processed = 0
+    
+    # Use ThreadPoolExecutor to fetch stories in parallel (up to 15 concurrent workers for better throughput)
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        # Submit all fetch tasks
+        future_to_id = {
+            executor.submit(fetch_hn_story, story_id): story_id 
+            for story_id in story_ids
+        }
+        
+        # Process results as they complete
+        for future in as_completed(future_to_id):
+            processed += 1
+            hn_story = future.result()
+            if not hn_story:
+                continue
+            
+            row = transform_hn_story(hn_story, topic_counts)
+            if row:
+                rows.append(row)
+                topic_counts[row.topic] += 1
+            
+            # Show progress every 10 stories
+            if processed % 10 == 0:
+                print(f"  ⏳ Processed {processed}/{len(story_ids)} stories... ({len(rows)} valid so far)")
+    
+    print(f"  ✓ Completed fetching {processed} stories\n")
 
     # Fallback if too few rows
     if len(rows) < 50:
@@ -400,34 +436,36 @@ def verify_dataset(rows: list[RawContentRow]) -> None:
 
 # ==================== FILE WRITING ====================
 def write_to_csv(rows: list[RawContentRow], filepath: Path) -> None:
-    """Write rows to CSV file."""
+    """Write rows to CSV file with batching for performance."""
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(filepath, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=[
-                "title",
-                "url",
-                "topic",
-                "format",
-                "audience_segment",
-                "word_count",
-                "publish_date",
-                "views",
-                "engagement_rate",
-                "avg_time_on_page",
-                "conversions",
-                "search_rank",
-                "github_stars_growth",
-                "api_signups",
-            ],
-        )
-        writer.writeheader()
+    fieldnames = [
+        "title",
+        "url",
+        "topic",
+        "format",
+        "audience_segment",
+        "word_count",
+        "publish_date",
+        "views",
+        "engagement_rate",
+        "avg_time_on_page",
+        "conversions",
+        "search_rank",
+        "github_stars_growth",
+        "api_signups",
+    ]
 
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        for row in rows:
-            writer.writerow(row.model_dump())
+        
+        # Batch write rows (more efficient than row-by-row)
+        batch_size = 100
+        for i in range(0, len(rows), batch_size):
+            batch = rows[i : i + batch_size]
+            for row in batch:
+                writer.writerow(row.model_dump())
 
     logger.info(f"✓ Wrote {len(rows)} rows to {filepath}")
 
@@ -436,25 +474,34 @@ def write_to_csv(rows: list[RawContentRow], filepath: Path) -> None:
 def main() -> None:
     """Main integration pipeline."""
     logger.info("Starting HN data integration...")
+    print("\n" + "="*60)
+    print("🚀 ContentPulse HN Data Integration")
+    print("="*60)
 
     # Fetch and transform
     rows, fetched_count = integrate_data()
     logger.info(f"✓ Fetched {fetched_count} stories from HN API")
     logger.info(f"✓ Transformed {len(rows)} to valid rows")
+    
+    print(f"📊 Transforming data...")
 
     # Verify
     verify_dataset(rows)
 
     # Write to main CSV
+    print(f"💾 Writing data to CSV files...")
     write_to_csv(rows, DATA_PATH)
 
     # Write to assets backup
     assets_path = Path("assets/data/hackernews_export.csv")
     write_to_csv(rows, assets_path)
 
-    print(f"✓ Fetched {fetched_count} stories from HN API")
-    print(f"✓ Transformed {len(rows)} to valid rows")
-    print(f"✓ Copy saved to {assets_path}")
+    print(f"\n✅ SUCCESS!")
+    print(f"   • Fetched: {fetched_count} stories from HN API")
+    print(f"   • Transformed: {len(rows)} valid rows")
+    print(f"   • Saved to: {DATA_PATH}")
+    print(f"   • Backup to: {assets_path}")
+    print("="*60 + "\n")
     logger.info("✓ Data integration complete")
 
 

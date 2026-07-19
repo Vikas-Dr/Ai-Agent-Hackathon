@@ -158,3 +158,77 @@ Fetching top 200 story IDs from HN API...
 Starting HN data integration...
 Fetching top 200 story IDs from HN API...
 ✓ Fetched 200 story IDs
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...
+✓ Fetched 200 story IDs
+✓ Fetched 200 stories from HN API
+✓ Transformed 200 to valid rows
+============================================================
+DATASET VERIFICATION
+============================================================
+✓ Total rows: 200
+✓ All required columns present: views, engagement_rate, avg_time_on_page, conversions, search_rank, github_stars_growth, api_signups
+✓ Topic distribution:
+  API Design: 20
+  Authentication: 20
+  Cloud Infrastructure: 20
+  Database & Data: 21
+  DevOps & CI/CD: 20
+  Frontend Frameworks: 20
+  Mobile Development: 20
+  Python & Data Science: 20
+  Serverless & Edge: 19
+  Web Security: 20
+✓ Format distribution:
+  sample_project: 22
+  technical_blog: 176
+  tutorial: 2
+✓ Sample titles:
+  - Mathematicians still don't know the fastest way to multiply 
+  - Codex Resets
+  - GPT-5.6 used a prompt to close a 30-year gap in convex optim
+  - Hardcore IndieWeb: Run your own website 100% independently f
+  - The Kimi K3 Moment
+============================================================
+✓ Wrote 200 rows to data/sample_content_data.csv
+✓ Wrote 200 rows to assets/data/hackernews_export.csv
+✓ Data integration complete
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...
+✓ Fetched 200 story IDs
+✓ Fetched 200 stories from HN API
+✓ Transformed 200 to valid rows
+============================================================
+DATASET VERIFICATION
+============================================================
+✓ Total rows: 200
+✓ All required columns present: views, engagement_rate, avg_time_on_page, conversions, search_rank, github_stars_growth, api_signups
+✓ Topic distribution:
+  API Design: 21
+  Authentication: 20
+  Cloud Infrastructure: 20
+  Database & Data: 20
+  DevOps & CI/CD: 20
+  Frontend Frameworks: 20
+  Mobile Development: 20
+  Python & Data Science: 20
+  Serverless & Edge: 19
+  Web Security: 20
+✓ Format distribution:
+  sample_project: 22
+  technical_blog: 176
+  tutorial: 2
+✓ Sample titles:
+  - Speech Recognition and TTS in less than 500kb
+  - I'm Making Strandfall, a Solarpunk Orienteering Larp
+  - Goodbye, and Thanks for All the Bikesheds
+  - NYC may require landlords and realtors to disclose the use o
+  - Elixir-lang.org has a new design
+============================================================
+✓ Wrote 200 rows to data/sample_content_data.csv
+✓ Wrote 200 rows to assets/data/hackernews_export.csv
+✓ Data integration complete
+Starting HN data integration...
+Fetching top 200 story IDs from HN API...

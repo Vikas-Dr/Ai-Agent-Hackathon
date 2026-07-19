@@ -63,27 +63,43 @@
                     <p class="empty-subtitle">Click 'Run Analysis' to start analyzing your content</p>
                 </div>
 
-                <!-- ROW 1: Metric Cards with Sparklines -->
+                <!-- ROW 1: Metric Cards with Sparklines & Trend Indicators -->
                 <div class="dashboard-row row-metrics">
                     <div class="metric-card metric-enhanced">
                         <div class="metric-label">Articles Analyzed</div>
                         <div class="metric-value" id="metric-articles">0</div>
                         <canvas id="sparkline-articles" class="metric-sparkline"></canvas>
+                        <div class="trend-indicator" id="trend-articles">
+                            <span class="trend-arrow">→</span>
+                            <span class="trend-percent">0%</span>
+                        </div>
                     </div>
                     <div class="metric-card metric-enhanced">
                         <div class="metric-label">Topics Covered</div>
                         <div class="metric-value" id="metric-topics">0</div>
                         <canvas id="sparkline-topics" class="metric-sparkline"></canvas>
+                        <div class="trend-indicator" id="trend-topics">
+                            <span class="trend-arrow">→</span>
+                            <span class="trend-percent">0%</span>
+                        </div>
                     </div>
                     <div class="metric-card metric-enhanced">
                         <div class="metric-label">Key Insights</div>
                         <div class="metric-value" id="metric-insights">0</div>
                         <canvas id="sparkline-insights" class="metric-sparkline"></canvas>
+                        <div class="trend-indicator" id="trend-insights">
+                            <span class="trend-arrow">→</span>
+                            <span class="trend-percent">0%</span>
+                        </div>
                     </div>
                     <div class="metric-card metric-enhanced">
                         <div class="metric-label">Content Gaps</div>
                         <div class="metric-value" id="metric-gaps">0</div>
                         <canvas id="sparkline-gaps" class="metric-sparkline"></canvas>
+                        <div class="trend-indicator" id="trend-gaps">
+                            <span class="trend-arrow">→</span>
+                            <span class="trend-percent">0%</span>
+                        </div>
                     </div>
                 </div>
 
@@ -144,6 +160,71 @@
                         <canvas id="length-chart"></canvas>
                     </div>
                 </div>
+
+                <!-- ROW 3C: 2x2 Content Strategy Matrix -->
+                <div class="dashboard-row row-strategy-matrix">
+                    <div class="chart-card" style="flex: 0 0 100%;">
+                        <h3>🎯 Content Strategy Matrix</h3>
+                        <div class="strategy-matrix-container">
+                            <svg id="strategy-matrix-svg" class="strategy-matrix" viewBox="0 0 600 600" width="600" height="600">
+                                <!-- Background -->
+                                <rect width="600" height="600" fill="#0b0d12" stroke="rgba(71, 85, 105, 0.3)" stroke-width="2"/>
+                                
+                                <!-- Grid lines (axes) -->
+                                <line x1="300" y1="0" x2="300" y2="600" stroke="rgba(72, 196, 130, 0.2)" stroke-width="2" stroke-dasharray="5,5"/>
+                                <line x1="0" y1="300" x2="600" y2="300" stroke="rgba(72, 196, 130, 0.2)" stroke-width="2" stroke-dasharray="5,5"/>
+                                
+                                <!-- Quadrant backgrounds -->
+                                <rect x="0" y="0" width="300" height="300" fill="rgba(251, 146, 60, 0.05)"/>
+                                <rect x="300" y="0" width="300" height="300" fill="rgba(34, 197, 94, 0.05)"/>
+                                <rect x="0" y="300" width="300" height="300" fill="rgba(239, 68, 68, 0.05)"/>
+                                <rect x="300" y="300" width="300" height="300" fill="rgba(156, 163, 175, 0.05)"/>
+                                
+                                <!-- Axis labels -->
+                                <text x="550" y="290" font-size="12" fill="var(--text-dim)" text-anchor="middle">High Engagement →</text>
+                                <text x="30" y="290" font-size="12" fill="var(--text-dim)" text-anchor="middle">← Low Engagement</text>
+                                <text x="310" y="30" font-size="12" fill="var(--text-dim)" text-anchor="middle">High Relevance ↑</text>
+                                <text x="310" y="580" font-size="12" fill="var(--text-dim)" text-anchor="middle">↓ Low Relevance</text>
+                                
+                                <!-- Quadrant labels -->
+                                <text x="150" y="150" font-size="16" font-weight="bold" fill="rgba(251, 146, 60, 0.8)" text-anchor="middle">Strategic</text>
+                                <text x="150" y="170" font-size="16" font-weight="bold" fill="rgba(251, 146, 60, 0.8)" text-anchor="middle">Priorities</text>
+                                
+                                <text x="450" y="150" font-size="16" font-weight="bold" fill="rgba(34, 197, 94, 0.8)" text-anchor="middle">Quick</text>
+                                <text x="450" y="170" font-size="16" font-weight="bold" fill="rgba(34, 197, 94, 0.8)" text-anchor="middle">Wins</text>
+                                
+                                <text x="150" y="450" font-size="16" font-weight="bold" fill="rgba(239, 68, 68, 0.8)" text-anchor="middle">Reconsider</text>
+                                
+                                <text x="450" y="450" font-size="16" font-weight="bold" fill="rgba(156, 163, 175, 0.8)" text-anchor="middle">Maintenance</text>
+                                
+                                <!-- Content circles will be rendered here -->
+                                <g id="strategy-circles"></g>
+                                
+                                <!-- Legend -->
+                                <g id="strategy-legend"></g>
+                            </svg>
+                        </div>
+                        <div class="matrix-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: rgba(251, 146, 60, 0.8);"></span>
+                                <span>Strategic Priorities (High Relevance, Low Engagement)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: rgba(34, 197, 94, 0.8);"></span>
+                                <span>Quick Wins (High Relevance, High Engagement)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: rgba(239, 68, 68, 0.8);"></span>
+                                <span>Reconsider (Low Relevance, Low Engagement)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: rgba(156, 163, 175, 0.8);"></span>
+                                <span>Maintenance (Low Relevance, High Engagement)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- ROW 4: Insights & Data Table -->
                 <div class="dashboard-row row-insights">

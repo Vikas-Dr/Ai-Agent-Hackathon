@@ -8,7 +8,11 @@ import logging
 import asyncio
 from typing import Any, Type, TypeVar
 from pydantic import BaseModel
-from google.antigravity import Agent, LocalAgentConfig
+
+# Note: google.antigravity has protobuf compatibility issues
+# Using mock LLM by default. To enable real LLM, fix protobuf version.
+# from google.antigravity import Agent, LocalAgentConfig
+
 from config import MOCK_LLM, LLM_PROVIDER, LLM_MODEL, GOOGLE_API_KEY, HF_TOKEN, LOGS_DIR
 
 logger = logging.getLogger(__name__)

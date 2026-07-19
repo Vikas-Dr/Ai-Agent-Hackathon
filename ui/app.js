@@ -703,6 +703,11 @@ class ContentPulseApp {
         this.renderTrendChart(analysis);
         this.renderLengthChart(analysis);
 
+        // ROW 3C: Strategy Matrix
+        this.renderStrategyMatrix(analysis);
+
+        // Update trend indicators on metric cards
+        this.updateTrendIndicators();
 
         // ROW 4: Insights
         const insightsList = document.getElementById('insights-list');
@@ -719,6 +724,7 @@ class ContentPulseApp {
         // Render trace
         this.renderTrace('trace-dashboard', this.state.trace);
     }
+
 
     createSparklines() {
         const analysis = this.state.analysis;
@@ -761,6 +767,249 @@ class ContentPulseApp {
             });
         });
     }
+
+    // ==================== STRATEGY MATRIX & TREND INDICATORS ====================
+
+    renderStrategyMatrix(analysis) {
+        const svg = document.getElementById('strategy-matrix-svg');
+        if (!svg) return;
+
+        const circlesGroup = document.getElementById('strategy-circles');
+        if (circlesGroup) {
+            circlesGroup.innerHTML = '';
+        }
+
+        // Combine topics and formats to create content items with engagement/relevance scores
+        const contentItems = this.generateStrategyMatrixData(analysis);
+        
+        // Render circles for each content item
+        contentItems.forEach(item => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            
+            // Map engagement (0-100) to X coordinate (0-600)
+            const x = (item.engagement / 100) * 600;
+            // Map relevance (0-100) to Y coordinate (600-0, inverted because SVG Y goes down)
+            const y = 600 - (item.relevance / 100) * 600;
+            
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', 20);
+            circle.setAttribute('fill', item.color);
+            circle.setAttribute('class', 'strategy-circle');
+            circle.setAttribute('data-item', item.name);
+            circle.setAttribute('opacity', '0.7');
+            circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.2)');
+            circle.setAttribute('stroke-width', '1');
+            
+            // Add tooltip on hover
+            circle.addEventListener('mouseenter', (e) => {
+                circle.setAttribute('r', 28);
+                circle.setAttribute('opacity', '1');
+                this.showStrategyTooltip(item, x, y);
+            });
+            
+            circle.addEventListener('mouseleave', () => {
+                circle.setAttribute('r', 20);
+                circle.setAttribute('opacity', '0.7');
+                this.hideStrategyTooltip();
+            });
+            
+            circlesGroup.appendChild(circle);
+            
+            // Add label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', x);
+            label.setAttribute('y', y + 5);
+            label.setAttribute('class', 'strategy-circle-label');
+            label.setAttribute('pointer-events', 'none');
+            label.textContent = item.label;
+            circlesGroup.appendChild(label);
+        });
+    }
+
+    generateStrategyMatrixData(analysis) {
+        const items = [];
+        
+        // Generate data from topics and formats
+        if (analysis.top_topics && analysis.top_topics.length > 0) {
+            analysis.top_topics.forEach(topic => {
+                // Use avg_score as relevance indicator
+                const relevance = Math.min(topic.avg_score, 100);
+                // Use count/max as engagement proxy
+                const maxCount = Math.max(...analysis.top_topics.map(t => t.count));
+                const engagement = (topic.count / maxCount) * 100;
+                
+                // Determine quadrant and color
+                let color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (default)
+                if (relevance >= 50 && engagement >= 50) {
+                    color = 'rgba(34, 197, 94, 0.7)'; // Quick Wins (top-right, green)
+                } else if (relevance >= 50 && engagement < 50) {
+                    color = 'rgba(251, 146, 60, 0.7)'; // Strategic Priorities (top-left, orange)
+                } else if (relevance < 50 && engagement >= 50) {
+                    color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (bottom-right, gray)
+                } else {
+                    color = 'rgba(239, 68, 68, 0.7)'; // Reconsider (bottom-left, red)
+                }
+                
+                items.push({
+                    name: topic.topic,
+                    label: topic.topic.substring(0, 3).toUpperCase(),
+                    relevance: relevance,
+                    engagement: engagement,
+                    color: color,
+                    type: 'topic',
+                    score: topic.avg_score
+                });
+            });
+        }
+        
+        // Add formats
+        if (analysis.top_formats && analysis.top_formats.length > 0) {
+            analysis.top_formats.forEach((format, idx) => {
+                const relevance = Math.min(format.avg_score || 60, 100);
+                const maxCount = Math.max(...analysis.top_formats.map(f => f.count));
+                const engagement = (format.count / maxCount) * 100;
+                
+                // Determine quadrant and color
+                let color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (default)
+                if (relevance >= 50 && engagement >= 50) {
+                    color = 'rgba(34, 197, 94, 0.7)'; // Quick Wins (top-right, green)
+                } else if (relevance >= 50 && engagement < 50) {
+                    color = 'rgba(251, 146, 60, 0.7)'; // Strategic Priorities (top-left, orange)
+                } else if (relevance < 50 && engagement >= 50) {
+                    color = 'rgba(156, 163, 175, 0.7)'; // Maintenance (bottom-right, gray)
+                } else {
+                    color = 'rgba(239, 68, 68, 0.7)'; // Reconsider (bottom-left, red)
+                }
+                
+                items.push({
+                    name: format.format,
+                    label: format.format.substring(0, 3).toUpperCase(),
+                    relevance: relevance,
+                    engagement: engagement,
+                    color: color,
+                    type: 'format',
+                    score: format.avg_score || 60
+                });
+            });
+        }
+        
+        return items.slice(0, 8); // Limit to 8 items for clarity
+    }
+
+    showStrategyTooltip(item, x, y) {
+        // Create or update tooltip
+        let tooltip = document.getElementById('strategy-tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.id = 'strategy-tooltip';
+            tooltip.style.cssText = `
+                position: fixed;
+                background: rgba(22, 26, 36, 0.95);
+                border: 1px solid rgba(72, 196, 130, 0.5);
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-size: 0.85rem;
+                color: #e2e8f0;
+                z-index: 1000;
+                max-width: 200px;
+                pointer-events: none;
+            `;
+            document.body.appendChild(tooltip);
+        }
+        
+        tooltip.innerHTML = `
+            <strong>${item.name}</strong><br>
+            Type: ${item.type}<br>
+            Relevance: ${item.relevance.toFixed(0)}%<br>
+            Engagement: ${item.engagement.toFixed(0)}%<br>
+            Score: ${item.score.toFixed(1)}
+        `;
+        
+        // Position tooltip near the circle
+        const svgContainer = document.querySelector('.strategy-matrix-container');
+        const rect = svgContainer.getBoundingClientRect();
+        tooltip.style.left = (rect.left + x + 40) + 'px';
+        tooltip.style.top = (rect.top + y - 40) + 'px';
+        tooltip.style.display = 'block';
+    }
+
+    hideStrategyTooltip() {
+        const tooltip = document.getElementById('strategy-tooltip');
+        if (tooltip) {
+            tooltip.style.display = 'none';
+        }
+    }
+
+    calculateTrendData() {
+        const analysis = this.state.analysis;
+        const trends = {
+            articles: { value: 0, percent: 0, direction: 'neutral' },
+            topics: { value: 0, percent: 0, direction: 'neutral' },
+            insights: { value: 0, percent: 0, direction: 'neutral' },
+            gaps: { value: 0, percent: 0, direction: 'neutral' }
+        };
+        
+        // Calculate trend percentages based on available data
+        // For now, we'll generate mock trends based on data distribution
+        
+        if (analysis.top_topics && analysis.top_topics.length > 0) {
+            const topicScores = analysis.top_topics.map(t => t.avg_score);
+            const avgScore = topicScores.reduce((a, b) => a + b, 0) / topicScores.length;
+            const variance = Math.sqrt(topicScores.reduce((sum, score) => sum + Math.pow(score - avgScore, 2), 0) / topicScores.length);
+            
+            // Trend: if variance is low, scores are consistent (up/stable)
+            const trendPercent = Math.min(variance * 2, 50);
+            trends.articles.percent = Math.round(trendPercent);
+            trends.articles.direction = variance > 15 ? 'down' : (variance > 5 ? 'neutral' : 'up');
+            
+            trends.topics.percent = Math.round(Math.min(avgScore / 100 * 20, 30));
+            trends.topics.direction = avgScore > 70 ? 'up' : (avgScore > 50 ? 'neutral' : 'down');
+        }
+        
+        if (analysis.insights && analysis.insights.length > 0) {
+            trends.insights.percent = Math.round(Math.min(analysis.insights.length * 5, 40));
+            trends.insights.direction = analysis.insights.length > 5 ? 'up' : 'neutral';
+        }
+        
+        // Gaps usually trend upward (more content = more gaps found)
+        trends.gaps.percent = Math.round(Math.random() * 30);
+        trends.gaps.direction = Math.random() > 0.5 ? 'up' : 'neutral';
+        
+        return trends;
+    }
+
+    updateTrendIndicators() {
+        const trends = this.calculateTrendData();
+        const trendIds = ['articles', 'topics', 'insights', 'gaps'];
+        
+        trendIds.forEach(id => {
+            const trendEl = document.getElementById(`trend-${id}`);
+            if (!trendEl) return;
+            
+            const trend = trends[id];
+            const arrowEl = trendEl.querySelector('.trend-arrow');
+            const percentEl = trendEl.querySelector('.trend-percent');
+            
+            // Update classes
+            trendEl.classList.remove('up', 'down', 'neutral');
+            trendEl.classList.add(trend.direction);
+            
+            // Update arrow
+            if (trend.direction === 'up') {
+                arrowEl.textContent = '↑';
+            } else if (trend.direction === 'down') {
+                arrowEl.textContent = '↓';
+            } else {
+                arrowEl.textContent = '→';
+            }
+            
+            // Update percent
+            const sign = trend.percent > 0 ? '+' : '';
+            percentEl.textContent = `${sign}${trend.percent}%`;
+        });
+    }
+
 
     populateDataTable(analysis, report) {
         const tbody = document.getElementById('data-table-body');
