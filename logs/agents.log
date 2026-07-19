@@ -1,0 +1,14 @@
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: nan - nan)
+CollectorAgent completed successfully in 0.04s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.05s
