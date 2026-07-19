@@ -1,6 +1,7 @@
 """
 Analyzer agent for ContentPulse.
 Analyzes content performance across multiple dimensions.
+Uses Pydantic structured output validation.
 """
 
 import json
@@ -12,6 +13,7 @@ import pandas as pd
 from agents.base_agent import BaseAgent
 from data.schema import (
     AnalyzerOutput,
+    AnalyzerInsightsOutput,
     AudienceBreakdown,
     FormatBreakdown,
     LengthAnalysis,
@@ -189,8 +191,8 @@ class AnalyzerAgent(BaseAgent):
         # ==================== STEP 3: LLM CALL ====================
 
         system_prompt = (
-            "You are a content analytics expert. Return JSON: {\"insights\": [\"...\", \"...\"]}"
-            " Each insight is one sentence grounded in the data, actionable for editorial decisions."
+            "You are a content analytics expert. Return structured insights grounded in data. "
+            "Each insight must be one sentence and actionable for editorial decisions."
         )
         user_prompt = (
             f"Aggregated data:\n{summary}\n\n"
@@ -198,7 +200,13 @@ class AnalyzerAgent(BaseAgent):
         )
 
         try:
-            response_text = call_llm(system_prompt, user_prompt)
+            # Use Pydantic structured output validation
+            response_text = call_llm(
+                system_prompt, 
+                user_prompt,
+                response_schema=AnalyzerInsightsOutput,
+                max_tokens=500
+            )
             response_obj = json.loads(response_text)
             insights = response_obj.get("insights", [])
 
@@ -206,7 +214,7 @@ class AnalyzerAgent(BaseAgent):
                 logger.warning("LLM returned empty insights, using fallback")
                 insights = self._generate_fallback_insights(dataframe)
             else:
-                logger.info(f"✓ LLM generated {len(insights)} insights")
+                logger.info(f"✓ LLM generated {len(insights)} insights (with Pydantic validation)")
         except (json.JSONDecodeError, KeyError, Exception) as e:
             logger.warning(f"LLM parsing failed: {e}, using fallback insights")
             insights = self._generate_fallback_insights(dataframe)

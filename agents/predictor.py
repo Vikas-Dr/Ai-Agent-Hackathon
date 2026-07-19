@@ -1,6 +1,7 @@
 """
 Predictor agent for ContentPulse.
 Predicts content performance based on comparable historical data.
+Uses Pydantic structured output validation.
 """
 
 import json
@@ -10,7 +11,7 @@ from typing import Any
 import pandas as pd
 
 from agents.base_agent import BaseAgent
-from data.schema import PredictorInput, PredictorOutput
+from data.schema import PredictorInput, PredictorOutput, PredictorStructuredOutput
 from llm import call_llm
 
 logger = logging.getLogger(__name__)
@@ -129,10 +130,7 @@ class PredictorAgent(BaseAgent):
         # ==================== STEP 4: LLM CALL ====================
 
         system_prompt = (
-            'You are a content predictor expert. Return JSON: '
-            '{"predicted_score": <0-100>, "reasoning": "<1 sentence>", '
-            '"suggestions": ["<s1>", "<s2>", "<s3>"], '
-            '"confidence": "<high|medium|low>", "comparable_count": <N>}'
+            'You are a content predictor expert. Predict content performance with structured reasoning.'
         )
         user_prompt = (
             f"Proposed content:\n"
@@ -146,7 +144,13 @@ class PredictorAgent(BaseAgent):
         )
 
         try:
-            response_text = call_llm(system_prompt, user_prompt, max_tokens=400)
+            # Use Pydantic structured output validation
+            response_text = call_llm(
+                system_prompt, 
+                user_prompt,
+                response_schema=PredictorStructuredOutput,
+                max_tokens=400
+            )
             response_obj = json.loads(response_text)
 
             # Validate required fields
@@ -166,7 +170,7 @@ class PredictorAgent(BaseAgent):
                 raise ValueError("Invalid suggestions length")
 
             logger.info(
-                f"✓ LLM predicted score={predicted_score}, confidence={confidence}"
+                f"✓ LLM predicted score={predicted_score}, confidence={confidence} (with Pydantic validation)"
             )
 
             return PredictorOutput(

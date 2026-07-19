@@ -10,6 +10,23 @@ import re
 
 from config import TOPICS, FORMATS, AUDIENCE_SEGMENTS
 
+# ==================== LLM STRUCTURED OUTPUT ====================
+class AnalyzerInsightsOutput(BaseModel):
+    """Structured output from LLM for analyzer insights."""
+    insights: list[str] = Field(..., min_length=4, max_length=6)
+
+
+class PredictorStructuredOutput(BaseModel):
+    """Structured output from LLM for predictor."""
+    predicted_score: int = Field(..., ge=0, le=100)
+    reasoning: str
+    suggestions: list[str] = Field(..., min_length=3, max_length=3)
+    confidence: str
+    comparable_count: int = Field(..., ge=0)
+
+
+
+
 
 # ==================== RAW DATA ====================
 class RawContentRow(BaseModel):

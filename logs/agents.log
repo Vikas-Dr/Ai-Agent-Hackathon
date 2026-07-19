@@ -1064,3 +1064,910 @@ Predicting for: AI/ML/blog/developers
 Found 31 comparable rows
 ✓ LLM predicted score=78, confidence=high
 PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.05s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.04s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Found 38 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Frontend', 'AI/ML', 'Leadership', 'Mobile', 'Cloud', 'Security', 'Data Engineering', 'Platform', 'Backend', 'DevOps'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Data Engineering (37.2)
+Gap: Low-scoring topic: Platform (32.8)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Frontend', 'AI/ML', 'Leadership', 'Mobile', 'Cloud', 'Security', 'Data Engineering', 'Platform', 'Backend', 'DevOps'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Data Engineering (37.2)
+Gap: Low-scoring topic: Platform (32.8)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Platform (score 32.8)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: AI/ML — Low average score (39.4) for topic 'AI/ML' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: Cloud — Low average score (39.7) for topic 'Cloud' — consider refreshing or reframing
+Create: Security — Low average score (35.1) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (37.2) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Platform — Low average score (32.8) for topic 'Platform' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 12 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 12 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Frontend', 'AI/ML', 'Leadership', 'Mobile', 'Cloud', 'Security', 'Data Engineering', 'Platform', 'Backend', 'DevOps'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Data Engineering (37.2)
+Gap: Low-scoring topic: Platform (32.8)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Platform (score 32.8)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: AI/ML — Low average score (39.4) for topic 'AI/ML' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: Cloud — Low average score (39.7) for topic 'Cloud' — consider refreshing or reframing
+Create: Security — Low average score (35.1) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (37.2) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Platform — Low average score (32.8) for topic 'Platform' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 12 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 12 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.05s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Found 38 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Leadership', 'AI/ML', 'Backend', 'DevOps', 'Security', 'Frontend', 'Mobile', 'Cloud', 'Platform', 'Data Engineering'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Platform (32.8)
+Gap: Low-scoring topic: Data Engineering (37.2)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Leadership', 'AI/ML', 'Backend', 'DevOps', 'Security', 'Frontend', 'Mobile', 'Cloud', 'Platform', 'Data Engineering'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Platform (32.8)
+Gap: Low-scoring topic: Data Engineering (37.2)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Platform (score 32.8)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: AI/ML — Low average score (39.4) for topic 'AI/ML' — consider refreshing or reframing
+Create: Security — Low average score (35.1) for topic 'Security' — consider refreshing or reframing
+Create: Cloud — Low average score (39.7) for topic 'Cloud' — consider refreshing or reframing
+Create: Platform — Low average score (32.8) for topic 'Platform' — consider refreshing or reframing
+Create: Data Engineering — Low average score (37.2) for topic 'Data Engineering' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 12 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 12 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.04s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Leadership', 'AI/ML', 'Backend', 'DevOps', 'Security', 'Frontend', 'Mobile', 'Cloud', 'Platform', 'Data Engineering'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Platform (32.8)
+Gap: Low-scoring topic: Data Engineering (37.2)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Platform (score 32.8)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: AI/ML — Low average score (39.4) for topic 'AI/ML' — consider refreshing or reframing
+Create: Security — Low average score (35.1) for topic 'Security' — consider refreshing or reframing
+Create: Cloud — Low average score (39.7) for topic 'Cloud' — consider refreshing or reframing
+Create: Platform — Low average score (32.8) for topic 'Platform' — consider refreshing or reframing
+Create: Data Engineering — Low average score (37.2) for topic 'Data Engineering' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 12 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 12 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.04s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 5 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Backend', 'Cloud', 'Leadership', 'DevOps', 'AI/ML', 'Frontend', 'Security', 'Platform', 'Data Engineering', 'Mobile'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Cloud (39.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: AI/ML (39.4)
+Gap: Low-scoring topic: Security (35.1)
+Gap: Low-scoring topic: Platform (32.8)
+Gap: Low-scoring topic: Data Engineering (37.2)
+✓ Identified 12 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Platform (score 32.8)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Cloud — Low average score (39.7) for topic 'Cloud' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: AI/ML — Low average score (39.4) for topic 'AI/ML' — consider refreshing or reframing
+Create: Security — Low average score (35.1) for topic 'Security' — consider refreshing or reframing
+Create: Platform — Low average score (32.8) for topic 'Platform' — consider refreshing or reframing
+Create: Data Engineering — Low average score (37.2) for topic 'Data Engineering' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 12 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 12 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 100.0)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 31 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Found 35 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Mobile', 'Data Engineering', 'Leadership', 'AI/ML', 'DevOps', 'Platform', 'Security', 'Cloud', 'Backend', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Mobile', 'Data Engineering', 'Leadership', 'AI/ML', 'DevOps', 'Platform', 'Security', 'Cloud', 'Backend', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Mobile', 'Data Engineering', 'Leadership', 'AI/ML', 'DevOps', 'Platform', 'Security', 'Cloud', 'Backend', 'Frontend'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Data Engineering (38.7)
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Frontend (37.4)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.05s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Generated 6 fallback insights
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/podcast/executives
+Found 35 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Backend', 'Cloud', 'Platform', 'Leadership', 'DevOps', 'AI/ML', 'Frontend', 'Security', 'Data Engineering', 'Mobile'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Backend', 'Cloud', 'Platform', 'Leadership', 'DevOps', 'AI/ML', 'Frontend', 'Security', 'Data Engineering', 'Mobile'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized AnalyzerAgent
+✓ Computed aggregations: 10 topics, 6 formats
+✓ LLM generated 6 insights (with Pydantic validation)
+AnalyzerAgent completed successfully in 0.01s
+Initialized StrategistAgent
+Covered topics: {'Backend', 'Cloud', 'Platform', 'Leadership', 'DevOps', 'AI/ML', 'Frontend', 'Security', 'Data Engineering', 'Mobile'}
+Gap: Trending topic not covered: FinOps
+Gap: Trending topic not covered: AI Agents
+Gap: Trending topic not covered: Platform Engineering
+Gap: Trending topic not covered: WebAssembly
+Gap: Trending topic not covered: Edge Computing
+Gap: Trending topic not covered: Green Software
+Gap: Low-scoring topic: Leadership (37.1)
+Gap: Low-scoring topic: DevOps (36.7)
+Gap: Low-scoring topic: Frontend (37.4)
+Gap: Low-scoring topic: Security (34.6)
+Gap: Low-scoring topic: Data Engineering (38.7)
+✓ Identified 11 gaps
+StrategistAgent completed successfully in 0.00s
+Initialized ReportAgent
+Best format: blog
+Stop: Security (score 34.6)
+Create: FinOps — Zero coverage of trending topic 'FinOps' — first-mover opportunity
+Create: AI Agents — Zero coverage of trending topic 'AI Agents' — first-mover opportunity
+Create: Platform Engineering — Zero coverage of trending topic 'Platform Engineering' — first-mover opportunity
+Create: WebAssembly — Zero coverage of trending topic 'WebAssembly' — first-mover opportunity
+Create: Edge Computing — Zero coverage of trending topic 'Edge Computing' — first-mover opportunity
+Create: Green Software — Zero coverage of trending topic 'Green Software' — first-mover opportunity
+Create: Leadership — Low average score (37.1) for topic 'Leadership' — consider refreshing or reframing
+Create: DevOps — Low average score (36.7) for topic 'DevOps' — consider refreshing or reframing
+Create: Frontend — Low average score (37.4) for topic 'Frontend' — consider refreshing or reframing
+Create: Security — Low average score (34.6) for topic 'Security' — consider refreshing or reframing
+Create: Data Engineering — Low average score (38.7) for topic 'Data Engineering' — consider refreshing or reframing
+Summary: Recommend continuing investment in high-performers and similar topics. Pause 1 underperforming content streams. Launch 11 new topics to capture trending opportunities.
+✓ Generated report with 0 continue, 1 stop, 11 create
+ReportAgent completed successfully in 0.00s
+Initialized CollectorAgent
+CollectorAgent initialized with data_path: data/sample_content_data.csv
+Loading data from data/sample_content_data.csv
+Loaded 200 rows from CSV
+✓ Validated 200 rows, dropped 0
+✓ Enriched data with performance_score (range: 10.0 - 98.3)
+CollectorAgent completed successfully in 0.02s
+Initialized PredictorAgent
+Predicting for: AI/ML/blog/developers
+Found 30 comparable rows
+✓ LLM predicted score=78, confidence=high (with Pydantic validation)
+PredictorAgent completed successfully in 0.00s
