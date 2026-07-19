@@ -21,13 +21,23 @@ class ContentPulseApp {
     }
 
     setupEventListeners() {
-        // Tab switching
+        // Tab switching with keyboard accessibility
         document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+            btn.addEventListener('click', (e) => {
+                this.switchTab(e.target.dataset.tab);
+            });
+            // Keyboard support: Enter and Space
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.switchTab(e.target.dataset.tab);
+                }
+            });
         });
 
         // Dashboard
         document.getElementById('btn-run-analysis').addEventListener('click', () => this.runAnalysis());
+        document.getElementById('export-json').addEventListener('click', () => this.exportJSON());
 
         // Scorer
         document.getElementById('scorer-form').addEventListener('submit', (e) => this.scoreContent(e));
@@ -35,6 +45,7 @@ class ContentPulseApp {
         // Strategy
         document.getElementById('btn-generate-report').addEventListener('click', () => this.generateReport());
         document.getElementById('btn-export-github').addEventListener('click', () => this.exportToGitHubIssues());
+        document.getElementById('btn-copy-summary').addEventListener('click', () => this.copySummary());
         const exportPdfBtn = document.getElementById('btn-export-pdf');
         if (exportPdfBtn) {
             exportPdfBtn.addEventListener('click', () => this.exportToPDF());
@@ -45,8 +56,14 @@ class ContentPulseApp {
 
         // Custom Dataset
         document.getElementById('btn-analyze-custom').addEventListener('click', () => this.uploadCSVFile());
+
+        // Data Table
+        document.getElementById('btn-load-data').addEventListener('click', () => this.loadData());
+        
         this.setupFileDragDrop();
     }
+
+
 
     setupFileDragDrop() {
         // CSV drag-drop
@@ -91,6 +108,18 @@ class ContentPulseApp {
             assetZone.addEventListener('click', () => document.getElementById('scorer-asset').click());
         }
     }
+
+    showToast(message, type = 'error') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `show ${type}`;
+        
+        // Auto-hide after 4 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+
 
     async loadConfig() {
         try {
@@ -144,14 +173,19 @@ class ContentPulseApp {
         });
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
         });
 
         // Add active to selected
         document.getElementById(tabName).classList.add('active');
-        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-selected', 'true');
+        activeBtn.focus();
     }
 
     // ==================== CHART.JS UTILITIES ====================
+
 
     destroyChart(chartId) {
         if (this.state.charts[chartId]) {
@@ -172,20 +206,32 @@ class ContentPulseApp {
         const ctx = document.getElementById(canvasId);
         if (!ctx) return;
 
+        // Sort data in descending order
+        const sortedPairs = labels.map((l, i) => ({ label: l, value: values[i] }))
+            .sort((a, b) => b.value - a.value);
+        const sortedLabels = sortedPairs.map(p => p.label);
+        const sortedValues = sortedPairs.map(p => p.value);
+
+        // Create gradient for bars
+        const gradient = ctx.createLinearGradient(0, 0, 300, 0);
+        gradient.addColorStop(0, 'rgba(72, 196, 130, 0.6)');
+        gradient.addColorStop(1, 'rgba(72, 196, 130, 1)');
+
         this.state.charts[canvasId] = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: sortedLabels,
                 datasets: [{
                     label: label,
-                    data: values,
-                    backgroundColor: color,
-                    borderColor: color,
+                    data: sortedValues,
+                    backgroundColor: gradient,
+                    borderColor: '#48c482',
                     borderWidth: 1,
                     borderRadius: 6
                 }]
             },
             options: {
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
@@ -198,12 +244,12 @@ class ContentPulseApp {
                     }
                 },
                 scales: {
-                    y: {
+                    x: {
                         beginAtZero: true,
                         grid: { color: 'rgba(71, 85, 105, 0.2)' },
                         ticks: { color: '#94a3b8' }
                     },
-                    x: {
+                    y: {
                         grid: { display: false },
                         ticks: { color: '#94a3b8' }
                     }
@@ -404,10 +450,162 @@ class ContentPulseApp {
         });
     }
 
+    renderAudienceChart(analysis) {
+        if (!analysis.audience_analysis || analysis.audience_analysis.length === 0) {
+            return;
+        }
+        
+        const labels = analysis.audience_analysis.map(a => a.segment || a.audience);
+        const values = analysis.audience_analysis.map(a => a.avg_score);
+        this.createBarChart('audience-chart', labels, values, 'Avg Score', '#48c482');
+    }
+
+    renderTrendChart(analysis) {
+        if (!analysis.period_trends || analysis.period_trends.length === 0) {
+            return;
+        }
+        
+        const labels = analysis.period_trends.map(t => t.period);
+        const viewsData = analysis.period_trends.map(t => t.avg_views);
+        const engagementData = analysis.period_trends.map(t => t.avg_engagement);
+        
+        const datasets = [
+            {
+                label: 'Avg Views',
+                data: viewsData
+            },
+            {
+                label: 'Avg Engagement',
+                data: engagementData
+            }
+        ];
+        
+        this.createDualAxisLineChart('trend-chart', labels, datasets);
+    }
+
+    renderLengthChart(analysis) {
+        if (!analysis.length_analysis || analysis.length_analysis.length === 0) {
+            return;
+        }
+        
+        const labels = analysis.length_analysis.map(l => l.bucket);
+        const values = analysis.length_analysis.map(l => l.avg_score);
+        
+        this.destroyChart('length-chart');
+        const ctx = document.getElementById('length-chart');
+        if (!ctx) return;
+        
+        this.state.charts['length-chart'] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Avg Score',
+                    data: values,
+                    backgroundColor: 'rgba(72, 196, 130, 0.8)',
+                    borderColor: '#48c482',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                indexAxis: undefined,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleColor: '#48c482',
+                        bodyColor: '#e2e8f0'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+    createDualAxisLineChart(canvasId, labels, datasets) {
+        this.destroyChart(canvasId);
+        const ctx = document.getElementById(canvasId);
+        if (!ctx) return;
+
+        const colors = ['#48c482', '#38bdf8'];
+        const formattedDatasets = datasets.map((ds, idx) => ({
+            label: ds.label,
+            data: ds.data,
+            borderColor: colors[idx % colors.length],
+            backgroundColor: colors[idx % colors.length] + '15',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: colors[idx % colors.length],
+            yAxisID: idx === 0 ? 'y' : 'y1'
+        }));
+
+        this.state.charts[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: formattedDatasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0', padding: 15 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        bodyColor: '#e2e8f0'
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        grid: { color: 'rgba(71, 85, 105, 0.2)' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+
     async runAnalysis() {
         try {
-            document.getElementById('btn-run-analysis').disabled = true;
-            document.getElementById('btn-run-analysis').textContent = '⏳ Running...';
+            this.setButtonLoading('btn-run-analysis', true);
 
             const response = await fetch('/api/report', { method: 'POST' });
             const data = await response.json();
@@ -417,14 +615,15 @@ class ContentPulseApp {
             this.state.trace = data.trace;
 
             this.renderDashboard();
+            this.hideEmptyState('dashboard');
         } catch (e) {
             console.error('Error running analysis:', e);
-            alert('Failed to run analysis: ' + e.message);
+            this.showToast('Failed to run analysis: ' + e.message);
         } finally {
-            document.getElementById('btn-run-analysis').disabled = false;
-            document.getElementById('btn-run-analysis').textContent = '🔄 Run Analysis';
+            this.setButtonLoading('btn-run-analysis', false);
         }
     }
+
 
     renderDashboard() {
         const analysis = this.state.analysis;
@@ -439,6 +638,12 @@ class ContentPulseApp {
         document.getElementById('metric-topics').textContent = analysis.top_topics.length;
         document.getElementById('metric-insights').textContent = analysis.insights.length;
         document.getElementById('metric-gaps').textContent = report.create_next.length;
+
+        // Apply stagger animation to metric cards
+        document.querySelectorAll('.metric-card').forEach((card, index) => {
+            card.classList.add('metric');
+        });
+
 
         // ROW 1: Sparklines (mini charts)
         this.createSparklines();
@@ -492,6 +697,12 @@ class ContentPulseApp {
             const lengthValues = Object.values(analysis.length_distribution);
             this.createRadarChart('chart-length-radar', lengthLabels, lengthValues, 'Content Count');
         }
+
+        // ROW 3B: Additional Analysis Charts
+        this.renderAudienceChart(analysis);
+        this.renderTrendChart(analysis);
+        this.renderLengthChart(analysis);
+
 
         // ROW 4: Insights
         const insightsList = document.getElementById('insights-list');
@@ -576,8 +787,12 @@ class ContentPulseApp {
         e.preventDefault();
 
         try {
-            document.querySelector('.scorer-form .btn-primary').disabled = true;
-            document.querySelector('.scorer-form .btn-primary').textContent = '⏳ Scoring...';
+            const scoreBtn = document.querySelector('.scorer-form .btn-primary');
+            this.setButtonLoading(scoreBtn.id || 'score-btn', true);
+            if (!scoreBtn.id) {
+                scoreBtn.id = 'score-btn';
+                this.setButtonLoading('score-btn', true);
+            }
 
             const payload = {
                 title: document.getElementById('scorer-title').value,
@@ -603,14 +818,21 @@ class ContentPulseApp {
             this.state.scoreResult = data.prediction;
 
             this.renderScoreResult(data.prediction);
+            this.hideEmptyState('scorer');
         } catch (e) {
             console.error('Error scoring content:', e);
-            alert('Scoring failed: ' + e.message);
+            this.showToast('Scoring failed: ' + e.message);
         } finally {
-            document.querySelector('.scorer-form .btn-primary').disabled = false;
-            document.querySelector('.scorer-form .btn-primary').textContent = '📈 Score This Draft';
+            const scoreBtn = document.querySelector('.scorer-form .btn-primary');
+            if (scoreBtn.id) {
+                this.setButtonLoading(scoreBtn.id, false);
+            } else {
+                scoreBtn.disabled = false;
+                scoreBtn.textContent = '📈 Score This Draft';
+            }
         }
     }
+
 
     renderScoreResult(prediction) {
         const resultCard = document.getElementById('score-result');
@@ -621,7 +843,16 @@ class ContentPulseApp {
         const offset = circumference - (score / 100) * circumference;
 
         const fillCircle = document.querySelector('.score-ring-fill');
-        fillCircle.style.strokeDashoffset = offset;
+        
+        // First set to hidden state
+        fillCircle.style.strokeDashoffset = circumference;
+        
+        // Use requestAnimationFrame twice to ensure CSS transition plays
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                fillCircle.style.strokeDashoffset = offset;
+            });
+        });
 
         // Color based on score
         if (score >= 70) {
@@ -702,7 +933,7 @@ class ContentPulseApp {
     uploadCSVFile() {
         const fileInput = document.getElementById('custom-csv-file');
         if (!fileInput || !fileInput.files.length) {
-            alert('Please select a CSV file');
+            this.showToast('Please select a CSV file');
             return;
         }
 
@@ -720,7 +951,7 @@ class ContentPulseApp {
                 document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
                 
                 if (data.error) {
-                    alert('Error: ' + data.error);
+                    this.showToast('Error: ' + data.error, 'error');
                     return;
                 }
 
@@ -744,7 +975,7 @@ class ContentPulseApp {
                 }
             })
             .catch(e => {
-                alert('Upload failed: ' + e.message);
+                this.showToast('Upload failed: ' + e.message, 'error');
                 document.getElementById('btn-analyze-custom').disabled = false;
                 document.getElementById('btn-analyze-custom').textContent = '🚀 Run Custom Analysis';
             });
@@ -764,7 +995,7 @@ class ContentPulseApp {
             .then(r => r.json())
             .then(data => {
                 if (data.error) {
-                    alert('Asset upload error: ' + data.error);
+                    this.showToast('Asset upload error: ' + data.error, 'error');
                     return null;
                 }
                 return data;
@@ -777,6 +1008,8 @@ class ContentPulseApp {
 
     runABTest() {
         try {
+            this.setButtonLoading('btn-run-ab-test', true);
+
             // Collect headlines
             const headlines = [
                 document.getElementById('headline-1')?.value || '',
@@ -791,7 +1024,8 @@ class ContentPulseApp {
             ].filter(h => h.trim());
 
             if (headlines.length === 0 || hooks.length === 0) {
-                alert('Please enter at least 1 headline and 1 code hook');
+                this.showToast('Please enter at least 1 headline and 1 code hook');
+                this.setButtonLoading('btn-run-ab-test', false);
                 return;
             }
 
@@ -802,9 +1036,12 @@ class ContentPulseApp {
             this.renderABTestResults(headlineResults, hookResults);
         } catch (e) {
             console.error('A/B test failed:', e);
-            alert('A/B test error: ' + e.message);
+            this.showToast('A/B test error: ' + e.message, 'error');
+        } finally {
+            this.setButtonLoading('btn-run-ab-test', false);
         }
     }
+
 
     scoreHeadlines(headlines) {
         const baselineScore = 75.0;
@@ -945,8 +1182,7 @@ class ContentPulseApp {
 
     async generateReport() {
         try {
-            document.getElementById('btn-generate-report').disabled = true;
-            document.getElementById('btn-generate-report').textContent = '⏳ Generating...';
+            this.setButtonLoading('btn-generate-report', true);
 
             const response = await fetch('/api/report', { method: 'POST' });
             const data = await response.json();
@@ -956,14 +1192,74 @@ class ContentPulseApp {
             this.state.trace = data.trace;
 
             this.renderReport();
+            this.hideEmptyState('strategy');
         } catch (e) {
             console.error('Error generating report:', e);
-            alert('Report generation failed: ' + e.message);
+            this.showToast('Report generation failed: ' + e.message, 'error');
         } finally {
-            document.getElementById('btn-generate-report').disabled = false;
-            document.getElementById('btn-generate-report').textContent = '📊 Generate Report';
+            this.setButtonLoading('btn-generate-report', false);
         }
     }
+
+    exportJSON() {
+        if (!this.state.analysis || !this.state.report) {
+            this.showToast('Please run analysis first', 'warning');
+            return;
+        }
+
+        const exportData = {
+            analysis: this.state.analysis,
+            report: this.state.report,
+            timestamp: new Date().toISOString()
+        };
+
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `devpulse-export-${new Date().getTime()}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        this.showToast('Exported successfully!', 'success');
+    }
+
+    copySummary() {
+        if (!this.state.report) {
+            this.showToast('Please generate a report first', 'warning');
+            return;
+        }
+
+        const report = this.state.report;
+        const date = new Date(report.report_date).toLocaleDateString();
+        const summary = `
+Editorial Strategy Report
+Generated: ${date}
+Period: ${report.period}
+
+Summary: ${report.summary}
+
+Continue (${report.continue_items.length} items):
+${report.continue_items.map(item => `- ${item.topic || item}`).join('\n')}
+
+Stop (${report.stop_items.length} items):
+${report.stop_items.map(item => `- ${item.topic || item}`).join('\n')}
+
+Create Next (${report.create_next.length} items):
+${report.create_next.map(item => `- ${item.topic || item}`).join('\n')}
+        `.trim();
+
+        navigator.clipboard.writeText(summary).then(() => {
+            this.showToast('Copied to clipboard!', 'success');
+        }).catch(() => {
+            this.showToast('Failed to copy to clipboard', 'error');
+        });
+    }
+
+
 
     renderReport() {
         const report = this.state.report;
@@ -1072,7 +1368,7 @@ class ContentPulseApp {
 
     exportToGitHubIssues() {
         if (!this.state.report) {
-            alert('Please generate a report first');
+            this.showToast('Please generate a report first', 'warning');
             return;
         }
 
@@ -1098,13 +1394,13 @@ class ContentPulseApp {
         });
 
         navigator.clipboard.writeText(content).then(() => {
-            alert('Report copied to clipboard! Paste it into a GitHub issue.');
+            this.showToast('Report copied to clipboard! Paste it into a GitHub issue.', 'success');
         });
     }
 
     exportToPDF() {
         if (!this.state.report) {
-            alert('Please generate a report first');
+            this.showToast('Please generate a report first', 'warning');
             return;
         }
         
@@ -1157,6 +1453,182 @@ class ContentPulseApp {
             container.appendChild(entry);
         });
     }
+
+    // ==================== BUTTON LOADING STATE ====================
+
+    setButtonLoading(buttonId, isLoading = true) {
+        const btn = document.getElementById(buttonId);
+        if (!btn) return;
+
+        if (isLoading) {
+            btn.disabled = true;
+            btn.classList.add('loading');
+            const btnText = btn.querySelector('.btn-text');
+            if (btnText) {
+                const originalText = btnText.textContent;
+                btn.dataset.originalText = originalText;
+                btnText.textContent = '';
+            }
+            // Add spinner
+            if (!btn.querySelector('.spinner')) {
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner';
+                spinner.innerHTML = '<span></span>';
+                btn.appendChild(spinner);
+            }
+        } else {
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            const spinner = btn.querySelector('.spinner');
+            if (spinner) spinner.remove();
+            const btnText = btn.querySelector('.btn-text');
+            if (btnText && btn.dataset.originalText) {
+                btnText.textContent = btn.dataset.originalText;
+            }
+        }
+    }
+
+    // ==================== DATA TABLE ====================
+
+    async loadData() {
+        try {
+            this.setButtonLoading('btn-load-data', true);
+            
+            const response = await fetch('/api/data');
+            const data = await response.json();
+
+            if (data.error) {
+                this.showToast('Failed to load data: ' + data.error, 'error');
+                return;
+            }
+
+            this.renderDataTable(data.rows, data.columns || []);
+        } catch (e) {
+            console.error('Error loading data:', e);
+            this.showToast('Failed to load data: ' + e.message, 'error');
+        } finally {
+            this.setButtonLoading('btn-load-data', false);
+        }
+    }
+
+    renderDataTable(rows, columns) {
+        const emptyState = document.getElementById('data-empty-state');
+        const tableSection = document.getElementById('data-table-section');
+        const tableBody = document.getElementById('data-table-body');
+
+        if (!rows || rows.length === 0) {
+            emptyState.classList.remove('hidden');
+            tableSection.classList.add('hidden');
+            return;
+        }
+
+        // Hide empty state and show table
+        emptyState.classList.add('hidden');
+        tableSection.classList.remove('hidden');
+
+        // Update row count
+        document.getElementById('rows-displayed').textContent = rows.length;
+        document.getElementById('rows-total').textContent = rows.length;
+
+        // Store data for sorting
+        this.currentTableData = rows;
+        this.currentTableColumns = Object.keys(rows[0]) || [];
+        this.tableSortColumn = null;
+        this.tableSortAsc = true;
+
+        // Populate table body
+        tableBody.innerHTML = '';
+        rows.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = this.currentTableColumns.map(col => {
+                const value = row[col];
+                const displayValue = value === null || value === undefined ? '—' : 
+                    typeof value === 'number' ? value.toFixed(2) : value;
+                return `<td data-label="${col}">${displayValue}</td>`;
+            }).join('');
+            tableBody.appendChild(tr);
+        });
+
+        // Add sort listeners to headers
+        document.querySelectorAll('.full-data-table th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = th.dataset.column;
+                this.sortDataTable(column);
+            });
+        });
+    }
+
+    sortDataTable(column) {
+        // Toggle sort direction if same column clicked
+        if (this.tableSortColumn === column) {
+            this.tableSortAsc = !this.tableSortAsc;
+        } else {
+            this.tableSortColumn = column;
+            this.tableSortAsc = true;
+        }
+
+        // Sort data
+        const sorted = [...this.currentTableData].sort((a, b) => {
+            let aVal = a[column];
+            let bVal = b[column];
+
+            // Handle null/undefined
+            if (aVal === null || aVal === undefined) aVal = '';
+            if (bVal === null || bVal === undefined) bVal = '';
+
+            // Numeric comparison
+            if (typeof aVal === 'number' && typeof bVal === 'number') {
+                return this.tableSortAsc ? aVal - bVal : bVal - aVal;
+            }
+
+            // String comparison
+            aVal = String(aVal).toLowerCase();
+            bVal = String(bVal).toLowerCase();
+            return this.tableSortAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        });
+
+        // Update sort indicators
+        document.querySelectorAll('.full-data-table th').forEach(th => {
+            th.classList.remove('sorted-asc', 'sorted-desc');
+        });
+        const activeHeader = document.querySelector(`[data-column="${column}"]`);
+        if (activeHeader) {
+            activeHeader.classList.add(this.tableSortAsc ? 'sorted-asc' : 'sorted-desc');
+        }
+
+        // Re-render table with sorted data
+        const tableBody = document.getElementById('data-table-body');
+        tableBody.innerHTML = '';
+        sorted.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = this.currentTableColumns.map(col => {
+                const value = row[col];
+                const displayValue = value === null || value === undefined ? '—' : 
+                    typeof value === 'number' ? value.toFixed(2) : value;
+                return `<td data-label="${col}">${displayValue}</td>`;
+            }).join('');
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // ==================== EMPTY STATE MANAGEMENT ====================
+
+    showEmptyState(tabName) {
+        const emptyStateId = `${tabName}-empty-state`;
+        const emptyState = document.getElementById(emptyStateId);
+        if (emptyState) {
+            emptyState.classList.remove('hidden');
+        }
+    }
+
+    hideEmptyState(tabName) {
+        const emptyStateId = `${tabName}-empty-state`;
+        const emptyState = document.getElementById(emptyStateId);
+        if (emptyState) {
+            emptyState.classList.add('hidden');
+        }
+    }
+
 }
 
 // Initialize app when DOM is ready

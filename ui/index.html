@@ -18,21 +18,24 @@
         </header>
 
         <!-- Tab Navigation -->
-        <nav class="tab-nav">
-            <button class="tab-btn active" data-tab="dashboard">
+        <nav class="tab-nav" role="tablist">
+            <button class="tab-btn active" data-tab="dashboard" role="tab" aria-selected="true" aria-controls="dashboard">
                 📊 Dashboard
             </button>
-            <button class="tab-btn" data-tab="scorer">
+            <button class="tab-btn" data-tab="scorer" role="tab" aria-selected="false" aria-controls="scorer">
                 ✍️ Draft Scorer
             </button>
-            <button class="tab-btn" data-tab="ab-tester">
+            <button class="tab-btn" data-tab="ab-tester" role="tab" aria-selected="false" aria-controls="ab-tester">
                 🔀 A/B Tester
             </button>
-            <button class="tab-btn" data-tab="custom-dataset">
+            <button class="tab-btn" data-tab="custom-dataset" role="tab" aria-selected="false" aria-controls="custom-dataset">
                 📤 Custom Data
             </button>
-            <button class="tab-btn" data-tab="strategy">
+            <button class="tab-btn" data-tab="strategy" role="tab" aria-selected="false" aria-controls="strategy">
                 🎯 Strategy Report
+            </button>
+            <button class="tab-btn" data-tab="data" role="tab" aria-selected="false" aria-controls="data">
+                📋 Data Table
             </button>
         </nav>
 
@@ -40,12 +43,24 @@
         <main class="main-content">
 
             <!-- ==================== DASHBOARD TAB ==================== -->
-            <section id="dashboard" class="tab-content active">
+            <section id="dashboard" class="tab-content active" role="tabpanel" aria-labelledby="dashboard-tab">
                 <div class="section-header">
                     <h2>Content Analytics Dashboard</h2>
-                    <button id="btn-run-analysis" class="btn btn-primary">
-                        🔄 Run Analysis
-                    </button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="btn-run-analysis" class="btn btn-primary">
+                            <span class="btn-text">🔄 Run Analysis</span>
+                        </button>
+                        <button class="btn btn-secondary" id="export-json" style="margin-left:0.5rem" title="Export analysis as JSON">
+                            📥 Export JSON
+                        </button>
+                    </div>
+                </div>
+
+
+                <div id="dashboard-empty-state" class="empty-state hidden">
+                    <div class="empty-icon">📊</div>
+                    <p class="empty-title">No data yet</p>
+                    <p class="empty-subtitle">Click 'Run Analysis' to start analyzing your content</p>
                 </div>
 
                 <!-- ROW 1: Metric Cards with Sparklines -->
@@ -114,6 +129,22 @@
                     </div>
                 </div>
 
+                <!-- ROW 3B: Additional Analysis Charts -->
+                <div class="dashboard-row row-charts-3b">
+                    <div class="chart-card" style="flex: 0 0 33.33%;">
+                        <h3>👥 Audience Segments</h3>
+                        <canvas id="audience-chart"></canvas>
+                    </div>
+                    <div class="chart-card" style="flex: 0 0 33.33%;">
+                        <h3>📅 Period Trends</h3>
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                    <div class="chart-card" style="flex: 0 0 33.33%;">
+                        <h3>📝 Length Analysis</h3>
+                        <canvas id="length-chart"></canvas>
+                    </div>
+                </div>
+
                 <!-- ROW 4: Insights & Data Table -->
                 <div class="dashboard-row row-insights">
                     <div class="insights-card" style="flex: 0 0 60%;">
@@ -143,12 +174,17 @@
                     <div id="trace-dashboard" class="trace-container"></div>
                 </div>
             </section>
-            </section>
 
             <!-- ==================== DRAFT SCORER TAB ==================== -->
-            <section id="scorer" class="tab-content">
+            <section id="scorer" class="tab-content" role="tabpanel" aria-labelledby="scorer-tab">
                 <div class="section-header">
                     <h2>Score Your Draft Content</h2>
+                </div>
+
+                <div id="scorer-empty-state" class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p class="empty-title">Enter a draft idea</p>
+                    <p class="empty-subtitle">Fill out the form below to score your draft and get recommendations</p>
                 </div>
 
                 <div class="scorer-container">
@@ -186,7 +222,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">
-                            📈 Score This Draft
+                            <span class="btn-text">📈 Score This Draft</span>
                         </button>
                     </form>
 
@@ -279,11 +315,9 @@
                     </div>
                 </div>
             </section>
-                </div>
-            </section>
 
             <!-- ==================== A/B TESTER TAB ==================== -->
-            <section id="ab-tester" class="tab-content">
+            <section id="ab-tester" class="tab-content" role="tabpanel" aria-labelledby="ab-tester-tab">
                 <div class="section-header">
                     <h2>A/B Test Headlines & Code Hooks</h2>
                 </div>
@@ -333,7 +367,7 @@ async def get_data():
                     </div>
 
                     <button id="btn-run-ab-test" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
-                        🔀 Run A/B Test
+                        <span class="btn-text">🔀 Run A/B Test</span>
                     </button>
 
                     <div id="ab-results" class="ab-results-container hidden">
@@ -394,7 +428,7 @@ async def get_data():
             </section>
 
             <!-- ==================== CUSTOM DATASET TAB ==================== -->
-            <section id="custom-dataset" class="tab-content">
+            <section id="custom-dataset" class="tab-content" role="tabpanel" aria-labelledby="custom-dataset-tab">
                 <div class="section-header">
                     <h2>📊 Custom Dataset Analysis</h2>
                 </div>
@@ -435,7 +469,7 @@ async def get_data():
                         </div>
 
                         <button id="btn-analyze-custom" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
-                            🚀 Run Custom Analysis
+                            <span class="btn-text">🚀 Run Custom Analysis</span>
                         </button>
                     </div>
 
@@ -447,12 +481,12 @@ async def get_data():
             </section>
 
             <!-- ==================== STRATEGY REPORT TAB ==================== -->
-            <section id="strategy" class="tab-content">
+            <section id="strategy" class="tab-content" role="tabpanel" aria-labelledby="strategy-tab">
                 <div class="section-header">
                     <h2>Editorial Strategy Report</h2>
                     <div style="display: flex; gap: 1rem;">
                         <button id="btn-generate-report" class="btn btn-primary">
-                            📊 Generate Report
+                            <span class="btn-text">📊 Generate Report</span>
                         </button>
                         <button id="btn-export-pdf" class="btn btn-secondary" title="Export as PDF">
                             📥 Export PDF
@@ -460,7 +494,17 @@ async def get_data():
                         <button id="btn-export-github" class="btn btn-secondary" title="Copy as GitHub Issues">
                             📋 GitHub Issues
                         </button>
+                        <button id="btn-copy-summary" class="btn btn-secondary" title="Copy summary text to clipboard">
+                            📋 Copy Summary
+                        </button>
                     </div>
+
+                </div>
+
+                <div id="report-empty-state" class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <p class="empty-title">Generate a report</p>
+                    <p class="empty-subtitle">Click "Generate Report" to create your editorial strategy recommendations</p>
                 </div>
 
                 <!-- Summary Statistics Chart -->
@@ -468,6 +512,7 @@ async def get_data():
                     <h3>📊 Strategy Summary</h3>
                     <canvas id="chart-strategy-summary"></canvas>
                 </div>
+                <div id="toast"></div>
 
                 <!-- Report Content -->
                 <div id="report-container" class="report-container">
@@ -480,11 +525,61 @@ async def get_data():
                     <div id="trace-strategy" class="trace-container"></div>
                 </div>
             </section>
+
+            <!-- ==================== DATA TABLE TAB ==================== -->
+            <section id="data" class="tab-content" role="tabpanel" aria-labelledby="data-tab">
+                <div class="section-header">
+                    <h2>📋 Full Dataset</h2>
+                    <button id="btn-load-data" class="btn btn-primary">
+                        <span class="btn-text">🔄 Load Data</span>
+                    </button>
+                </div>
+
+                <div id="data-empty-state" class="empty-state">
+                    <div class="empty-icon">📊</div>
+                    <p class="empty-title">No data loaded yet</p>
+                    <p class="empty-subtitle">Click "Load Data" above to fetch the full dataset</p>
+                </div>
+
+                <div id="data-table-section" class="data-table-section hidden">
+                    <div class="table-controls">
+                        <div class="table-info">
+                            <span>Showing <strong id="rows-displayed">0</strong> of <strong id="rows-total">0</strong> rows</span>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper responsive-table">
+                        <table id="full-data-table" class="full-data-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-column="title">Title</th>
+                                    <th class="sortable" data-column="topic">Topic</th>
+                                    <th class="sortable" data-column="format">Format</th>
+                                    <th class="sortable" data-column="audience_segment">Audience</th>
+                                    <th class="sortable" data-column="word_count">Word Count</th>
+                                    <th class="sortable" data-column="views">Views</th>
+                                    <th class="sortable" data-column="engagement_rate">Engagement %</th>
+                                    <th class="sortable" data-column="conversions">Conversions</th>
+                                    <th class="sortable" data-column="performance_score">Score</th>
+                                    <th class="sortable" data-column="length_bucket">Length</th>
+                                    <th class="sortable" data-column="publish_quarter">Quarter</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
 
         </main>
     </div>
 
+    <footer class="footer">
+        <p>DevPulse Intelligence Dashboard · Built for AI Agent Hackathon</p>
+    </footer>
+
     <script src="app.js"></script>
 </body>
+</html>
 </html>

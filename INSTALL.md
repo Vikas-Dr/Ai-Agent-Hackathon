@@ -1,264 +1,407 @@
-# DevPulse Local Setup Guide
+# 📦 DevPulse Installation & Setup Guide
 
-## Prerequisites
+## System Requirements
 
-- **Python 3.10+** — [Download Python](https://www.python.org/downloads/)
-- **Git** — [Download Git](https://git-scm.com/downloads)
-- **Text Editor** — VS Code, PyCharm, or any IDE
-- **API Keys** (optional, can use mock mode):
-  - Google API: https://aistudio.google.com/app/apikey
-  - HuggingFace Token: https://huggingface.co/settings/tokens
+- **Python**: 3.11+
+- **OS**: macOS, Linux (Windows with WSL)
+- **RAM**: 4GB minimum (8GB recommended)
+- **Disk**: 500MB for full installation + data
 
 ---
 
-## Quick Setup (Automated)
+## 🚀 Quick Start (5 minutes)
 
-### 1. Clone the Repository
+### Step 1: Clone Repository
 ```bash
-git clone https://github.com/Vikas-Dr/Ai-Agent-Hackathon.git
-cd Ai-Agent-Hackathon
+git clone <repo-url>
+cd devpulse
 ```
 
-### 2. Run Quick Start Script
-```bash
-python quickstart.py
-```
-
-This will:
-- ✅ Verify Python 3.10+
-- ✅ Create virtual environment
-- ✅ Install all dependencies
-- ✅ Create .env configuration file
-- ✅ Verify project structure
-
----
-
-## Manual Setup (Step-by-Step)
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/Vikas-Dr/Ai-Agent-Hackathon.git
-cd Ai-Agent-Hackathon
-```
-
-### 2. Create Virtual Environment
-
-**macOS/Linux:**
+### Step 2: Create Virtual Environment
 ```bash
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-**Windows (PowerShell):**
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-
-**Windows (Command Prompt):**
-```cmd
-python -m venv venv
-venv\Scripts\activate.bat
-```
-
-### 3. Install Dependencies
+### Step 3: Install Dependencies
 ```bash
-pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Create .env File
-Create a file named `.env` in the project root with:
-
-```
-LLM_PROVIDER=gemini
-LLM_MODEL=gemini-2.5-flash
-GOOGLE_API_KEY=your_api_key_here
-HF_TOKEN=your_hf_token_here
-MOCK_LLM=true
-DATA_PATH=data/sample_content_data.csv
-```
-
-**Note:** You can leave API keys blank and use `MOCK_LLM=true` to test locally.
-
-### 5. Generate Sample Data
+### Step 4: Configure Environment
 ```bash
-PYTHONPATH=. python data/integrate_data.py
+cp .env.example .env
+# Edit .env to add API keys if needed (optional for demo)
 ```
 
-This fetches real Hacker News stories and creates `data/sample_content_data.csv`
-
-### 6. Start the Dashboard
+### Step 5: Load Data
 ```bash
-PYTHONPATH=. python ui/api_server.py
+PYTHONPATH=. python3 data/integrate_data.py
 ```
 
-Output should show:
-```
- * Running on http://127.0.0.1:5050
- * Press CTRL+C to quit
+### Step 6: See It Working!
+```bash
+# Quick demo (2 minutes)
+python run_hackathon.py --demo
+
+# Or run full pipeline
+python run_hackathon.py --pipeline
 ```
 
-### 7. Open in Browser
-```
-http://localhost:5050
-```
+That's it! ✨
 
 ---
 
-## Directory Structure
+## 🏗️ Detailed Installation
 
-```
-Ai-Agent-Hackathon/
-├── agents/                 # Content analysis agents
-│   ├── analyzer.py        # DevRel metrics & insights
-│   ├── predictor.py       # Content scoring with code analysis
-│   ├── strategist.py      # Gap detection & strategy
-│   ├── report.py          # Recommendations & GitHub export
-│   └── sdk_detector.py    # SDK deprecation flagging
-│
-├── ui/                    # Web dashboard
-│   ├── index.html         # Main interface (4 tabs)
-│   ├── app.js             # Dashboard logic + A/B tester
-│   ├── api_server.py      # FastAPI backend
-│   └── index.css          # Styling
-│
-├── data/                  # Data layer
-│   ├── schema.py          # Pydantic models (DevRel metrics)
-│   ├── integrate_data.py  # HN data integration
-│   └── collector.py       # Data collection
-│
-├── utils/                 # Helper modules
-│   ├── code_parser.py     # Markdown code block analyzer
-│   ├── ab_tester.py       # A/B testing simulator
-│   ├── intent_extractor.py   # Developer intent classification
-│   ├── sandbox_generator.py  # 10-line starter code templates
-│   └── sdk_detector.py    # SDK deprecation detector
-│
-├── orchestrator/          # Pipeline orchestration
-│   ├── __init__.py        # Main pipeline
-│   └── scorer.py          # Draft scoring engine
-│
-├── llm/                   # LLM integration
-│   ├── client.py          # Gemini + HuggingFace client
-│   └── __init__.py
-│
-├── config.py              # DevRel configuration
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables
-└── README.md              # Project documentation
-```
+### Prerequisites Check
 
----
-
-## Features Overview
-
-### 📊 Dashboard Tab
-- View content analytics
-- Topic & format distribution
-- Audience insights
-- Performance metrics
-
-### ✍️ Draft Scorer Tab
-- Score article drafts
-- Analyze code-to-text ratio
-- Get AI recommendations
-- Get code quality feedback
-
-### 🔀 A/B Tester Tab
-- Test 3 headline variants
-- Test 2 code hooks
-- Compare side-by-side
-- Get winner + combined score
-
-### 🎯 Strategy Report Tab
-- Generate editorial recommendations
-- See what to continue/stop/create
-- Export as GitHub Issues
-- Bi-weekly action plan
-
----
-
-## Troubleshooting
-
-### Import Errors
 ```bash
-# Make sure PYTHONPATH is set
-PYTHONPATH=. python ui/api_server.py
+# Check Python version
+python3 --version
+# Expected: Python 3.11.x or higher
+
+# Check pip
+pip --version
+
+# Check git
+git --version
 ```
 
-### Port 5050 Already in Use
-Edit `ui/api_server.py`, find:
-```python
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5050)
-```
-Change port to 5051, 5052, etc.
+### Step 1: Clone Repository
 
-### Virtual Environment Not Activating
 ```bash
-# macOS/Linux: Check syntax
+# Clone the repository
+git clone https://github.com/yourusername/devpulse.git
+
+# Navigate to directory
+cd devpulse
+
+# Check structure
+ls -la
+# Should see: agents/, data/, llm/, orchestrator/, ui/, agentic_rag_hackathon.py, etc.
+```
+
+### Step 2: Create Virtual Environment
+
+```bash
+# Create venv
+python3 -m venv venv
+
+# Activate (macOS/Linux)
 source venv/bin/activate
 
-# Windows: Use correct script
-.\venv\Scripts\Activate.ps1
+# Activate (Windows)
+venv\Scripts\activate
+
+# Verify activation (should show (venv) prefix in terminal)
 ```
 
-### Missing Dependencies
+### Step 3: Upgrade pip & Install Dependencies
+
 ```bash
-pip install -r requirements.txt --force-reinstall
+# Upgrade pip first
+pip install --upgrade pip
+
+# Install all requirements
+pip install -r requirements.txt
+
+# Verify installation
+python3 -c "import pandas; print('✓ pandas installed')"
+python3 -c "import pydantic; print('✓ pydantic installed')"
+python3 -c "import flask; print('✓ flask installed')"
 ```
 
-### API Key Issues
-- Keep `MOCK_LLM=true` in .env to use mock responses
-- Get real keys from:
-  - Google: https://aistudio.google.com/app/apikey
-  - HuggingFace: https://huggingface.co/settings/tokens
+### Step 4: Environment Configuration
+
+```bash
+# Copy example env
+cp .env.example .env
+
+# Edit .env (optional for demo, required for production)
+nano .env  # or vim, or your editor
+
+# Required for production:
+# GOOGLE_API_KEY=your-key-here
+# MOCK_LLM=false
+
+# Recommended defaults (already in .env.example):
+# MOCK_LLM=true              (no API calls, uses mock data)
+# LLM_PROVIDER=gemini        (Gemini)
+# LLM_MODEL=gemini-2.5-flash
+```
+
+### Step 5: Load Sample Data
+
+```bash
+# Set Python path
+export PYTHONPATH=.
+
+# Load data from Hacker News API (creates CSV with 200 articles)
+python3 data/integrate_data.py
+
+# Verify data loaded
+ls -la data/sample_content_data.csv
+# Should be ~100KB
+
+wc -l data/sample_content_data.csv
+# Should be 201 lines (200 rows + header)
+```
+
+### Step 6: Verify Installation
+
+```bash
+# Test imports
+python3 << 'EOF'
+from agents import CollectorAgent, AnalyzerAgent
+from orchestrator.pipeline import run_pipeline
+from agentic_rag_hackathon import create_agentic_context
+print("✅ All imports successful!")
+EOF
+```
 
 ---
 
-## Running Tests
+## 🧪 Testing Installation
 
+### Quick Test (30 seconds)
 ```bash
-# Run all tests
-PYTHONPATH=. python -m pytest tests/ -v
+# Run quick demo to verify everything works
+python run_hackathon.py --demo
 
-# Run specific test
-PYTHONPATH=. python -m pytest tests/test_schema.py -v
+# Expected: Shows memory, vector search, ReACT reasoning in action
+```
 
-# Run with coverage
-PYTHONPATH=. python -m pytest tests/ --cov=agents --cov=utils
+### Full Test (1-2 minutes)
+```bash
+# Run complete pipeline with agentic features
+python run_hackathon.py --pipeline
+
+# Expected: Full analysis with memory storage
+```
+
+### Run Test Suite (1-2 minutes)
+```bash
+# Run all unit tests
+PYTHONPATH=. python3 -m pytest tests/ -v
+
+# Expected: 30+ tests pass
+# If tests fail, check error messages and requirements.txt versions
 ```
 
 ---
 
-## Development Workflow
+## 🎯 Common Installation Issues
 
-### Make Changes
+### Issue 1: "command not found: python3"
+**Solution**:
 ```bash
-# Edit files in your IDE
-vim config.py  # or open in VS Code
+# Check Python installation
+which python
+which python3
+
+# If not found, install Python:
+# macOS: brew install python3
+# Linux: apt-get install python3
+# Windows: Download from python.org
 ```
 
-### Test Your Changes
+### Issue 2: "ModuleNotFoundError" when importing
+**Solution**:
 ```bash
-# Verify syntax
-python3 -m py_compile agents/analyzer.py
+# Ensure venv is activated
+source venv/bin/activate
 
-# Run tests
-PYTHONPATH=. python -m pytest tests/
+# Reinstall requirements
+pip install --force-reinstall -r requirements.txt
+
+# Check installed packages
+pip list | grep pandas
+pip list | grep pydantic
 ```
 
-### Push to GitHub
+### Issue 3: "GOOGLE_API_KEY missing but MOCK_LLM not set"
+**Solution**:
 ```bash
-git add .
-git commit -m "feat: Your feature description"
-git push origin main
+# Edit .env
+echo "MOCK_LLM=true" >> .env
+
+# Or set environment variable
+export MOCK_LLM=true
+
+# Then try again
+python run_hackathon.py --demo
+```
+
+### Issue 4: "No module named 'agentic_rag_hackathon'"
+**Solution**:
+```bash
+# Make sure PYTHONPATH is set
+export PYTHONPATH=.
+
+# Or run with PYTHONPATH inline
+PYTHONPATH=. python3 run_hackathon.py --demo
+
+# Check file exists
+ls -la agentic_rag_hackathon.py
+```
+
+### Issue 5: "permission denied: ./run_hackathon.py"
+**Solution**:
+```bash
+# Make script executable
+chmod +x run_hackathon.py
+
+# Or run with python
+python3 run_hackathon.py --demo
+```
+
+### Issue 6: "Address already in use" when starting server
+**Solution**:
+```bash
+# Port 5050 is already in use, kill the process
+lsof -i :5050
+kill -9 <PID>
+
+# Or use different port
+PYTHONPATH=. python3 -m ui.api_server --port 5051
 ```
 
 ---
 
-## Docker Setup (Optional)
+## 📊 Verify Full Setup
+
+Run this comprehensive check:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "🔍 Verifying DevPulse Installation..."
+echo
+
+# 1. Python version
+echo "✓ Python version:"
+python3 --version
+
+# 2. Virtual environment
+echo "✓ Virtual environment: $VIRTUAL_ENV"
+
+# 3. Required packages
+echo "✓ Checking packages..."
+python3 << 'EOF'
+packages = ['pandas', 'pydantic', 'flask', 'numpy', 'google_generativeai', 'openai']
+for pkg in packages:
+    try:
+        __import__(pkg)
+        print(f"  ✓ {pkg}")
+    except ImportError:
+        print(f"  ✗ {pkg} - MISSING!")
+        raise
+EOF
+
+# 4. Data files
+echo "✓ Data files:"
+test -f data/sample_content_data.csv && echo "  ✓ sample_content_data.csv" || echo "  ✗ MISSING!"
+test -f assets/data/hackernews_export.csv && echo "  ✓ hackernews_export.csv" || echo "  ✗ MISSING!"
+
+# 5. Core modules
+echo "✓ Core modules:"
+ls -1 agents/*.py | head -3 | sed 's/^/  ✓ /'
+ls -1 orchestrator/*.py | head -3 | sed 's/^/  ✓ /'
+
+# 6. Agentic RAG module
+echo "✓ Agentic RAG:"
+test -f agentic_rag_hackathon.py && echo "  ✓ agentic_rag_hackathon.py" || echo "  ✗ MISSING!"
+
+# 7. Run quick test
+echo "✓ Running quick test..."
+export PYTHONPATH=.
+python3 -c "
+from agentic_rag_hackathon import create_agentic_context
+agentic = create_agentic_context()
+print(f'  ✓ Agentic context created')
+print(f'  ✓ Memory: {type(agentic[\"memory\"]).__name__}')
+print(f'  ✓ Tools: {type(agentic[\"tools\"]).__name__}')
+"
+
+echo
+echo "✅ All checks passed! Ready to use DevPulse"
+```
+
+Save this as `verify.sh` and run:
+```bash
+chmod +x verify.sh
+./verify.sh
+```
+
+---
+
+## 🚀 Next Steps After Installation
+
+### Option 1: See It Working (Recommended)
+```bash
+# 2-minute demo showing all features
+python run_hackathon.py --demo
+```
+
+### Option 2: Start the Dashboard
+```bash
+# Interactive web interface
+PYTHONPATH=. python3 -m ui.api_server
+
+# Then open: http://localhost:5050
+```
+
+### Option 3: Run Complete Pipeline
+```bash
+# Full analysis with all agents
+python run_hackathon.py --pipeline
+```
+
+### Option 4: Run Tests
+```bash
+# Verify everything works
+PYTHONPATH=. python3 -m pytest tests/ -v
+```
+
+---
+
+## 📚 Configuration Reference
+
+### Environment Variables (.env)
+
+| Variable | Required | Default | Notes |
+|----------|----------|---------|-------|
+| MOCK_LLM | No | true | Set to false for real LLM calls |
+| GOOGLE_API_KEY | No | - | Gemini API key (if not using mock) |
+| HF_TOKEN | No | - | Hugging Face token (if using Qwen) |
+| LLM_PROVIDER | No | gemini | "gemini" or "huggingface" |
+| LLM_MODEL | No | gemini-2.5-flash | LLM model name |
+| DATA_PATH | No | data/sample_content_data.csv | Path to CSV data |
+| LOGS_DIR | No | ./logs | Logging directory |
+| ASSETS_DIR | No | ./assets | Assets directory |
+
+### Example .env for Development
+```bash
+# Use mock LLM (no API calls needed)
+MOCK_LLM=true
+
+# If you want real LLM calls:
+# MOCK_LLM=false
+# GOOGLE_API_KEY=sk-xxx
+# LLM_PROVIDER=gemini
+# LLM_MODEL=gemini-2.5-flash
+
+# Data paths
+DATA_PATH=data/sample_content_data.csv
+LOGS_DIR=./logs
+ASSETS_DIR=./assets
+```
+
+---
+
+## 🐳 Docker Installation (Optional)
 
 If you prefer Docker:
 
@@ -267,28 +410,146 @@ If you prefer Docker:
 docker build -t devpulse .
 
 # Run container
-docker run -p 5050:5050 --env-file .env devpulse
+docker run -p 5050:5050 -v $(pwd):/app devpulse
 
-# Visit http://localhost:5050
+# Visit: http://localhost:5050
+```
+
+**Dockerfile** (create if using Docker):
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+ENV PYTHONPATH=/app
+ENV MOCK_LLM=true
+
+EXPOSE 5050
+
+CMD ["python3", "-m", "ui.api_server"]
 ```
 
 ---
 
-## Next Steps
+## 🔄 Updating Installation
 
-1. **Explore the Dashboard** — Run analysis on sample data
-2. **Try Draft Scoring** — Paste a markdown draft and get recommendations
-3. **A/B Test Headlines** — Compare different titles
-4. **Generate Reports** — Create GitHub issues for your content team
-5. **Integrate Real Data** — Connect to your own Hacker News feeds
+### Update Dependencies
+```bash
+# Update all packages to latest versions
+pip install --upgrade -r requirements.txt
+
+# Or specific package
+pip install --upgrade flask
+```
+
+### Update Code
+```bash
+# Pull latest from git
+git pull origin main
+
+# Install any new dependencies
+pip install -r requirements.txt
+
+# Reload data
+PYTHONPATH=. python3 data/integrate_data.py
+```
 
 ---
 
-## Support
+## 🗑️ Uninstall / Clean Up
 
-- 📖 [GitHub Repository](https://github.com/Vikas-Dr/Ai-Agent-Hackathon)
-- 💬 Open an issue for bugs/features
-- 🐍 Python docs: https://docs.python.org/3/
-- ⚡ FastAPI: https://fastapi.tiangolo.com/
+### Remove Virtual Environment
+```bash
+# Deactivate first
+deactivate
 
-Happy coding! 🚀
+# Remove venv directory
+rm -rf venv
+```
+
+### Clean Generated Files
+```bash
+# Remove logs
+rm -rf logs/*.log
+
+# Remove generated data
+rm -f data/sample_content_data.csv
+rm -f assets/data/hackernews_export.csv
+
+# Remove Python cache
+find . -type d -name __pycache__ -exec rm -rf {} +
+find . -type f -name "*.pyc" -delete
+```
+
+### Full Clean (Start Fresh)
+```bash
+# Remove everything generated
+rm -rf venv logs/ __pycache__
+find . -type d -name __pycache__ -exec rm -rf {} +
+find . -type f -name "*.pyc" -delete
+find . -type f -name ".DS_Store" -delete
+
+# Now reinstall from scratch
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python3 data/integrate_data.py
+```
+
+---
+
+## ✅ Installation Checklist
+
+Use this to verify everything:
+
+- [ ] Python 3.11+ installed
+- [ ] Virtual environment created and activated
+- [ ] Dependencies installed (pip install -r requirements.txt)
+- [ ] .env file configured
+- [ ] Sample data loaded (data/integrate_data.py)
+- [ ] Quick demo works (python run_hackathon.py --demo)
+- [ ] Tests pass (pytest tests/ -v)
+- [ ] Dashboard starts (python -m ui.api_server)
+- [ ] Can access http://localhost:5050
+
+---
+
+## 📞 Support
+
+If you encounter issues:
+
+1. **Check Python version**: `python3 --version` (should be 3.11+)
+2. **Verify venv activation**: (should see (venv) in prompt)
+3. **Check dependencies**: `pip list | grep -E "pandas|pydantic|flask"`
+4. **Check data**: `ls -la data/sample_content_data.csv`
+5. **Run tests**: `PYTHONPATH=. pytest tests/ -v`
+6. **Check logs**: `tail -f logs/orchestrator.log`
+7. **Read TROUBLESHOOTING** section of README.md
+
+---
+
+## 🎉 Success!
+
+Once installation is complete, you're ready to:
+
+```bash
+# See it working
+python run_hackathon.py --demo
+
+# Use the dashboard
+PYTHONPATH=. python3 -m ui.api_server
+
+# Run the pipeline
+python run_hackathon.py --pipeline
+
+# Integrate into your code
+from orchestrator.pipeline import run_pipeline
+result = run_pipeline(enable_agentic=True)
+```
+
+**Happy analyzing! 🚀**

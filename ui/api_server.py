@@ -72,6 +72,35 @@ def get_audiences():
     return jsonify(AUDIENCE_SEGMENTS)
 
 
+
+@app.route("/api/data", methods=["GET"])
+def get_data():
+    """Get full dataset for Data Table tab."""
+    try:
+        from agents.collector import CollectorAgent
+        agent = CollectorAgent()
+        result, _, _ = agent.execute()
+        df = result['dataframe']
+        
+        # Select columns to display
+        cols = ['title', 'topic', 'format', 'audience_segment', 'word_count',
+                'views', 'engagement_rate', 'conversions', 'performance_score',
+                'length_bucket', 'publish_quarter']
+        
+        # Filter to available columns
+        available_cols = [c for c in cols if c in df.columns]
+        subset = df[available_cols].head(50).to_dict(orient='records')
+        
+        return jsonify({
+            "rows": subset,
+            "total": len(df),
+            "columns": available_cols
+        })
+    except Exception as e:
+        logger.error(f"Error fetching data: {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
 # ==================== ANALYSIS ENDPOINTS ====================
 
 
