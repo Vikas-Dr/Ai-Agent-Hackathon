@@ -250,6 +250,17 @@ def transform_hn_story(
         # Conversions (views * 0.001 to 0.008)
         conversions = int(views * random.uniform(0.001, 0.008))
 
+        # ==================== DEVREL FIELDS ====================
+        # GitHub stars growth (derived from HN score)
+        github_stars_growth = int(score * random.uniform(0.05, 0.3))
+        
+        # API signups (derived from conversions)
+        api_signups = int(conversions * random.uniform(0.5, 2.0))
+
+        logger.debug(
+            f"DevRel metrics: github_stars_growth={github_stars_growth}, api_signups={api_signups}"
+        )
+
         # Validate and create
         row = RawContentRow(
             title=title,
